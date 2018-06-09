@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import 'bulma'
+
 export default {
   name: 'App',
   components: {}
