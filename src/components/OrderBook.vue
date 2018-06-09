@@ -89,6 +89,7 @@ export default {
           // Update the books
           this.buyBook = buyBook
           this.sellBook = sellBook
+          this.$emit('tickerUpdated', [this.ask, this.bid])
         }))
     },
     addAccumulated (book) {
