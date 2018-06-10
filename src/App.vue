@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <TopPanel/>
     <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
     <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
       Últimas transacciones
@@ -28,6 +29,7 @@ import ActiveOrders from './components/ActiveOrders'
 import Balance from './components/Balance'
 import OrderBook from './components/OrderBook'
 import Footer from './components/Footer'
+import TopPanel from './components/TopPanel'
 import Trades from './components/Trades'
 
 export default {
@@ -37,7 +39,8 @@ export default {
     Balance,
     Footer,
     OrderBook,
-    Trades
+    Trades,
+    TopPanel
   },
   data () {
     return {
@@ -61,7 +64,10 @@ export default {
 </script>
 
 <style lang="scss">
-  body { margin-bottom: 120px }
+  body {
+    margin-top: 60px;
+    margin-bottom: 120px;
+  }
   .section-name {
     border-bottom: 1px solid #e0e0e0;
     background-color: #eee;
