@@ -4,6 +4,7 @@
       <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
       <Trades/>
       <ActiveOrders @ordersUpdated="updateActiveOrders"/>
+      <Balance/>
       <Footer :ask="ask" :bid="bid"/>
     </div>
   </div>
@@ -12,6 +13,7 @@
 <script>
 import 'bulma'
 import ActiveOrders from './components/ActiveOrders'
+import Balance from './components/Balance'
 import OrderBook from './components/OrderBook'
 import Footer from './components/Footer'
 import Trades from './components/Trades'
@@ -20,6 +22,7 @@ export default {
   name: 'App',
   components: {
     ActiveOrders,
+    Balance,
     Footer,
     OrderBook,
     Trades
