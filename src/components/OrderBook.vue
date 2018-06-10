@@ -35,6 +35,7 @@ import axios from 'axios'
 
 export default {
   name: 'OrderBook',
+  props: ['activeOrders'],
   created () {
     this.getBooks().then(() => { // Get the order books
       // Center the order book
@@ -49,8 +50,7 @@ export default {
   data () {
     return {
       buyBook: [],
-      sellBook: [],
-      activeOrdersTimestamp: [] // The timestamp of my active orders
+      sellBook: []
     }
   },
   computed: {
@@ -66,6 +66,9 @@ export default {
     spreadPercentage () {
       let spreadPercentage = (this.spread / this.ask) * 100
       return spreadPercentage.toFixed(2)
+    },
+    activeOrdersTimestamp () {
+      return this.activeOrders.map(order => order.created_at)
     }
   },
   methods: {
