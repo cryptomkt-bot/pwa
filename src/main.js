@@ -14,6 +14,16 @@ Vue.filter('toDecimals', (number, decimals) => {
   return number.slice(0, i) + number.substr(i, decimals)
 })
 
+Vue.filter('date', timestamp => {
+  const date = new Date(timestamp)
+  return date.toLocaleString('es-AR', {
+    day: 'numeric',
+    month: 'long',
+    hour: 'numeric',
+    minute: 'numeric'
+  })
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
