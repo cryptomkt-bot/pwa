@@ -36,6 +36,13 @@ import axios from 'axios'
 export default {
   name: 'OrderBook',
   props: ['activeOrders'],
+  data () {
+    return {
+      buyBook: [],
+      sellBook: [],
+      intervalId: null
+    }
+  },
   created () {
     this.getBooks().then(() => { // Get the order books
       // Center the order book
@@ -45,13 +52,10 @@ export default {
       }
       target.scrollIntoView()
     })
-    setInterval(this.getBooks, 10000) // Update books every 10 secs
+    this.intervalId = setInterval(this.getBooks, 10000) // Update books every 10 secs
   },
-  data () {
-    return {
-      buyBook: [],
-      sellBook: []
-    }
+  destroyed () {
+    clearInterval(this.intervalId)
   },
   computed: {
     ask () {

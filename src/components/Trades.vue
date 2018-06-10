@@ -22,12 +22,16 @@ export default {
   name: 'Trades',
   data () {
     return {
-      orders: []
+      orders: [],
+      intevalId: null
     }
   },
   created () {
     this.getOrders()
-    setInterval(this.getOrders, 10000)
+    this.intervalId = setInterval(this.getOrders, 10000)
+  },
+  destroyed () {
+    clearInterval(this.intervalId)
   },
   methods: {
     getOrders () {

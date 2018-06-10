@@ -26,12 +26,16 @@ export default {
   name: 'ActiveOrders',
   data () {
     return {
-      orders: []
+      orders: [],
+      intervalId: null
     }
   },
   created () {
     this.getOrders()
-    setInterval(this.getOrders, 10000)
+    this.intervalId = setInterval(this.getOrders, 10000)
+  },
+  destroyed () {
+    clearInterval(this.intervalId)
   },
   methods: {
     getOrders () {
