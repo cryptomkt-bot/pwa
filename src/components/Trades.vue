@@ -1,18 +1,23 @@
 <template>
-  <table class="table is-hoverable is-fullwidth is-marginless is-size-7">
-    <thead>
-      <th>Fecha</th>
-      <th>Precio</th>
-      <th>Cantidad</th>
-    </thead>
-    <tbody>
-      <tr v-for="order in orders" :key="order.id">
-        <td>{{ order.timestamp | date }}</td>
-        <td :class="orderColor(order)">${{ order.price }}</td>
-        <td>{{ order.amount | toDecimals(4) }} ETH</td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+    <div v-if="!orders.length" class="has-text-centered">
+      <span id="loading-message">Cargando ...</span>
+    </div>
+    <table v-else class="table is-hoverable is-fullwidth is-marginless is-size-7">
+      <thead>
+        <th>Fecha</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+      </thead>
+      <tbody>
+        <tr v-for="order in orders" :key="order.id">
+          <td>{{ order.timestamp | date }}</td>
+          <td :class="orderColor(order)">${{ order.price }}</td>
+          <td>{{ order.amount | toDecimals(4) }} ETH</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -48,15 +53,19 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  $bodyHeight: 100px;
   tbody {
     display: block;
-    height: 100px;
+    height: $bodyHeight;
     overflow: auto;
   }
   thead, tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed;
+  }
+  #loading-message {
+    line-height: $bodyHeight + 30px;
   }
 </style>

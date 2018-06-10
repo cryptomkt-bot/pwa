@@ -1,33 +1,38 @@
 <template>
-  <table id="order-book-table" class="table is-hoverable is-fullwidth is-size-7 is-marginless">
-    <thead>
-      <th>Precio</th>
-      <th>Cantidad</th>
-      <th>Acumulado</th>
-    </thead>
-    <tbody>
-      <!-- Sell book -->
-      <tr v-for="order in [...sellBook].reverse()" :key="order.timestamp"
-          :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
-        <td class="has-text-danger">${{ order.price }}</td>
-        <td>{{ order.amount | toDecimals(4) }} ETH</td>
-        <td>{{ order.accumulated | toDecimals(4) }} ETH</td>
-      </tr>
-      <!-- Spread -->
-      <tr id="spread-row">
-        <td>${{ spread }} ({{ spreadPercentage }}%)</td>
-        <td></td>
-        <td>Spread</td>
-      </tr>
-      <!-- Buy book -->
-      <tr v-for="order in buyBook" :key="order.timestamp"
-          :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
-        <td class="has-text-success">${{ order.price }}</td>
-        <td>{{ order.amount | toDecimals(4) }} ETH</td>
-        <td>{{ order.accumulated | toDecimals(4) }} ETH</td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+    <div v-if="!sellBook.length || !buyBook.length" class="has-text-centered">
+      <span id="loading-message">Cargando ...</span>
+    </div>
+    <table v-else id="order-book-table" class="table is-hoverable is-fullwidth is-size-7 is-marginless">
+      <thead>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Acumulado</th>
+      </thead>
+      <tbody>
+        <!-- Sell book -->
+        <tr v-for="order in [...sellBook].reverse()" :key="order.timestamp"
+            :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
+          <td class="has-text-danger">${{ order.price }}</td>
+          <td>{{ order.amount | toDecimals(4) }} ETH</td>
+          <td>{{ order.accumulated | toDecimals(4) }} ETH</td>
+        </tr>
+        <!-- Spread -->
+        <tr id="spread-row">
+          <td>${{ spread }} ({{ spreadPercentage }}%)</td>
+          <td></td>
+          <td>Spread</td>
+        </tr>
+        <!-- Buy book -->
+        <tr v-for="order in buyBook" :key="order.timestamp"
+            :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
+          <td class="has-text-success">${{ order.price }}</td>
+          <td>{{ order.amount | toDecimals(4) }} ETH</td>
+          <td>{{ order.accumulated | toDecimals(4) }} ETH</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -112,13 +117,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  $bodyHeight: 270px;
   #order-book-table {
     tr.selected {
       background-color: #fffde7;
     }
     tbody {
       display: block;
-      height: 270px;
+      height: $bodyHeight;
       overflow: auto;
     }
     thead, tbody tr {
@@ -129,5 +135,8 @@ export default {
   }
   #spread-row {
     background-color: #eceff1;
+  }
+  #loading-message {
+    line-height: $bodyHeight + 30px;
   }
 </style>
