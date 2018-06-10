@@ -1,9 +1,21 @@
 <template>
   <div id="app">
-    <div class="container">
-      <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
-      <Trades/>
-      <ActiveOrders @ordersUpdated="updateActiveOrders"/>
+    <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
+    <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
+      Últimas transacciones
+      <span class="icon is-pulled-right">
+        <span v-if="isTradesVisible">-</span><span v-else>+</span>
+      </span>
+    </div>
+    <Trades v-if="isTradesVisible"/>
+    <div class="section-name has-text-centered" @click="isActiveOrdersVisible = !isActiveOrdersVisible">
+      Órdenes abiertas
+      <span class="icon is-pulled-right">
+        <span v-if="isActiveOrdersVisible">-</span><span v-else>+</span>
+      </span>
+    </div>
+    <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
+    <div id="footer">
       <Balance/>
       <Footer :ask="ask" :bid="bid"/>
     </div>
@@ -31,7 +43,9 @@ export default {
     return {
       ask: 0,
       bid: 0,
-      activeOrders: []
+      activeOrders: [],
+      isTradesVisible: false,
+      isActiveOrdersVisible: false
     }
   },
   methods: {
@@ -46,5 +60,20 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+  body { margin-bottom: 120px }
+  .section-name {
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #eee;
+    padding: 8px;
+    .icon {
+      position: absolute;
+      right: 16px;
+    }
+  }
+  #footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
 </style>

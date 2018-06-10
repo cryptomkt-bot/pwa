@@ -1,5 +1,5 @@
 <template>
-  <div id="footer">
+  <div id="footer-content">
     <span>ETHARS</span>
     <div class="price has-text-centered">
       <div class="price-label has-text-weight-light">venta</div>
@@ -19,15 +19,12 @@ export default {
 }
 </script>
 
-<style>
-  #footer {
+<style scoped>
+  #footer-content {
     background-color: #677ae4;
     color: #fff;
     font-size: 1.2rem;
     padding: 16px 48px 16px 48px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     height: 64px;
     position: relative;
   }

@@ -62,8 +62,6 @@ export default {
 
 <style lang="scss">
   #balance {
-    position: fixed;
-    bottom: 60px;
     width: 100%;
     .button {
       position: relative;
@@ -74,5 +72,5 @@ export default {
     }
   }
   #balance-label { font-size: 0.8rem }
-  #balance-content { border-top: 1px solid #ddd }
+  #balance-content { box-shadow: 0 0 16px rgba(0, 0, 0, 0.2) }
 </style>

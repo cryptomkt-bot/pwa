@@ -1,5 +1,5 @@
 <template>
-  <table class="table is-hoverable is-fullwidth is-size-7">
+  <table class="table is-hoverable is-fullwidth is-marginless is-size-7">
     <thead>
     <th>Tipo</th>
     <th>Precio</th>

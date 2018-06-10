@@ -1,5 +1,5 @@
 <template>
-  <table id="order-book-table" class="table is-hoverable is-fullwidth is-size-7">
+  <table id="order-book-table" class="table is-hoverable is-fullwidth is-size-7 is-marginless">
     <thead>
       <th>Precio</th>
       <th>Cantidad</th>
