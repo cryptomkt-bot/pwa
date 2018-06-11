@@ -8,7 +8,7 @@
         <span v-if="isTradesVisible">-</span><span v-else>+</span>
       </span>
     </div>
-    <Trades v-if="isTradesVisible"/>
+    <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
     <div class="section-name has-text-centered" @click="isActiveOrdersVisible = !isActiveOrdersVisible">
       Órdenes abiertas
       <span class="icon is-pulled-right">

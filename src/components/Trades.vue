@@ -10,7 +10,7 @@
         <th>Cantidad</th>
       </thead>
       <tbody>
-        <tr v-for="order in orders" :key="order.id">
+        <tr v-for="order in orders" :key="order.timestamp">
           <td>{{ order.timestamp | date }}</td>
           <td :class="orderColor(order)">${{ order.price }}</td>
           <td>{{ order.amount | toDecimals(4) }} ETH</td>
@@ -25,18 +25,26 @@ import axios from 'axios'
 
 export default {
   name: 'Trades',
+  props: ['isVisible'],
   data () {
     return {
       orders: [],
-      intevalId: null
+      intervalId: null
     }
-  },
-  created () {
-    this.getOrders()
-    this.intervalId = setInterval(this.getOrders, 10000)
   },
   destroyed () {
     clearInterval(this.intervalId)
+  },
+  watch: {
+    isVisible (newValue) {
+      if (newValue === true) { // The component is visible
+        this.getOrders() // Get latest orders
+        this.intervalId = setInterval(this.getOrders, 10000) // Update trades every 10 secs
+      } else { // The component gets hidden
+        this.orders = []
+        clearInterval(this.intervalId) // Stop updating the orders
+      }
+    }
   },
   methods: {
     getOrders () {
