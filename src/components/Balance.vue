@@ -72,5 +72,8 @@ export default {
     }
   }
   #balance-label { font-size: 0.8rem }
-  #balance-content { box-shadow: 0 0 16px rgba(0, 0, 0, 0.2) }
+  #balance-content {
+    position: relative;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+  }
 </style>
