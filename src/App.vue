@@ -19,6 +19,7 @@
     <div id="footer">
       <Balance @visibilityChanged="areTradersVisible = !$event"/>
       <Seller v-show="areTradersVisible"/>
+      <Buyer v-show="areTradersVisible"/>
       <Footer :ask="ask" :bid="bid"/>
     </div>
   </div>
@@ -28,6 +29,7 @@
 import 'bulma'
 import ActiveOrders from './components/ActiveOrders'
 import Balance from './components/Balance'
+import Buyer from './components/Buyer'
 import OrderBook from './components/OrderBook'
 import Footer from './components/Footer'
 import TopPanel from './components/TopPanel'
@@ -39,6 +41,7 @@ export default {
   components: {
     ActiveOrders,
     Balance,
+    Buyer,
     Footer,
     OrderBook,
     Seller,
