@@ -24,7 +24,7 @@ export default {
     background-color: #677ae4;
     color: #fff;
     font-size: 1.2rem;
-    padding: 16px 48px 16px 48px;
+    padding: 16px 60px 16px 60px;
     height: 64px;
     position: relative;
   }

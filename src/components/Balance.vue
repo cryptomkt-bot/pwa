@@ -44,6 +44,7 @@ export default {
   },
   watch: {
     isContentVisible (newValue) {
+      this.$emit('visibilityChanged', newValue)
       if (newValue === true) {
         this.getBalances()
       }

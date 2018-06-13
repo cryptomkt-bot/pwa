@@ -17,7 +17,8 @@
     </div>
     <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
     <div id="footer">
-      <Balance/>
+      <Balance @visibilityChanged="areTradersVisible = !$event"/>
+      <Seller v-show="areTradersVisible"/>
       <Footer :ask="ask" :bid="bid"/>
     </div>
   </div>
@@ -31,6 +32,7 @@ import OrderBook from './components/OrderBook'
 import Footer from './components/Footer'
 import TopPanel from './components/TopPanel'
 import Trades from './components/Trades'
+import Seller from './components/Seller'
 
 export default {
   name: 'App',
@@ -39,6 +41,7 @@ export default {
     Balance,
     Footer,
     OrderBook,
+    Seller,
     Trades,
     TopPanel
   },
@@ -48,7 +51,8 @@ export default {
       bid: 0,
       activeOrders: [],
       isTradesVisible: false,
-      isActiveOrdersVisible: false
+      isActiveOrdersVisible: false,
+      areTradersVisible: true
     }
   },
   methods: {
