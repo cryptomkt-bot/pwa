@@ -19,13 +19,15 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   #footer-content {
+    $height: 64px;
     background-color: #677ae4;
     color: #fff;
     font-size: 1.2rem;
     padding: 16px 60px 16px 60px;
-    height: 64px;
+    height: $height;
+    line-height: $height / 2;
     position: relative;
   }
   .price {
