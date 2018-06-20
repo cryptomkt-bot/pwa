@@ -15,11 +15,14 @@
                        :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
             </div>
-            <div class="field">
-              <label for="fiat" class="label is-small">Fiat restante</label>
+            <label for="fiat" class="label is-small">Fiat restante</label>
+            <div class="field has-addons">
               <div class="control">
                 <input id="fiat" class="input" type="number" v-model.number="remainingFiat"
                        :placeholder="inputsPlaceholder" :disabled="isLoading">
+              </div>
+              <div class="control">
+                <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
               </div>
             </div>
             <p class="is-size-7">Precio máximo: ${{ maxPrice }}</p>
@@ -89,6 +92,12 @@ export default {
     }
   },
   methods: {
+    setMaxFiat () {
+      const url = 'http://localhost:5000/balance/ARS'
+      axios.get(url).then(response => {
+        this.remainingFiat = Number(response.data.balance)
+      })
+    },
     submit () {
       if (this.isLoading) {
         return
