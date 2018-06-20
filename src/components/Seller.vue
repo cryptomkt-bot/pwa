@@ -8,11 +8,14 @@
             <p class="card-header-title">Vendedor</p>
           </header>
           <div class="card-content">
-            <div class="field">
-              <label for="amount" class="label is-small">Cantidad</label>
+            <label for="amount" class="label is-small">Cantidad</label>
+            <div class="field has-addons">
               <div class="control">
                 <input id="amount" class="input" type="number" step="0.0001" v-model.number="remainingAmount"
                        :placeholder="inputsPlaceholder" :disabled="isLoading">
+              </div>
+              <div class="control">
+                <button class="button is-info" @click="setMaxAmount" :disabled="isLoading">Max</button>
               </div>
             </div>
             <div class="field">
@@ -44,8 +47,8 @@ export default {
     return {
       seller: null,
       isModalVisible: false,
-      url: 'http://localhost:5000/seller'
-      updating: false,
+      url: 'http://localhost:5000/seller',
+      updating: false
     }
   },
   computed: {
@@ -82,6 +85,12 @@ export default {
     }
   },
   methods: {
+    setMaxAmount () {
+      const url = 'http://localhost:5000/balance/ETH'
+      axios.get(url).then(response => {
+        this.remainingAmount = Number(response.data.balance)
+      })
+    },
     submit () {
       if (this.isLoading) {
         return
