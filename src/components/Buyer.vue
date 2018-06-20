@@ -9,15 +9,17 @@
           </header>
           <div class="card-content">
             <div class="field">
-              <label for="spread" class="label is-small">Cantidad</label>
+              <label for="amount" class="label is-small">Cantidad</label>
               <div class="control">
-                <input id="spread" class="input" type="number" step="0.0001" v-model.number="buyer.remaining_amount">
+                <input id="amount" class="input" type="number" step="0.0001" v-model.number="remainingAmount"
+                       :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
             </div>
             <div class="field">
-              <label for="spread" class="label is-small">Fiat restante</label>
+              <label for="fiat" class="label is-small">Fiat restante</label>
               <div class="control">
-                <input id="amount" class="input" type="number" v-model.number="buyer.remaining_fiat">
+                <input id="fiat" class="input" type="number" v-model.number="remainingFiat"
+                       :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
             </div>
           </div>
@@ -40,12 +42,34 @@ export default {
   name: 'Buyer',
   data () {
     return {
-      buyer: {
-        remaining_amount: null,
-        remaining_fiat: null
-      },
+      buyer: null,
       isModalVisible: false,
       url: 'http://localhost:5000/buyer'
+      updating: false,
+    }
+  },
+  computed: {
+    isLoading () {
+      return this.updating || this.buyer === null
+    },
+    inputsPlaceholder () {
+      return this.buyer === null ? 'Cargando ...' : ''
+    },
+    remainingAmount: {
+      get () {
+        return this.buyer ? this.buyer.remaining_amount : null
+      },
+      set (newValue) {
+        this.buyer.remaining_amount = newValue
+      }
+    },
+    remainingFiat: {
+      get () {
+        return this.buyer ? this.buyer.remaining_fiat : null
+      },
+      set (newValue) {
+        this.buyer.remaining_fiat = newValue
+      }
     }
   },
   watch: {
@@ -59,14 +83,20 @@ export default {
   },
   methods: {
     submit () {
+      if (this.isLoading) {
+        return
+      }
+      this.updating = true
       axios.patch(this.url, this.buyer).then(() => {
         this.hideModal()
+        this.updating = false
       })
     },
     showModal () {
       this.isModalVisible = true
     },
     hideModal () {
+      this.buyer = null
       this.isModalVisible = false
     }
   }

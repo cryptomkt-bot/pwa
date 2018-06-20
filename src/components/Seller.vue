@@ -9,15 +9,17 @@
           </header>
           <div class="card-content">
             <div class="field">
-              <label for="spread" class="label is-small">Cantidad</label>
+              <label for="amount" class="label is-small">Cantidad</label>
               <div class="control">
-                <input id="spread" class="input" type="number" step="0.0001" v-model.number="seller.remaining_amount">
+                <input id="amount" class="input" type="number" step="0.0001" v-model.number="remainingAmount"
+                       :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
             </div>
             <div class="field">
               <label for="spread" class="label is-small">Spread (%)</label>
               <div class="control">
-                <input id="amount" class="input" type="number" step="0.01" v-model.number="seller.min_spread">
+                <input id="spread" class="input" type="number" step="0.01" v-model.number="minSpread"
+                       :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
             </div>
           </div>
@@ -40,12 +42,34 @@ export default {
   name: 'Seller',
   data () {
     return {
-      seller: {
-        remaining_amount: null,
-        min_spread: null
-      },
+      seller: null,
       isModalVisible: false,
       url: 'http://localhost:5000/seller'
+      updating: false,
+    }
+  },
+  computed: {
+    isLoading () {
+      return this.updating || this.seller === null
+    },
+    inputsPlaceholder () {
+      return this.seller === null ? 'Cargando ...' : ''
+    },
+    remainingAmount: {
+      get () {
+        return this.seller ? this.seller.remaining_amount : null
+      },
+      set (newValue) {
+        this.seller.remaining_amount = newValue
+      }
+    },
+    minSpread: {
+      get () {
+        return this.seller ? this.seller.min_spread : null
+      },
+      set (newValue) {
+        this.seller.min_spread = newValue
+      }
     }
   },
   watch: {
@@ -59,14 +83,20 @@ export default {
   },
   methods: {
     submit () {
+      if (this.isLoading) {
+        return
+      }
+      this.updating = true
       axios.patch(this.url, this.seller).then(() => {
         this.hideModal()
+        this.updating = false
       })
     },
     showModal () {
       this.isModalVisible = true
     },
     hideModal () {
+      this.seller = null
       this.isModalVisible = false
     }
   }
