@@ -11,7 +11,7 @@
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.timestamp">
-          <td>{{ order.timestamp | date }}</td>
+          <td>{{ order.timestamp + '-00:00' | date }}</td>
           <td :class="orderColor(order)">${{ order.price }}</td>
           <td>{{ order.amount | toDecimals(4) }} ETH</td>
         </tr>
