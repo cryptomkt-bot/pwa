@@ -16,7 +16,8 @@
       <span class="icon is-size-6">+</span>
       Abrir orden de mercado
     </button>
-    <button id="logout-button" class="button has-text-danger has-text-weight-bold is-size-7">Salir</button>
+    <button id="logout-button" @click="logout"
+            class="button has-text-danger has-text-weight-bold is-size-7">Salir</button>
   </div>
 </template>
 
@@ -26,6 +27,13 @@ export default {
   data () {
     return {
       isDropdownVisible: false
+    }
+  },
+  methods: {
+    logout () {
+      if (confirm('¿Desea salir?')) {
+        this.$emit('loggedOut')
+      }
     }
   }
 }

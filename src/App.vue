@@ -5,7 +5,7 @@
 
     <!-- Main app -->
     <div v-else>
-      <TopPanel/>
+      <TopPanel @loggedOut="removeToken"/>
       <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
       <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
         Últimas transacciones
@@ -80,6 +80,9 @@ export default {
       axios.defaults.headers.common['Authorization'] = 'JWT ' + token
       callback()
       this.token = token
+    },
+    removeToken () {
+      this.token = null
     }
   }
 }
