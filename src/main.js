@@ -24,6 +24,10 @@ Vue.filter('date', timestamp => {
   })
 })
 
+Vue.filter('localetime', date => {
+  return date.toLocaleTimeString()
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

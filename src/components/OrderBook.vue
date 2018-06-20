@@ -32,6 +32,7 @@
         </tr>
       </tbody>
     </table>
+    <p class="is-size-7" v-if="updatedAt">Actualizado a las: {{ updatedAt | localetime }}</p>
   </div>
 </template>
 
@@ -45,7 +46,8 @@ export default {
     return {
       buyBook: [],
       sellBook: [],
-      intervalId: null
+      intervalId: null,
+      updatedAt: null
     }
   },
   created () {
@@ -93,6 +95,7 @@ export default {
       // Fetch both the buy and sell order books (concurrently)
       return axios.all([buyBookRequest, sellBookRequest])
         .then(axios.spread((buyBookResponse, sellBookResponse) => {
+          this.updatedAt = new Date()
           let buyBook = buyBookResponse.data.data
           let sellBook = sellBookResponse.data.data
           // Add accumulated amount to the books
