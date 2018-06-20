@@ -1,31 +1,38 @@
 <template>
   <div id="app">
-    <TopPanel/>
-    <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
-    <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
-      Últimas transacciones
-      <span class="icon is-pulled-right">
-        <span v-if="isTradesVisible">-</span><span v-else>+</span>
-      </span>
-    </div>
-    <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
-    <div class="section-name has-text-centered" @click="isActiveOrdersVisible = !isActiveOrdersVisible">
-      Órdenes abiertas
-      <span class="icon is-pulled-right">
-        <span v-if="isActiveOrdersVisible">-</span><span v-else>+</span>
-      </span>
-    </div>
-    <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
-    <div id="footer">
-      <Balance @visibilityChanged="areTradersVisible = !$event"/>
-      <Seller v-show="areTradersVisible"/>
-      <Buyer v-show="areTradersVisible"/>
-      <Footer :ask="ask" :bid="bid"/>
+    <!-- Login page -->
+    <Login v-if="!token" @tokenObtained="saveToken"/>
+
+    <!-- Main app -->
+    <div v-else>
+      <TopPanel/>
+      <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
+      <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
+        Últimas transacciones
+        <span class="icon is-pulled-right">
+          <span v-if="isTradesVisible">-</span><span v-else>+</span>
+        </span>
+      </div>
+      <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
+      <div class="section-name has-text-centered" @click="isActiveOrdersVisible = !isActiveOrdersVisible">
+        Órdenes abiertas
+        <span class="icon is-pulled-right">
+          <span v-if="isActiveOrdersVisible">-</span><span v-else>+</span>
+        </span>
+      </div>
+      <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
+      <div id="footer">
+        <Balance @visibilityChanged="areTradersVisible = !$event"/>
+        <Seller v-show="areTradersVisible"/>
+        <Buyer v-show="areTradersVisible"/>
+        <Footer :ask="ask" :bid="bid"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 import 'bulma'
 import ActiveOrders from './components/ActiveOrders'
 import Balance from './components/Balance'
@@ -35,6 +42,7 @@ import Footer from './components/Footer'
 import TopPanel from './components/TopPanel'
 import Trades from './components/Trades'
 import Seller from './components/Seller'
+import Login from './components/Login'
 
 export default {
   name: 'App',
@@ -43,6 +51,7 @@ export default {
     Balance,
     Buyer,
     Footer,
+    Login,
     OrderBook,
     Seller,
     Trades,
@@ -55,7 +64,8 @@ export default {
       activeOrders: [],
       isTradesVisible: false,
       isActiveOrdersVisible: false,
-      areTradersVisible: true
+      areTradersVisible: true,
+      token: null
     }
   },
   methods: {
@@ -65,6 +75,11 @@ export default {
     },
     updateActiveOrders (orders) {
       this.activeOrders = orders
+    },
+    saveToken (token, callback) {
+      axios.defaults.headers.common['Authorization'] = 'JWT ' + token
+      callback()
+      this.token = token
     }
   }
 }
