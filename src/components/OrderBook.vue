@@ -32,7 +32,7 @@
         </tr>
       </tbody>
     </table>
-    <p class="is-size-7" v-if="updatedAt">Actualizado a las: {{ updatedAt | localetime }}</p>
+    <p id="updated-time" class="is-size-7" v-if="updatedAt">Actualizado a las {{ updatedAt | localetime }}</p>
   </div>
 </template>
 
@@ -141,5 +141,9 @@ export default {
   }
   #loading-message {
     line-height: $bodyHeight + 30px;
+  }
+  #updated-time {
+    padding: 2px 4px;
+    background-color: #fafafa;
   }
 </style>
