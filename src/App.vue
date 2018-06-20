@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss">
-  body {
+  #app {
     margin-top: 60px;
     margin-bottom: 120px;
   }
