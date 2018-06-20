@@ -22,6 +22,7 @@
                        :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
             </div>
+            <p class="is-size-7">Precio máximo: ${{ maxPrice }}</p>
           </div>
           <footer class="card-footer">
             <a class="card-footer-item" @click="hideModal">Cancelar</a>
@@ -49,6 +50,12 @@ export default {
     }
   },
   computed: {
+    maxPrice () {
+      if (this.buyer === null || this.remainingAmount === 0) {
+        return 0
+      }
+      return Math.round(this.remainingFiat / this.remainingAmount)
+    },
     isLoading () {
       return this.updating || this.buyer === null
     },
