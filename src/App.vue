@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="is-unselectable">
     <!-- Login page -->
     <Login v-if="!token" @tokenObtained="saveToken"/>
 
