@@ -1,15 +1,13 @@
 <template>
   <table class="table is-fullwidth is-marginless is-size-7">
     <thead>
-    <th>Tipo</th>
     <th>Precio</th>
     <th>Cantidad</th>
     <th>Eliminar</th>
     </thead>
     <tbody>
       <tr v-for="order in orders" :key="order.id">
-        <td>{{ order.type === 'sell' ? 'Venta' : 'Compra' }}</td>
-        <td>${{ order.price }}</td>
+        <td :class="orderColor(order)">${{ order.price }}</td>
         <td>{{ order.amount.remaining | toDecimals(4) }} ETH</td>
         <td>
           <span class="delete is-small" @click="deleteOrder(order.id)"></span>
@@ -54,6 +52,10 @@ export default {
         orderId = response.data.id
         this.orders = this.orders.filter(order => order.id !== orderId)
       })
+    },
+    orderColor (order) {
+      const type = order.type === 'sell' ? 'danger' : 'success'
+      return `has-text-${type}`
     }
   }
 }
