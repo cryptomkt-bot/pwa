@@ -3,7 +3,7 @@
     <div v-if="!sellBook.length || !buyBook.length" class="has-text-centered">
       <span id="loading-message">Cargando ...</span>
     </div>
-    <table v-else id="order-book-table" class="table is-hoverable is-fullwidth is-size-7 is-marginless">
+    <table v-else id="order-book-table" class="table is-fullwidth is-size-7 is-marginless">
       <thead>
         <th>Precio</th>
         <th>Cantidad</th>

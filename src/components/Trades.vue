@@ -3,7 +3,7 @@
     <div v-if="!orders.length" class="has-text-centered">
       <span id="loading-message">Cargando ...</span>
     </div>
-    <table v-else class="table is-hoverable is-fullwidth is-marginless is-size-7">
+    <table v-else class="table is-fullwidth is-marginless is-size-7">
       <thead>
         <th>Fecha</th>
         <th>Precio</th>
