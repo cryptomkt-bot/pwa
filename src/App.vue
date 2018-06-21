@@ -14,6 +14,7 @@
         </span>
       </div>
       <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
+      <!-- Active orders -->
       <div class="section-name has-text-centered" @click="isActiveOrdersVisible = !isActiveOrdersVisible">
         Órdenes abiertas
         <span class="icon is-pulled-right">
@@ -21,6 +22,14 @@
         </span>
       </div>
       <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
+      <!-- Executed orders -->
+      <div class="section-name has-text-centered" @click="isExecutedOrdersVisible = !isExecutedOrdersVisible">
+        Órdenes históricas
+        <span class="icon is-pulled-right">
+          <span v-if="isExecutedOrdersVisible">-</span><span v-else>+</span>
+        </span>
+      </div>
+      <ExecutedOrders v-show="isExecutedOrdersVisible" :isVisible="isExecutedOrdersVisible"/>
       <div id="footer">
         <Balance @visibilityChanged="areTradersVisible = !$event"/>
         <Seller v-show="areTradersVisible"/>
@@ -43,11 +52,13 @@ import TopPanel from './components/TopPanel'
 import Trades from './components/Trades'
 import Seller from './components/Seller'
 import Login from './components/Login'
+import ExecutedOrders from './components/ExecutedOrders'
 
 export default {
   name: 'App',
   components: {
     ActiveOrders,
+    ExecutedOrders,
     Balance,
     Buyer,
     Footer,
@@ -64,6 +75,7 @@ export default {
       activeOrders: [],
       isTradesVisible: false,
       isActiveOrdersVisible: false,
+      isExecutedOrdersVisible: false,
       areTradersVisible: true,
       token: null
     }
