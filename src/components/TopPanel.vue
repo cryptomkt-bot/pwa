@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <button id="open-order" class="button is-success">
+    <button id="open-order" class="button is-success" @click="$emit('openOrderModalOpened')">
       <span class="icon is-size-6">+</span>
       Abrir orden de mercado
     </button>

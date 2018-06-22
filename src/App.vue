@@ -5,7 +5,8 @@
 
     <!-- Main app -->
     <div v-else>
-      <TopPanel @loggedOut="removeToken"/>
+      <OpenOrder v-show="isOpenOrderModalVisible" @close="isOpenOrderModalVisible = false" />
+      <TopPanel @loggedOut="removeToken" @openOrderModalOpened="isOpenOrderModalVisible = true"/>
       <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
       <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
         Últimas transacciones
@@ -46,6 +47,7 @@ import 'bulma'
 import ActiveOrders from './components/ActiveOrders'
 import Balance from './components/Balance'
 import Buyer from './components/Buyer'
+import OpenOrder from './components/OpenOrder'
 import OrderBook from './components/OrderBook'
 import Footer from './components/Footer'
 import TopPanel from './components/TopPanel'
@@ -63,6 +65,7 @@ export default {
     Buyer,
     Footer,
     Login,
+    OpenOrder,
     OrderBook,
     Seller,
     Trades,
@@ -76,6 +79,7 @@ export default {
       isTradesVisible: false,
       isActiveOrdersVisible: false,
       isExecutedOrdersVisible: false,
+      isOpenOrderModalVisible: false,
       areTradersVisible: true,
       token: null
     }
