@@ -7,7 +7,7 @@
           <div class="field">
             <label for="username" class="label">Nombre de usuario</label>
             <div class="control">
-              <input id="username" class="input" type="text" required
+              <input id="username" class="input" type="text" autocapitalize="off" required
                      v-model="username" placeholder="Ingrese su nombre de usuario">
             </div>
           </div>
