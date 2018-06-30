@@ -20,14 +20,14 @@
           </div>
           <div class="field">
             <div class="control">
-              <label for="price" class="label is-size-7">Precio</label>
-              <input id="price" class="input" v-model="order.price" type="number" min="0" step="1">
+              <label for="amount" class="label is-size-7">Cantidad</label>
+              <input id="amount" class="input" v-model.number="order.amount" type="number" min="0" step="0.0001">
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <label for="amount" class="label is-size-7">Cantidad</label>
-              <input id="amount" class="input" v-model="order.amount" type="number" min="0" step="0.0001">
+              <label for="price" class="label is-size-7">Precio</label>
+              <input id="price" class="input" v-model.number="order.price" type="number" min="0" step="1">
             </div>
           </div>
         </div>
@@ -55,14 +55,27 @@ export default {
       }
     }
   },
+  computed: {
+    isOrderValid () {
+      if (this.order.type !== 'buy' && this.order.type !== 'sell') {
+        return false
+      }
+      if (this.order.price <= 0) {
+        return false
+      }
+      if (this.order.amount < 0.0001) {
+        return false
+      }
+      return true
+    }
+  },
   methods: {
     submit () {
-      const order = this.order
-      if (!order.type || !order.price || !order.amount) {
+      if (!this.isOrderValid || !this.confirmOrder()) {
         return
       }
       const url = 'http://localhost:5000/orders'
-      axios.post(url, order).then(() => {
+      axios.post(url, this.order).then(() => {
         this.hideModal()
         this.order = {
           type: 'buy',
@@ -73,6 +86,11 @@ export default {
     },
     hideModal () {
       this.$emit('close')
+    },
+    confirmOrder () {
+      const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender'
+      const msg = `¿Desea ${typeVerb} ${this.order.amount} ETH a $${this.order.price}?`
+      return confirm(msg)
     }
   }
 }
