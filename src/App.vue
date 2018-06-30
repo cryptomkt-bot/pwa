@@ -6,7 +6,7 @@
     <!-- Main app -->
     <div v-else>
       <OpenOrder v-show="isOpenOrderModalVisible" @close="isOpenOrderModalVisible = false" />
-      <TopPanel @loggedOut="removeToken" @openOrderModalOpened="isOpenOrderModalVisible = true"/>
+      <TopPanel @loggedOut="logout" @openOrderModalOpened="isOpenOrderModalVisible = true"/>
       <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
       <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
         Últimas transacciones
@@ -97,7 +97,12 @@ export default {
       callback()
       this.token = token
     },
-    removeToken () {
+    logout () {
+      this.isTradesVisible = false
+      this.isActiveOrdersVisible = false
+      this.isExecutedOrdersVisible = false
+      this.isOpenOrderModalVisible = false
+      this.areTradersVisible = true
       this.token = null
     }
   }
