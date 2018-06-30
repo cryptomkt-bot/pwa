@@ -116,8 +116,7 @@ export default {
   $red: #f44336;
   #seller-modal .modal-content {
     border-top: 6px solid $red;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    border-radius: 4px;
   }
   #seller-button {
     background-color: $red;

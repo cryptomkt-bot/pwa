@@ -123,8 +123,7 @@ export default {
   $green: #4caf50;
   #buyer-modal .modal-content {
     border-top: 6px solid $green;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+    border-radius: 4px;
   }
   #buyer-button {
     background-color: $green;

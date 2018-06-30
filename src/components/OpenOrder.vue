@@ -129,9 +129,8 @@ export default {
 
 <style>
   #open-order-modal .modal-content {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
     border-top: 6px solid;
+    border-radius: 4px;
   }
   .green { border-top-color: #4caf50 !important }
   .red { border-top-color: #f44336 !important }
