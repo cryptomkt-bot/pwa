@@ -48,12 +48,11 @@ export default {
   name: 'OpenOrder',
   data () {
     return {
-      order: {
-        type: 'buy',
-        price: null,
-        amount: null
-      }
+      order: null
     }
+  },
+  created () {
+    this.initialize()
   },
   computed: {
     isOrderValid () {
@@ -70,6 +69,13 @@ export default {
     }
   },
   methods: {
+    initialize () {
+      this.order = {
+        type: 'buy',
+        price: null,
+        amount: null
+      }
+    },
     submit () {
       if (!this.isOrderValid || !this.confirmOrder()) {
         return
@@ -86,6 +92,7 @@ export default {
     },
     hideModal () {
       this.$emit('close')
+      this.initialize()
     },
     confirmOrder () {
       const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender'
