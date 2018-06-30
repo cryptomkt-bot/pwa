@@ -3,7 +3,7 @@
     <h1 class="title has-text-centered">Iniciar sesión</h1>
     <div class="section">
       <div class="card">
-        <div class="card-content">
+        <form class="card-content" @submit.prevent="login">
           <div class="field">
             <label for="username" class="label">Nombre de usuario</label>
             <div class="control">
@@ -20,11 +20,11 @@
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-primary is-fullwidth" @click="login"
+              <button class="button is-primary is-fullwidth"
                       :disabled="!this.username || !this.password">Iniciar sesión</button>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
