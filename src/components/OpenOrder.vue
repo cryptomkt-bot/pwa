@@ -18,10 +18,13 @@
               </div>
             </div>
           </div>
-          <div class="field">
+          <label for="amount" class="label is-small">Cantidad</label>
+          <div class="field has-addons">
             <div class="control">
-              <label for="amount" class="label is-size-7">Cantidad</label>
               <input id="amount" class="input" v-model.number="order.amount" type="number" min="0" step="0.0001">
+            </div>
+            <div class="control">
+              <button class="button is-info" @click="setMaxAmount">Max</button>
             </div>
           </div>
           <div class="field">
@@ -75,6 +78,18 @@ export default {
         price: null,
         amount: null
       }
+    },
+    setMaxAmount () {
+      let amount
+      const asset = this.order.type === 'sell' ? 'ETH' : 'ARS'
+      const url = `http://localhost:5000/balance/${asset}`
+      axios.get(url).then(response => {
+        amount = Number(response.data.available)
+        if (this.order.type === 'buy' && this.order.price > 0) {
+          amount = amount / this.order.price
+        }
+        this.order.amount = amount
+      })
     },
     submit () {
       if (!this.isOrderValid || !this.confirmOrder()) {
