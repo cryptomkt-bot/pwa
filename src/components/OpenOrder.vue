@@ -33,6 +33,7 @@
               <input id="price" class="input" v-model.number="order.price" type="number" min="0" step="1">
             </div>
           </div>
+          <p class="is-size-7">{{ infoMessage }}</p>
         </div>
         <footer class="card-footer">
           <a class="card-footer-item" @click="hideModal">Cancelar</a>
@@ -69,6 +70,14 @@ export default {
         return false
       }
       return true
+    },
+    infoMessage () {
+      const amount = this.order.amount * this.order.price
+      if (this.order.type === 'buy') {
+        return `Gastando $${amount}`
+      } else {
+        return `Recibirás $${amount} (menos comisión)`
+      }
     }
   },
   methods: {
