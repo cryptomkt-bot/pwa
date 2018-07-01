@@ -5,7 +5,7 @@ export default class ApiService {
     const baseIp = ip !== null ? ip : localStorage.getItem('ip')
     const basePort = port !== null ? port : localStorage.getItem('port')
     this.axios = axios.create({
-      baseURL: `http://${baseIp}:${basePort}` // TODO: Don't hardcode the protocol
+      baseURL: `https://${baseIp}:${basePort}`
     })
     const token = localStorage.getItem('token')
     this.setToken(token)
