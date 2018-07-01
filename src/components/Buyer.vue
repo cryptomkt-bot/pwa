@@ -40,16 +40,17 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 
 export default {
   name: 'Buyer',
   data () {
     return {
+      api: new ApiService(),
+      endpoint: '/buyer',
       buyer: null,
       isModalVisible: false,
-      url: 'http://localhost:5000/buyer'
-      updating: false,
+      updating: false
     }
   },
   computed: {
@@ -85,7 +86,7 @@ export default {
   watch: {
     isModalVisible (newValue) {
       if (newValue === true) {
-        axios.get(this.url).then(response => {
+        this.api.get(this.endpoint).then(response => {
           this.buyer = response.data
         })
       }
@@ -93,8 +94,7 @@ export default {
   },
   methods: {
     setMaxFiat () {
-      const url = 'http://localhost:5000/balance/ARS'
-      axios.get(url).then(response => {
+      this.api.get('/balance/ARS').then(response => {
         this.remainingFiat = Number(response.data.balance)
       })
     },
@@ -103,7 +103,7 @@ export default {
         return
       }
       this.updating = true
-      axios.patch(this.url, this.buyer).then(() => {
+      this.api.patch(this.endpoint, this.buyer).then(() => {
         this.hideModal()
         this.updating = false
       })

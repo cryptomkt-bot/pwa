@@ -46,12 +46,13 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 
 export default {
   name: 'OpenOrder',
   data () {
     return {
+      api: new ApiService(),
       order: null
     }
   },
@@ -91,8 +92,8 @@ export default {
     setMaxAmount () {
       let amount
       const asset = this.order.type === 'sell' ? 'ETH' : 'ARS'
-      const url = `http://localhost:5000/balance/${asset}`
-      axios.get(url).then(response => {
+      const endpoint = `/balance/${asset}`
+      this.api.get(endpoint).then(response => {
         amount = Number(response.data.available)
         if (this.order.type === 'buy' && this.order.price > 0) {
           amount = amount / this.order.price
@@ -104,8 +105,7 @@ export default {
       if (!this.isOrderValid || !this.confirmOrder()) {
         return
       }
-      const url = 'http://localhost:5000/orders'
-      axios.post(url, this.order).then(() => {
+      this.api.post('/orders', this.order).then(() => {
         this.hideModal()
         this.order = {
           type: 'buy',

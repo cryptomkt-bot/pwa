@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="is-unselectable">
     <!-- Login page -->
-    <Login v-if="!token" @tokenObtained="saveToken"/>
+    <Login v-if="!isLogged" @loggedIn="isLogged = true"/>
 
     <!-- Main app -->
     <div v-else>
@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import 'bulma'
 import ActiveOrders from './components/ActiveOrders'
 import Balance from './components/Balance'
@@ -73,6 +72,7 @@ export default {
   },
   data () {
     return {
+      isLogged: false,
       ask: 0,
       bid: 0,
       activeOrders: [],
@@ -80,8 +80,7 @@ export default {
       isActiveOrdersVisible: false,
       isExecutedOrdersVisible: false,
       isOpenOrderModalVisible: false,
-      areTradersVisible: true,
-      token: null
+      areTradersVisible: true
     }
   },
   methods: {
@@ -92,18 +91,13 @@ export default {
     updateActiveOrders (orders) {
       this.activeOrders = orders
     },
-    saveToken (token, callback) {
-      axios.defaults.headers.common['Authorization'] = 'JWT ' + token
-      callback()
-      this.token = token
-    },
     logout () {
+      this.isLogged = false
       this.isTradesVisible = false
       this.isActiveOrdersVisible = false
       this.isExecutedOrdersVisible = false
       this.isOpenOrderModalVisible = false
       this.areTradersVisible = true
-      this.token = null
     }
   }
 }

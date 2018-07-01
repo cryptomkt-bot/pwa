@@ -21,13 +21,14 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 
 export default {
   name: 'ExecutedOrders',
   props: ['isVisible'],
   data () {
     return {
+      api: new ApiService(),
       orders: [],
       intervalId: null
     }
@@ -48,8 +49,7 @@ export default {
   },
   methods: {
     getOrders () {
-      const url = 'http://localhost:5000/orders/executed'
-      axios.get(url).then(response => {
+      this.api.get('/orders/executed').then(response => {
         this.orders = response.data
       })
     },

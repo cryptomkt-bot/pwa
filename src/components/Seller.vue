@@ -39,15 +39,16 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 
 export default {
   name: 'Seller',
   data () {
     return {
+      api: new ApiService(),
+      endpoint: '/seller',
       seller: null,
       isModalVisible: false,
-      url: 'http://localhost:5000/seller',
       updating: false
     }
   },
@@ -78,7 +79,7 @@ export default {
   watch: {
     isModalVisible (newValue) {
       if (newValue === true) {
-        axios.get(this.url).then(response => {
+        this.api.get(this.endpoint).then(response => {
           this.seller = response.data
         })
       }
@@ -86,8 +87,7 @@ export default {
   },
   methods: {
     setMaxAmount () {
-      const url = 'http://localhost:5000/balance/ETH'
-      axios.get(url).then(response => {
+      this.api.get('/balance/ETH').then(response => {
         this.remainingAmount = Number(response.data.balance)
       })
     },
@@ -96,7 +96,7 @@ export default {
         return
       }
       this.updating = true
-      axios.patch(this.url, this.seller).then(() => {
+      this.api.patch(this.endpoint, this.seller).then(() => {
         this.hideModal()
         this.updating = false
       })

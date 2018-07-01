@@ -18,12 +18,13 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 
 export default {
   name: 'ActiveOrders',
   data () {
     return {
+      api: new ApiService(),
       orders: [],
       intervalId: null
     }
@@ -37,8 +38,7 @@ export default {
   },
   methods: {
     getOrders () {
-      const url = 'http://localhost:5000/orders/active'
-      axios.get(url).then(response => {
+      this.api.get('/orders/active').then(response => {
         this.orders = response.data
         this.$emit('ordersUpdated', this.orders)
       })
@@ -47,8 +47,8 @@ export default {
       if (!confirm('¿Estás seguro?')) {
         return
       }
-      const url = `http://localhost:5000/orders/${orderId}` // TODO: Update url
-      axios.delete(url).then(response => {
+      const endpoint = `/orders/${orderId}`
+      this.api.delete(endpoint).then(response => {
         orderId = response.data.id
         this.orders = this.orders.filter(order => order.id !== orderId)
       })

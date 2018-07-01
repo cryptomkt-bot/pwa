@@ -29,12 +29,13 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 
 export default {
   name: 'Balance',
   data () {
     return {
+      api: new ApiService(),
       isContentVisible: false,
       balances: []
     }
@@ -52,8 +53,7 @@ export default {
   },
   methods: {
     getBalances () {
-      const url = 'http://localhost:5000/balance'
-      axios.get(url).then(response => {
+      this.api.get('/balance').then(response => {
         this.balances = response.data
       })
     }

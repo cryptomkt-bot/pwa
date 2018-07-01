@@ -1,9 +1,23 @@
 <template>
   <div>
-    <h1 class="title has-text-centered">Iniciar sesión</h1>
+    <h1 class="title has-text-centered is-marginless">Iniciar sesión</h1>
     <div class="section">
       <div class="card">
         <form class="card-content" @submit.prevent="login">
+          <div class="field">
+            <label for="ip" class="label">IP</label>
+            <div class="control">
+              <input id="ip" class="input" type="text" required
+                     v-model="ip" placeholder="Ingrese la IP de la API">
+            </div>
+          </div>
+          <div class="field">
+            <label for="port" class="label">Puerto</label>
+            <div class="control">
+              <input id="port" class="input" type="number" required
+                     v-model="port" placeholder="Ingrese el puerto">
+            </div>
+          </div>
           <div class="field">
             <label for="username" class="label">Nombre de usuario</label>
             <div class="control">
@@ -31,30 +45,47 @@
 </template>
 
 <script>
-import axios from 'axios'
+import ApiService from '../services/ApiService'
 
 export default {
   name: 'Login',
   data () {
     return {
+      ip: null,
+      port: null,
       username: '',
       password: ''
     }
   },
+  created () {
+    this.restoreFromStorage()
+  },
   methods: {
     login () {
-      const url = 'http://localhost:5000/auth'
-      axios.post(url, {
+      this.saveToStorage()
+      const api = new ApiService()
+      api.post('/auth', {
         username: this.username,
         password: this.password
       }).then(response => {
         const token = response.data.access_token
-        this.$emit('tokenObtained', token, () => {
-          axios.post('http://localhost:5000/start') // Start traders callback
-        })
+        localStorage.setItem('token', token) // Save token to storage
+        this.$emit('loggedIn')
+        api.setToken(token)
+        api.post('/start')
       }).catch(() => {
         alert('Usuario o contraseña incorrecta.')
       })
+    },
+    saveToStorage () {
+      localStorage.setItem('ip', this.ip)
+      localStorage.setItem('port', this.port)
+      localStorage.setItem('username', this.username)
+    },
+    restoreFromStorage () {
+      this.ip = localStorage.getItem('ip')
+      this.port = localStorage.getItem('port')
+      this.username = localStorage.getItem('username')
     }
   }
 }
