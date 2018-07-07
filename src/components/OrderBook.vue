@@ -69,7 +69,7 @@ export default {
       return this.sellBook.length ? Number(this.sellBook[0]['price']) : 0
     },
     bid () {
-      return this.sellBook.length ? Number(this.buyBook[0]['price']) : 0
+      return this.buyBook.length ? Number(this.buyBook[0]['price']) : 0
     },
     spread () {
       return this.ask - this.bid
