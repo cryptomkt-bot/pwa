@@ -1,32 +1,56 @@
 <template>
   <div>
+    <!-- Modal -->
     <div id="buyer-modal" class="modal" :class="{'is-active': isModalVisible}">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="card">
+          <!-- Title -->
           <header class="card-header">
             <p class="card-header-title">Comprador</p>
           </header>
+
+          <!-- Body -->
           <div class="card-content">
-            <div class="field">
-              <label for="amount" class="label is-small">Cantidad</label>
+            <!-- Amount -->
+            <label for="amount" class="label is-small">Cantidad</label>
+            <div class="field has-addons">
               <div class="control">
-                <input id="amount" class="input" type="number" step="0.0001" v-model.number="remainingAmount"
-                       :placeholder="inputsPlaceholder" :disabled="isLoading">
+                <span class="button is-static" :disabled="isLoading">{{ currentMarket.baseCurrency.code }}</span>
+              </div>
+              <div class="control">
+                <input id="amount" class="input" type="number" v-model.number="remainingAmount"
+                       :step="currentMarket.baseCurrency.step" :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
             </div>
+
+            <!-- Fiat -->
             <label for="fiat" class="label is-small">Fiat restante</label>
             <div class="field has-addons">
+              <!-- Prefix -->
+              <div class="control" v-if="currentMarket.quoteCurrency.prefix">
+                <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.prefix }}</span>
+              </div>
+              <div class="control" v-else>
+                <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
+              </div>
+              <!-- Input -->
               <div class="control">
                 <input id="fiat" class="input" type="number" v-model.number="remainingFiat"
                        :placeholder="inputsPlaceholder" :disabled="isLoading">
               </div>
-              <div class="control">
+              <!-- Postfix -->
+              <div class="control" v-if="currentMarket.quoteCurrency.postfix">
+                <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.postfix }}</span>
+              </div>
+              <div class="control" v-else>
                 <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
               </div>
             </div>
             <p class="is-size-7">Precio máximo: ${{ maxPrice }}</p>
           </div>
+
+          <!-- Action buttons -->
           <footer class="card-footer">
             <a class="card-footer-item" @click="hideModal">Cancelar</a>
             <a class="card-footer-item" @click="submit">Actualizar</a>
@@ -35,6 +59,7 @@
       </div>
       <button class="modal-close is-large" aria-label="close" @click="hideModal"></button>
     </div>
+    <!--/ End modal -->
     <div id="buyer-button" class="button is-rounded has-text-weight-bold" @click="showModal">C</div>
   </div>
 </template>
@@ -47,13 +72,18 @@ export default {
   data () {
     return {
       api: new ApiService(),
-      endpoint: '/buyer',
       buyer: null,
       isModalVisible: false,
       updating: false
     }
   },
   computed: {
+    currentMarket () {
+      return this.$store.state.currentMarket
+    },
+    endpoint () {
+      return `buyer/${this.currentMarket.code}`
+    },
     maxPrice () {
       if (this.buyer === null || this.remainingAmount === 0) {
         return 0
@@ -94,7 +124,8 @@ export default {
   },
   methods: {
     setMaxFiat () {
-      this.api.get('/balance/ARS').then(response => {
+      const url = `/balance/${this.currentMarket.quoteCurrency.code}`
+      this.api.get(url).then(response => {
         this.remainingFiat = Number(response.data.balance)
       })
     },

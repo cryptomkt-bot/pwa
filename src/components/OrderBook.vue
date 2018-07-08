@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!sellBook.length || !buyBook.length" class="has-text-centered">
+    <div v-if="!market || !sellBook.length || !buyBook.length" class="has-text-centered">
       <span id="loading-message">Cargando ...</span>
     </div>
     <table v-else id="order-book-table" class="table is-fullwidth is-size-7 is-marginless">
@@ -13,22 +13,22 @@
         <!-- Sell book -->
         <tr v-for="order in [...sellBook].reverse()" :key="order.timestamp"
             :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
-          <td class="has-text-danger">${{ order.price }}</td>
-          <td>{{ order.amount | toDecimals(4) }} ETH</td>
-          <td>{{ order.accumulated | toDecimals(4) }} ETH</td>
+          <td class="has-text-danger">{{ formatAmount(order.price, market.quoteCurrency) }}</td>
+          <td>{{ formatAmount(order.amount, market.baseCurrency) }}</td>
+          <td>{{ formatAmount(order.accumulated, market.baseCurrency) }}</td>
         </tr>
         <!-- Spread -->
         <tr id="spread-row">
-          <td>${{ spread }} ({{ spreadPercentage }}%)</td>
+          <td>{{ formattedSpread }}</td>
           <td></td>
           <td>Spread</td>
         </tr>
         <!-- Buy book -->
         <tr v-for="order in buyBook" :key="order.timestamp"
             :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
-          <td class="has-text-success">${{ order.price }}</td>
-          <td>{{ order.amount | toDecimals(4) }} ETH</td>
-          <td>{{ order.accumulated | toDecimals(4) }} ETH</td>
+          <td class="has-text-success">{{ formatAmount(order.price, market.quoteCurrency) }}</td>
+          <td>{{ formatAmount(order.amount, market.baseCurrency) }}</td>
+          <td>{{ formatAmount(order.accumulated, market.baseCurrency) }}</td>
         </tr>
       </tbody>
     </table>
@@ -38,12 +38,14 @@
 
 <script>
 import axios from 'axios'
+import { formatAmount, toDecimals } from '../utils'
 
 export default {
   name: 'OrderBook',
   props: ['activeOrders'],
   data () {
     return {
+      market: null,
       buyBook: [],
       sellBook: [],
       intervalId: null,
@@ -51,20 +53,15 @@ export default {
     }
   },
   created () {
-    this.getBooks().then(() => { // Get the order books
-      // Center the order book
-      let target = document.getElementById('spread-row')
-      for (let i = 0; i < 4; i++) {
-        target = target.previousElementSibling
-      }
-      target.scrollIntoView()
-    })
-    this.intervalId = setInterval(this.getBooks, 10000) // Update books every 10 secs
+    this.init(this.currentMarket)
   },
   destroyed () {
     clearInterval(this.intervalId)
   },
   computed: {
+    currentMarket () {
+      return this.$store.state.currentMarket
+    },
     ask () {
       return this.sellBook.length ? Number(this.sellBook[0]['price']) : 0
     },
@@ -73,6 +70,11 @@ export default {
     },
     spread () {
       return this.ask - this.bid
+    },
+    formattedSpread () {
+      const currency = this.market.quoteCurrency
+      const spread = toDecimals(this.spread, currency.decimals)
+      return `${currency.prefix}${spread} ${currency.postfix} (${this.spreadPercentage}%)`
     },
     spreadPercentage () {
       let spreadPercentage = (this.spread / this.ask) * 100
@@ -83,13 +85,24 @@ export default {
     }
   },
   methods: {
-    getBooks () {
-      const url = 'https://api.cryptomkt.com/v1/book?market=ETHARS'
+    init (market) {
+      this.market = null
+      this.getBooks(market).then(() => { // Get the order books
+        this.market = market
+        setTimeout(this.centerBook, 500) // Center book
+      })
+      clearInterval(this.intervalId)
+      this.intervalId = setInterval(() => {
+        this.getBooks(market)
+      }, 10000) // Update books every 10 secs
+    },
+    getBooks (market) {
+      const url = 'https://api.cryptomkt.com/v1/book'
       const sellBookRequest = axios.get(url, {
-        params: { type: 'sell' }
+        params: { market: market.code, type: 'sell' }
       })
       const buyBookRequest = axios.get(url, {
-        params: { type: 'buy' }
+        params: { market: market.code, type: 'buy' }
       })
 
       // Fetch both the buy and sell order books (concurrently)
@@ -114,6 +127,19 @@ export default {
         accumulated += Number(order.amount)
         order.accumulated = accumulated
       }
+    },
+    centerBook () {
+      let target = document.getElementById('spread-row')
+      for (let i = 0; i < 4; i++) {
+        target = target.previousElementSibling
+      }
+      target.scrollIntoView()
+    },
+    formatAmount
+  },
+  watch: {
+    currentMarket (newMarket) {
+      this.init(newMarket)
     }
   }
 }

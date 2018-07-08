@@ -1,18 +1,14 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 import App from './App'
+
+import { toDecimals } from './utils'
 
 Vue.config.productionTip = false
 
-Vue.filter('toDecimals', (number, decimals) => {
-  /** Filter to truncate a number to a given number of decimals **/
-  number = number.toString() // It needs to be a string
-  const decimalPointI = number.indexOf('.')
-  if (decimalPointI === -1) { // The number has no decimal part
-    return number
-  }
-  const i = decimalPointI + 1
-  return number.slice(0, i) + number.substr(i, decimals)
-})
+Vue.use(Vuex)
+
+Vue.filter('toDecimals', toDecimals)
 
 Vue.filter('date', timestamp => {
   const date = new Date(timestamp)
@@ -28,8 +24,21 @@ Vue.filter('localetime', date => {
   return date.toLocaleTimeString()
 })
 
+const store = new Vuex.Store({
+  state: {
+    currentMarket: JSON.parse(localStorage.getItem('currentMarket'))
+  },
+  mutations: {
+    changeMarket (state, market) {
+      state.currentMarket = market
+      localStorage.setItem('currentMarket', JSON.stringify(market))
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   render: h => h(App)
 })

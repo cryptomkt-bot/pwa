@@ -15,8 +15,8 @@ export default class ApiService {
     this.axios.defaults.headers.common['Authorization'] = `JWT ${token}`
   }
 
-  get (endpoint) {
-    return this.axios.get(endpoint)
+  get (endpoint, params = null) {
+    return this.axios.get(endpoint, { params })
   }
 
   post (endpoint, data) {

@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div v-if="!orders.length" class="has-text-centered">
+    <div v-if="!market" class="has-text-centered">
       <span id="loading-message">Cargando ...</span>
     </div>
+    <span v-else-if="!orders.length" class="is-size-7">Ninguna órden.</span>
     <table v-else class="table is-fullwidth is-marginless is-size-7">
       <thead>
         <th>Fecha</th>
@@ -12,8 +13,8 @@
       <tbody>
         <tr v-for="order in orders" :key="order.executed_at">
           <td>{{ order.executed_at + '-00:00' | date }}</td>
-          <td :class="orderColor(order)">${{ order.execution_price }}</td>
-          <td>{{ order.amount.executed | toDecimals(4) }} ETH</td>
+          <td :class="orderColor(order)">{{ formatAmount(order.execution_price, market.quoteCurrency) }}</td>
+          <td>{{ formatAmount(order.amount.executed, market.baseCurrency) }}</td>
         </tr>
       </tbody>
     </table>
@@ -22,12 +23,14 @@
 
 <script>
 import ApiService from '../services/ApiService'
+import { formatAmount } from '../utils'
 
 export default {
   name: 'ExecutedOrders',
   props: ['isVisible'],
   data () {
     return {
+      market: null,
       api: new ApiService(),
       orders: [],
       intervalId: null
@@ -39,24 +42,46 @@ export default {
   watch: {
     isVisible (newValue) {
       if (newValue === true) { // The component is visible
-        this.getOrders() // Get latest orders
-        this.intervalId = setInterval(this.getOrders, 10000) // Update trades every 10 secs
+        this.init(this.currentMarket)
       } else { // The component gets hidden
         this.orders = []
         clearInterval(this.intervalId) // Stop updating the orders
       }
+    },
+    currentMarket (newMarket) {
+      this.init(newMarket)
+    }
+  },
+  computed: {
+    currentMarket () {
+      return this.$store.state.currentMarket
     }
   },
   methods: {
-    getOrders () {
-      this.api.get('/orders/executed').then(response => {
-        this.orders = response.data
+    init (market) {
+      this.market = null
+      this.getOrders().then(orders => {
+        this.orders = orders
+        this.market = market
+        clearInterval(this.intervalId)
+        this.intervalId = setInterval(() => {
+          this.getOrders(market).then(orders => {
+            this.orders = orders
+          })
+        }, 10000)
       })
+    },
+    getOrders () {
+      const params = { market: this.currentMarket.code }
+      return this.api.get('/orders/executed', params).then(
+        response => new Promise(resolve => resolve(response.data))
+      )
     },
     orderColor (order) {
       const type = order.type === 'sell' ? 'danger' : 'success'
       return `has-text-${type}`
-    }
+    },
+    formatAmount
   }
 }
 </script>

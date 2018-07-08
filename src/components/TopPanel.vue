@@ -1,20 +1,15 @@
 <template>
   <div id="top-panel">
-    <div id="market-dropdown" class="dropdown" :class="{'is-active': isDropdownVisible }">
-      <div class="dropdown-trigger">
-        <button id="market-button" class="button has-text-weight-bold"
-                @click="isDropdownVisible = !isDropdownVisible">ETHARS</button>
-      </div>
-      <div class="dropdown-menu">
-        <div class="dropdown-content">
-          <a class="dropdown-item">BTCARS</a>
-          <a class="dropdown-item">XLMARS</a>
-        </div>
-      </div>
+    <div id="market-select" class="select">
+      <select v-model="currentMarket">
+        <optgroup v-for="country in countries" :key="country" :label="country">
+          <option v-for="market in markets[country]" :key="market.code" :value="market"
+                  :selected="market.code === currentMarket.code">{{ market.code }}</option>
+        </optgroup>
+      </select>
     </div>
-    <button id="open-order" class="button is-success" @click="$emit('openOrderModalOpened')">
-      <span class="icon is-size-6">+</span>
-      Abrir orden de mercado
+    <button id="open-order" class="button is-success is-size-6" @click="$emit('openOrderModalOpened')">
+      <span class="icon">+</span> Abrir orden
     </button>
     <button id="logout-button" @click="logout"
             class="button has-text-danger has-text-weight-bold is-size-7">Salir</button>
@@ -22,14 +17,38 @@
 </template>
 
 <script>
+import {countries, markets} from '../constants'
+
 export default {
   name: 'TopPanel',
   data () {
     return {
+      countries: [],
+      markets: [],
       isDropdownVisible: false
     }
   },
+  created () {
+    this.countries = countries
+    this.markets = markets
+  },
+  computed: {
+    currentMarket: {
+      get () {
+        return this.$store.state.currentMarket
+      },
+      set (newValue) {
+        this.$store.commit('changeMarket', newValue)
+      }
+    },
+    otherMarkets () {
+      return this.markets.filter(market => market.code !== this.currentMarket.code)
+    }
+  },
   methods: {
+    changeMarket (market) {
+      this.$store.commit('changeMarket', market)
+    },
     logout () {
       if (confirm('¿Desea salir?')) {
         this.$emit('loggedOut')
@@ -41,33 +60,36 @@ export default {
 
 <style lang="scss">
   $cryptoMktColor: #677ae4;
+  $panelHeight: 50px;
 
   #top-panel {
     width: 100%;
+    height: 50px;
     position: fixed;
     top: 0;
     box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
     .button {
       border-radius: 0;
-      height: 50px;
+      height: $panelHeight;
     }
   }
-  #market-dropdown, #open-order, #logout-button {
+  #open-order, #logout-button {
     float: left;
     display: inline-block;
   }
-  #market-dropdown {
-    width: 25%;
-    background-color: $cryptoMktColor;
-  }
-  #market-button {
-    border: 0;
-    background-color: $cryptoMktColor;
-    color: #fff;
+  #market-select {
+    float: left;
+    width: 35%;
+    height: $panelHeight;
+    select {
+      border: 0;
+      border-radius: 0;
+      height: $panelHeight;
+    }
   }
   #open-order {
     font-size: 0.9rem;
-    width: 60%;
+    width: 50%;
   }
   #logout-button {
     width: 15%;

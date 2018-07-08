@@ -1,6 +1,6 @@
 <template>
   <div id="footer-content" class="has-text-centered">
-    <span>ETHARS</span>
+    <span>{{ currentMarket.code }}</span>
     <div class="price has-text-centered">
       <div class="price-label has-text-weight-light">venta</div>
       <div>${{ bid }}</div>
@@ -15,7 +15,12 @@
 <script>
 export default {
   name: 'Footer',
-  props: ['ask', 'bid']
+  props: ['ask', 'bid'],
+  computed: {
+    currentMarket () {
+      return this.$store.state.currentMarket
+    }
+  }
 }
 </script>
 

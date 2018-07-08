@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!orders.length" class="has-text-centered">
+    <div v-if="!market" class="has-text-centered">
       <span id="loading-message">Cargando ...</span>
     </div>
     <table v-else class="table is-fullwidth is-marginless is-size-7">
@@ -12,8 +12,8 @@
       <tbody>
         <tr v-for="order in orders" :key="order.timestamp">
           <td>{{ order.timestamp + '-00:00' | date }}</td>
-          <td :class="orderColor(order)">${{ order.price }}</td>
-          <td>{{ order.amount | toDecimals(4) }} ETH</td>
+          <td :class="orderColor(order)">{{ formatAmount(order.price, currentMarket.quoteCurrency) }}</td>
+          <td>{{ formatAmount(order.amount, currentMarket.baseCurrency) }}</td>
         </tr>
       </tbody>
     </table>
@@ -22,12 +22,14 @@
 
 <script>
 import axios from 'axios'
+import { formatAmount } from '../utils'
 
 export default {
   name: 'Trades',
   props: ['isVisible'],
   data () {
     return {
+      market: null,
       orders: [],
       intervalId: null
     }
@@ -35,28 +37,50 @@ export default {
   destroyed () {
     clearInterval(this.intervalId)
   },
+  computed: {
+    currentMarket () {
+      return this.$store.state.currentMarket
+    }
+  },
   watch: {
     isVisible (newValue) {
       if (newValue === true) { // The component is visible
-        this.getOrders() // Get latest orders
-        this.intervalId = setInterval(this.getOrders, 10000) // Update trades every 10 secs
+        this.init(this.currentMarket) // Get latest orders
       } else { // The component gets hidden
         this.orders = []
         clearInterval(this.intervalId) // Stop updating the orders
       }
+    },
+    currentMarket (newMarket) {
+      this.init(newMarket)
     }
   },
   methods: {
-    getOrders () {
-      const url = 'https://api.cryptomkt.com/v1/trades?market=ETHARS'
-      axios.get(url).then(response => {
-        this.orders = response.data.data
+    init (market) {
+      this.market = null
+      this.getOrders().then(orders => {
+        this.orders = orders
+        this.market = market
+        clearInterval(this.intervalId) // Stop updating the orders
+        this.intervalId = setInterval(() => {
+          this.getOrders(market).then(orders => {
+            this.orders = orders
+          })
+        }, 10000) // Update trades every 10 secs
       })
+    },
+    getOrders () {
+      const url = 'https://api.cryptomkt.com/v1/trades'
+      const params = { market: this.currentMarket.code }
+      return axios.get(url, { params }).then(
+        response => new Promise(resolve => resolve(response.data.data))
+      )
     },
     orderColor (order) {
       const type = order.market_taker === 'sell' ? 'danger' : 'success'
       return `has-text-${type}`
-    }
+    },
+    formatAmount
   }
 }
 </script>

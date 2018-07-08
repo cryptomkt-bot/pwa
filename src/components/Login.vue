@@ -72,7 +72,6 @@ export default {
         localStorage.setItem('token', token) // Save token to storage
         this.$emit('loggedIn')
         api.setToken(token)
-        api.post('/start')
       }).catch(() => {
         alert('Usuario o contraseña incorrecta.')
       })
