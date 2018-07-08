@@ -1,5 +1,5 @@
 <template>
-  <div id="footer-content">
+  <div id="footer-content" class="has-text-centered">
     <span>ETHARS</span>
     <div class="price has-text-centered">
       <div class="price-label has-text-weight-light">venta</div>
@@ -25,7 +25,7 @@ export default {
     background-color: #677ae4;
     color: #fff;
     font-size: 1.2rem;
-    padding: 16px 60px 16px 60px;
+    padding: 16px 0;
     height: $height;
     line-height: $height / 2;
     position: relative;
