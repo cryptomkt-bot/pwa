@@ -22,16 +22,15 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService'
 import { formatAmount } from '../utils'
 
 export default {
   name: 'ExecutedOrders',
+  dependencies: ['apiService'],
   props: ['isVisible'],
   data () {
     return {
       market: null,
-      api: new ApiService(),
       orders: [],
       intervalId: null
     }
@@ -73,7 +72,7 @@ export default {
     },
     getOrders () {
       const params = { market: this.currentMarket.code }
-      return this.api.get('/orders/executed', params).then(
+      return this.apiService.get('/orders/executed', params).then(
         response => new Promise(resolve => resolve(response.data))
       )
     },

@@ -29,13 +29,11 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService'
-
 export default {
   name: 'Balance',
+  dependencies: ['apiService'],
   data () {
     return {
-      api: new ApiService(),
       isContentVisible: false,
       balances: []
     }
@@ -53,7 +51,7 @@ export default {
   },
   methods: {
     getBalances () {
-      this.api.get('/balance').then(response => {
+      this.apiService.get('/balance').then(response => {
         this.balances = response.data
       })
     }

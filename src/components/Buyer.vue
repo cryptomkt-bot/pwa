@@ -65,13 +65,11 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService'
-
 export default {
   name: 'Buyer',
+  dependencies: ['apiService'],
   data () {
     return {
-      api: new ApiService(),
       buyer: null,
       isModalVisible: false,
       updating: false
@@ -116,7 +114,7 @@ export default {
   watch: {
     isModalVisible (newValue) {
       if (newValue === true) {
-        this.api.get(this.endpoint).then(response => {
+        this.apiService.get(this.endpoint).then(response => {
           this.buyer = response.data
         })
       }
@@ -125,7 +123,7 @@ export default {
   methods: {
     setMaxFiat () {
       const url = `/balance/${this.currentMarket.quoteCurrency.code}`
-      this.api.get(url).then(response => {
+      this.apiService.get(url).then(response => {
         this.remainingFiat = Number(response.data.balance)
       })
     },
@@ -134,7 +132,7 @@ export default {
         return
       }
       this.updating = true
-      this.api.patch(this.endpoint, this.buyer).then(() => {
+      this.apiService.patch(this.endpoint, this.buyer).then(() => {
         this.hideModal()
         this.updating = false
       })

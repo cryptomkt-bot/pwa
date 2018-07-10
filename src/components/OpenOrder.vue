@@ -74,14 +74,13 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService'
 import { formatAmount } from '../utils'
 
 export default {
   name: 'OpenOrder',
+  dependencies: ['apiService'],
   data () {
     return {
-      api: new ApiService(),
       order: null
     }
   },
@@ -130,7 +129,7 @@ export default {
         currency = this.currentMarket.quoteCurrency
       }
       const endpoint = `/balance/${currency.code}`
-      this.api.get(endpoint).then(response => {
+      this.apiService.get(endpoint).then(response => {
         amount = Number(response.data.available)
         if (this.order.type === 'buy') {
           if (this.order.price > 0) {
@@ -146,7 +145,7 @@ export default {
       if (!this.isOrderValid || !this.confirmOrder()) {
         return
       }
-      this.api.post('/orders', this.order).then(() => {
+      this.apiService.post('/orders', this.order).then(() => {
         this.hideModal()
         this.order = {
           type: 'buy',

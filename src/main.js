@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App'
+import injector from 'vue-inject'
 
 import { toDecimals } from './utils'
 import { markets } from './constants'
@@ -8,6 +9,7 @@ import { markets } from './constants'
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
+Vue.use(injector)
 
 Vue.filter('toDecimals', toDecimals)
 

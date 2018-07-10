@@ -61,13 +61,11 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService'
-
 export default {
   name: 'Seller',
+  dependencies: ['apiService'],
   data () {
     return {
-      api: new ApiService(),
       seller: null,
       isModalVisible: false,
       updating: false
@@ -106,7 +104,7 @@ export default {
   watch: {
     isModalVisible (newValue) {
       if (newValue === true) {
-        this.api.get(this.endpoint).then(response => {
+        this.apiService.get(this.endpoint).then(response => {
           this.seller = response.data
         })
       }
@@ -115,7 +113,7 @@ export default {
   methods: {
     setMaxAmount () {
       const url = `/balance/${this.currentMarket.baseCurrency.code}`
-      this.api.get(url).then(response => {
+      this.apiService.get(url).then(response => {
         this.remainingAmount = Number(response.data.balance)
       })
     },
@@ -124,7 +122,7 @@ export default {
         return
       }
       this.updating = true
-      this.api.patch(this.endpoint, this.seller).then(() => {
+      this.apiService.patch(this.endpoint, this.seller).then(() => {
         this.hideModal()
         this.updating = false
       })

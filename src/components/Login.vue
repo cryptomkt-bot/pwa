@@ -54,7 +54,8 @@ export default {
       ip: null,
       port: null,
       username: '',
-      password: ''
+      password: '',
+      token: null
     }
   },
   created () {
@@ -62,16 +63,14 @@ export default {
   },
   methods: {
     login () {
-      this.saveToStorage()
-      const api = new ApiService()
+      const api = new ApiService(this.ip, this.port)
       api.post('/auth', {
         username: this.username,
         password: this.password
       }).then(response => {
-        const token = response.data.access_token
-        localStorage.setItem('token', token) // Save token to storage
+        this.token = response.data.access_token
+        this.saveToStorage()
         this.$emit('loggedIn')
-        api.setToken(token)
       }).catch(() => {
         alert('Usuario o contraseña incorrecta.')
       })
@@ -80,6 +79,7 @@ export default {
       localStorage.setItem('ip', this.ip)
       localStorage.setItem('port', this.port)
       localStorage.setItem('username', this.username)
+      localStorage.setItem('token', this.token)
     },
     restoreFromStorage () {
       this.ip = localStorage.getItem('ip')

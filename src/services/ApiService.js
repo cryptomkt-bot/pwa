@@ -1,4 +1,5 @@
 import axios from 'axios'
+import injector from 'vue-inject'
 
 export default class ApiService {
   constructor (ip = null, port = null) {
@@ -35,3 +36,5 @@ export default class ApiService {
     return this.axios.delete(endpoint)
   }
 }
+
+injector.service('apiService', ApiService)

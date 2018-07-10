@@ -24,15 +24,14 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService'
 import { formatAmount } from '../utils'
 
 export default {
   name: 'ActiveOrders',
+  dependencies: ['apiService'],
   data () {
     return {
       market: null,
-      api: new ApiService(),
       orders: [],
       intervalId: null
     }
@@ -69,7 +68,7 @@ export default {
     },
     getOrders (market) {
       const params = { market: market.code }
-      return this.api.get('/orders/active', params).then(response => {
+      return this.apiService.get('/orders/active', params).then(response => {
         const orders = response.data
         this.$emit('ordersUpdated', orders)
         return new Promise(resolve => resolve(orders))
@@ -80,7 +79,7 @@ export default {
         return
       }
       const endpoint = `/orders/${orderId}`
-      this.api.delete(endpoint).then(response => {
+      this.apiService.delete(endpoint).then(response => {
         orderId = response.data.id
         this.orders = this.orders.filter(order => order.id !== orderId)
       })
