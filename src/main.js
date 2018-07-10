@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import App from './App'
 import injector from 'vue-inject'
 
+import './services/StorageService'
 import { toDecimals } from './utils'
 import { markets } from './constants'
 
@@ -27,14 +28,16 @@ Vue.filter('localetime', date => {
   return date.toLocaleTimeString()
 })
 
+const storageService = injector.get('storageService')
+
 const store = new Vuex.Store({
   state: {
-    currentMarket: JSON.parse(localStorage.getItem('currentMarket')) || markets['ARS'][1]
+    currentMarket: storageService.get('currentMarket') || markets['ARS'][1]
   },
   mutations: {
     changeMarket (state, market) {
       state.currentMarket = market
-      localStorage.setItem('currentMarket', JSON.stringify(market))
+      storageService.set('currentMarket', market)
     }
   }
 })

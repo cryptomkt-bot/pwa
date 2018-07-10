@@ -49,6 +49,7 @@ import ApiService from '../services/ApiService'
 
 export default {
   name: 'Login',
+  dependencies: ['storageService'],
   data () {
     return {
       ip: null,
@@ -76,15 +77,15 @@ export default {
       })
     },
     saveToStorage () {
-      localStorage.setItem('ip', this.ip)
-      localStorage.setItem('port', this.port)
-      localStorage.setItem('username', this.username)
-      localStorage.setItem('token', this.token)
+      this.storageService.set('ip', this.ip)
+      this.storageService.set('port', this.port)
+      this.storageService.set('username', this.username)
+      this.storageService.set('token', this.token)
     },
     restoreFromStorage () {
-      this.ip = localStorage.getItem('ip')
-      this.port = localStorage.getItem('port')
-      this.username = localStorage.getItem('username')
+      this.ip = this.storageService.get('ip')
+      this.port = this.storageService.get('port')
+      this.username = this.storageService.get('username')
     }
   }
 }

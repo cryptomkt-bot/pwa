@@ -3,12 +3,13 @@ import injector from 'vue-inject'
 
 export default class ApiService {
   constructor (ip = null, port = null) {
-    const baseIp = ip !== null ? ip : localStorage.getItem('ip')
-    const basePort = port !== null ? port : localStorage.getItem('port')
+    const storageService = injector.get('storageService')
+    const baseIp = ip !== null ? ip : storageService.get('ip')
+    const basePort = port !== null ? port : storageService.get('port')
     this.axios = axios.create({
       baseURL: `https://${baseIp}:${basePort}`
     })
-    const token = localStorage.getItem('token')
+    const token = storageService.get('token')
     this.setToken(token)
   }
 
