@@ -71,6 +71,7 @@ export default {
     .button {
       border-radius: 0;
       height: $panelHeight;
+      box-shadow: none !important;
     }
   }
   #open-order, #logout-button {
@@ -85,6 +86,7 @@ export default {
       border: 0;
       border-radius: 0;
       height: $panelHeight;
+      box-shadow: none !important;
     }
   }
   #open-order {
