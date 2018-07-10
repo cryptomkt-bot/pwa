@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import App from './App'
 
 import { toDecimals } from './utils'
+import { markets } from './constants'
 
 Vue.config.productionTip = false
 
@@ -26,7 +27,7 @@ Vue.filter('localetime', date => {
 
 const store = new Vuex.Store({
   state: {
-    currentMarket: JSON.parse(localStorage.getItem('currentMarket'))
+    currentMarket: JSON.parse(localStorage.getItem('currentMarket')) || markets['ARS'][1]
   },
   mutations: {
     changeMarket (state, market) {
