@@ -1,68 +1,70 @@
 <template>
   <div>
-    <!-- Modal -->
-    <div id="buyer-modal" class="modal" :class="{'is-active': isModalVisible}">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <div class="card">
-          <!-- Title -->
-          <header class="card-header">
-            <p class="card-header-title">Comprador</p>
-          </header>
+    <transition name="fade">
+      <!-- Modal -->
+      <div v-show="isModalVisible" id="buyer-modal" class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="card">
+            <!-- Title -->
+            <header class="card-header">
+              <p class="card-header-title">Comprador</p>
+            </header>
 
-          <!-- Body -->
-          <div class="card-content">
-            <!-- Amount -->
-            <label for="amount" class="label is-small">Cantidad</label>
-            <div class="field has-addons">
-              <div class="control">
-                <span class="button is-static" :disabled="isLoading">{{ currentMarket.baseCurrency.code }}</span>
+            <!-- Body -->
+            <div class="card-content">
+              <!-- Amount -->
+              <label for="amount" class="label is-small">Cantidad</label>
+              <div class="field has-addons">
+                <div class="control">
+                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.baseCurrency.code }}</span>
+                </div>
+                <div class="control">
+                  <input id="amount" class="input" type="number" v-model.number="remainingAmount"
+                         :step="currentMarket.baseCurrency.step" :placeholder="inputsPlaceholder" :disabled="isLoading">
+                </div>
               </div>
-              <div class="control">
-                <input id="amount" class="input" type="number" v-model.number="remainingAmount"
-                       :step="currentMarket.baseCurrency.step" :placeholder="inputsPlaceholder" :disabled="isLoading">
+
+              <!-- Fiat -->
+              <label for="fiat" class="label is-small">Fiat restante</label>
+              <div class="field has-addons">
+                <!-- Prefix -->
+                <div class="control" v-if="currentMarket.quoteCurrency.prefix">
+                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.prefix }}</span>
+                </div>
+                <div class="control" v-else>
+                  <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
+                </div>
+                <!-- Input -->
+                <div class="control">
+                  <input id="fiat" class="input" type="number" v-model.number="remainingFiat"
+                         :placeholder="inputsPlaceholder" :disabled="isLoading">
+                </div>
+                <!-- Postfix -->
+                <div class="control" v-if="currentMarket.quoteCurrency.postfix">
+                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.postfix }}</span>
+                </div>
+                <div class="control" v-else>
+                  <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
+                </div>
               </div>
+              <p class="is-size-7">Precio máximo: ${{ maxPrice }}</p>
             </div>
 
-            <!-- Fiat -->
-            <label for="fiat" class="label is-small">Fiat restante</label>
-            <div class="field has-addons">
-              <!-- Prefix -->
-              <div class="control" v-if="currentMarket.quoteCurrency.prefix">
-                <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.prefix }}</span>
-              </div>
-              <div class="control" v-else>
-                <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
-              </div>
-              <!-- Input -->
-              <div class="control">
-                <input id="fiat" class="input" type="number" v-model.number="remainingFiat"
-                       :placeholder="inputsPlaceholder" :disabled="isLoading">
-              </div>
-              <!-- Postfix -->
-              <div class="control" v-if="currentMarket.quoteCurrency.postfix">
-                <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.postfix }}</span>
-              </div>
-              <div class="control" v-else>
-                <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
-              </div>
-            </div>
-            <p class="is-size-7">Precio máximo: ${{ maxPrice }}</p>
+            <!-- Action buttons -->
+            <footer class="card-footer">
+              <a class="card-footer-item" @click="hideModal">Cancelar</a>
+              <a class="card-footer-item" @click="submit">
+                <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+                <span v-else>Actualizar</span>
+              </a>
+            </footer>
           </div>
-
-          <!-- Action buttons -->
-          <footer class="card-footer">
-            <a class="card-footer-item" @click="hideModal">Cancelar</a>
-            <a class="card-footer-item" @click="submit">
-              <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-              <span v-else>Actualizar</span>
-            </a>
-          </footer>
         </div>
+        <button class="modal-close is-large" aria-label="close" @click="hideModal"></button>
       </div>
-      <button class="modal-close is-large" aria-label="close" @click="hideModal"></button>
-    </div>
-    <!--/ End modal -->
+      <!--/ End modal -->
+    </transition>
     <div id="buyer-button" class="button is-rounded has-text-weight-bold" @click="showModal">C</div>
   </div>
 </template>

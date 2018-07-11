@@ -1,64 +1,66 @@
 <template>
   <div>
-    <!-- Modal -->
-    <div id="seller-modal" class="modal" :class="{'is-active': isModalVisible}">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <div class="card">
-          <!-- Title -->
-          <header class="card-header">
-            <p class="card-header-title">Vendedor</p>
-          </header>
+    <transition name="fade">
+      <!-- Modal -->
+      <div v-show="isModalVisible" id="seller-modal" class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="card">
+            <!-- Title -->
+            <header class="card-header">
+              <p class="card-header-title">Vendedor</p>
+            </header>
 
-          <!-- Body -->
-          <div class="card-content">
-            <!-- Amount -->
-            <label for="amount" class="label is-small">Cantidad</label>
-            <div class="field has-addons">
-              <!-- Currency code -->
-              <div class="control">
-                <span class="button is-static" :disabled="isLoading">{{ currentMarket.baseCurrency.code }}</span>
+            <!-- Body -->
+            <div class="card-content">
+              <!-- Amount -->
+              <label for="amount" class="label is-small">Cantidad</label>
+              <div class="field has-addons">
+                <!-- Currency code -->
+                <div class="control">
+                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.baseCurrency.code }}</span>
+                </div>
+                <!-- Input -->
+                <div class="control">
+                  <input id="amount" class="input" type="number" v-model.number="remainingAmount"
+                         :step="currentMarket.baseCurrency.step" :placeholder="inputsPlaceholder" :disabled="isLoading">
+                </div>
+                <!-- Max button -->
+                <div class="control">
+                  <button class="button is-info" @click="setMaxAmount" :disabled="isLoading">Max</button>
+                </div>
               </div>
-              <!-- Input -->
-              <div class="control">
-                <input id="amount" class="input" type="number" v-model.number="remainingAmount"
-                       :step="currentMarket.baseCurrency.step" :placeholder="inputsPlaceholder" :disabled="isLoading">
-              </div>
-              <!-- Max button -->
-              <div class="control">
-                <button class="button is-info" @click="setMaxAmount" :disabled="isLoading">Max</button>
+
+              <!-- Spread -->
+              <label for="spread" class="label is-small">Spread</label>
+              <div class="field has-addons">
+                <!-- Input -->
+                <div class="control">
+                  <input id="spread" class="input" type="number" step="0.01" v-model.number="minSpread"
+                         :placeholder="inputsPlaceholder" :disabled="isLoading">
+                </div>
+                <!-- Percent sign -->
+                <div class="control">
+                  <span class="button is-static" :disabled="isLoading">%</span>
+                </div>
               </div>
             </div>
+            <!--/ End body -->
 
-            <!-- Spread -->
-            <label for="spread" class="label is-small">Spread</label>
-            <div class="field has-addons">
-              <!-- Input -->
-              <div class="control">
-                <input id="spread" class="input" type="number" step="0.01" v-model.number="minSpread"
-                       :placeholder="inputsPlaceholder" :disabled="isLoading">
-              </div>
-              <!-- Percent sign -->
-              <div class="control">
-                <span class="button is-static" :disabled="isLoading">%</span>
-              </div>
-            </div>
+            <!-- Action buttons -->
+            <footer class="card-footer">
+              <a class="card-footer-item" @click="hideModal">Cancelar</a>
+              <a class="card-footer-item" @click="submit">
+                <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+                <span v-else>Actualizar</span>
+              </a>
+            </footer>
           </div>
-          <!--/ End body -->
-
-          <!-- Action buttons -->
-          <footer class="card-footer">
-            <a class="card-footer-item" @click="hideModal">Cancelar</a>
-            <a class="card-footer-item" @click="submit">
-              <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-              <span v-else>Actualizar</span>
-            </a>
-          </footer>
         </div>
+        <button class="modal-close is-large" aria-label="close" @click="hideModal"></button>
       </div>
-      <button class="modal-close is-large" aria-label="close" @click="hideModal"></button>
-    </div>
-    <!--/ End modal -->
+      <!--/ End modal -->
+    </transition>
     <div id="seller-button" class="button is-rounded has-text-weight-bold" @click="showModal">V</div>
   </div>
 </template>

@@ -5,7 +5,9 @@
 
     <!-- Main app -->
     <div v-else>
-      <OpenOrder v-show="isOpenOrderModalVisible" @close="isOpenOrderModalVisible = false" />
+      <transition name="fade">
+        <OpenOrder v-show="isOpenOrderModalVisible" @close="isOpenOrderModalVisible = false" />
+      </transition>
       <TopPanel @loggedOut="logout" @openOrderModalOpened="isOpenOrderModalVisible = true"/>
       <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
       <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
@@ -124,4 +126,6 @@ export default {
     bottom: 0;
     width: 100%;
   }
+  .fade-enter-active, .fade-leave-active { transition: opacity 500ms }
+  .fade-enter, .fade-leave-to { opacity: 0 }
 </style>
