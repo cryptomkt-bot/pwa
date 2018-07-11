@@ -111,6 +111,7 @@ export default {
   #app {
     margin-top: 60px;
     margin-bottom: 120px;
+    -webkit-tap-highlight-color: transparent;
   }
   .section-name {
     border-bottom: 1px solid #e0e0e0;
