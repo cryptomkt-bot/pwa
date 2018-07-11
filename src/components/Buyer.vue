@@ -61,7 +61,6 @@
             </footer>
           </div>
         </div>
-        <button class="modal-close is-large" aria-label="close" @click="hideModal"></button>
       </div>
       <!--/ End modal -->
     </transition>
