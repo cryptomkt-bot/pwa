@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import 'bulma'
 import ActiveOrders from './components/ActiveOrders'
 import Balance from './components/Balance'
 import Buyer from './components/Buyer'
