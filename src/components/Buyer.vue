@@ -3,7 +3,7 @@
     <transition name="fade">
       <!-- Modal -->
       <div v-show="isModalVisible" id="buyer-modal" class="modal is-active">
-        <div class="modal-background"></div>
+        <div class="modal-background" @click="hideModal"></div>
         <div class="modal-content">
           <div class="card">
             <!-- Title -->
