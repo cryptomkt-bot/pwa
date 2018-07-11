@@ -38,8 +38,8 @@
       <ExecutedOrders v-show="isExecutedOrdersVisible" :isVisible="isExecutedOrdersVisible"/>
       <div id="footer">
         <Balance @visibilityChanged="areTradersVisible = !$event"/>
-        <Seller v-show="areTradersVisible"/>
-        <Buyer v-show="areTradersVisible"/>
+        <Seller :isButtonVisible="areTradersVisible"/>
+        <Buyer :isButtonVisible="areTradersVisible"/>
         <Footer :ask="ask" :bid="bid"/>
       </div>
     </div>
@@ -128,4 +128,6 @@ export default {
   }
   .fade-enter-active, .fade-leave-active { transition: opacity 500ms }
   .fade-enter, .fade-leave-to { opacity: 0 }
+  .scale-enter-active, .scale-leave-active { transition: transform 200ms }
+  .scale-enter, .scale-leave-to { transform: scale(0) }
 </style>

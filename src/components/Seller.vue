@@ -60,13 +60,17 @@
       </div>
       <!--/ End modal -->
     </transition>
-    <div id="seller-button" class="button is-rounded has-text-weight-bold" @click="showModal">V</div>
+    <transition name="scale">
+      <div v-show="isButtonVisible" id="seller-button" @click="showModal"
+           class="button is-rounded has-text-weight-bold">V</div>
+    </transition>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Seller',
+  props: [ 'isButtonVisible' ],
   dependencies: ['apiService'],
   data () {
     return {
@@ -155,8 +159,8 @@ export default {
     border: none;
     width: 48px;
     height: 48px;
-    position: absolute;
-    top: 12px;
+    position: fixed;
+    bottom: 40px;
     left: 12px;
     z-index: 1;
   }
