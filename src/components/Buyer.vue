@@ -53,7 +53,10 @@
           <!-- Action buttons -->
           <footer class="card-footer">
             <a class="card-footer-item" @click="hideModal">Cancelar</a>
-            <a class="card-footer-item" @click="submit">Actualizar</a>
+            <a class="card-footer-item" @click="submit">
+              <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+              <span v-else>Actualizar</span>
+            </a>
           </footer>
         </div>
       </div>

@@ -1,7 +1,9 @@
 <template>
   <div>
     <div v-if="!market" class="has-text-centered">
-      <span id="loading-message">Cargando ...</span>
+      <span class="icon">
+        <i class="fa fa-spinner fa-pulse"></i>
+      </span>
     </div>
     <table v-else class="table is-fullwidth is-marginless is-size-7">
       <thead>
@@ -96,8 +98,5 @@ export default {
     display: table;
     width: 100%;
     table-layout: fixed;
-  }
-  #loading-message {
-    line-height: $bodyHeight + 30px;
   }
 </style>

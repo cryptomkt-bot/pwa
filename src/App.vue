@@ -10,24 +10,27 @@
       <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
       <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
         Últimas transacciones
-        <span class="icon is-pulled-right">
-          <span v-if="isTradesVisible">-</span><span v-else>+</span>
+        <span class="icon is-size-7 is-pulled-right">
+          <i v-if="isTradesVisible" class="fa fa-minus"></i>
+          <i v-else class="fa fa-plus"></i>
         </span>
       </div>
       <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
       <!-- Active orders -->
       <div class="section-name has-text-centered" @click="isActiveOrdersVisible = !isActiveOrdersVisible">
         Órdenes abiertas
-        <span class="icon is-pulled-right">
-          <span v-if="isActiveOrdersVisible">-</span><span v-else>+</span>
+        <span class="icon is-size-7 is-pulled-right">
+          <i v-if="isActiveOrdersVisible" class="fa fa-minus"></i>
+          <i v-else class="fa fa-plus"></i>
         </span>
       </div>
       <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
       <!-- Executed orders -->
       <div class="section-name has-text-centered" @click="isExecutedOrdersVisible = !isExecutedOrdersVisible">
         Órdenes históricas
-        <span class="icon is-pulled-right">
-          <span v-if="isExecutedOrdersVisible">-</span><span v-else>+</span>
+        <span class="icon is-size-7 is-pulled-right">
+          <i v-if="isExecutedOrdersVisible" class="fa fa-minus"></i>
+          <i v-else class="fa fa-plus"></i>
         </span>
       </div>
       <ExecutedOrders v-show="isExecutedOrdersVisible" :isVisible="isExecutedOrdersVisible"/>

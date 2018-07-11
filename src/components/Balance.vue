@@ -1,6 +1,9 @@
 <template>
   <div id="balance" class="has-text-centered">
     <div class="button is-primary" @click="isContentVisible = !isContentVisible">
+      <span class="icon is-size-7">
+        <i class="fa" :class="[isContentVisible ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
+      </span>
       <span id="balance-label" class="has-text-weight-light">Balances</span>
     </div>
     <div id="balance-content" v-show="isContentVisible">

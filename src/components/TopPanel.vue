@@ -11,8 +11,9 @@
     <button id="open-order" class="button is-success is-size-6" @click="$emit('openOrderModalOpened')">
       <span class="icon">+</span> Abrir orden
     </button>
-    <button id="logout-button" @click="logout"
-            class="button has-text-danger has-text-weight-bold is-size-7">Salir</button>
+    <button id="logout-button" @click="logout" class="button">
+      <span class="icon has-text-danger"><i class="fa fa-power-off"></i></span>
+    </button>
   </div>
 </template>
 

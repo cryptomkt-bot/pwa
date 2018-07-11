@@ -8,14 +8,16 @@
       <thead>
         <th>Precio</th>
         <th>Cantidad</th>
-        <th>Eliminar</th>
+        <th></th>
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.id">
           <td :class="orderColor(order)">{{ formatAmount(order.price, market.quoteCurrency) }}</td>
           <td>{{ formatAmount(order.amount.remaining, market.baseCurrency) }}</td>
           <td>
-            <span class="delete is-small" @click="deleteOrder(order.id)"></span>
+            <span class="icon is-small" @click="deleteOrder(order.id)">
+              <i class="fa fa-trash-o"></i>
+            </span>
           </td>
         </tr>
       </tbody>

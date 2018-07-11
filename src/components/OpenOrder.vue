@@ -64,7 +64,10 @@
         <!-- Action buttons -->
         <footer class="card-footer">
           <a class="card-footer-item" @click="hideModal">Cancelar</a>
-          <a class="card-footer-item" @click="submit">Abrir orden</a>
+          <a class="card-footer-item" @click="submit">
+            <span v-if="isLoading" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+            <span v-else>Abrir orden</span>
+          </a>
         </footer>
       </div>
     </div>
@@ -81,7 +84,8 @@ export default {
   dependencies: ['apiService'],
   data () {
     return {
-      order: null
+      order: null,
+      isLoading: false
     }
   },
   created () {
@@ -145,7 +149,9 @@ export default {
       if (!this.isOrderValid || !this.confirmOrder()) {
         return
       }
+      this.isLoading = true
       this.apiService.post('/orders', this.order).then(() => {
+        this.isLoading = false
         this.hideModal()
         this.order = {
           type: 'buy',
