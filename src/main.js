@@ -32,12 +32,23 @@ const storageService = injector.get('storageService')
 
 const store = new Vuex.Store({
   state: {
-    currentMarket: storageService.get('currentMarket') || markets['ARS'][1]
+    currentMarket: storageService.get('currentMarket') || markets['ARS'][1],
+    isDialogVisible: false,
+    dialogText: '',
+    dialogCallback: null
   },
   mutations: {
     changeMarket (state, market) {
       state.currentMarket = market
       storageService.set('currentMarket', market)
+    },
+    showDialog (state, payload) {
+      state.dialogText = payload.text
+      state.dialogCallback = payload.callback
+      state.isDialogVisible = true
+    },
+    hideDialog (state) {
+      state.isDialogVisible = false
     }
   }
 })

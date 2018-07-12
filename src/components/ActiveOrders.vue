@@ -79,9 +79,14 @@ export default {
       })
     },
     deleteOrder (orderId) {
-      if (!confirm('¿Estás seguro?')) {
-        return
-      }
+      this.$store.commit('showDialog', {
+        text: '¿Estás seguro?',
+        callback: () => {
+          this.doDeleteOrder(orderId)
+        }
+      })
+    },
+    doDeleteOrder (orderId) {
       const endpoint = `/orders/${orderId}`
       this.apiService.delete(endpoint).then(response => {
         orderId = response.data.id

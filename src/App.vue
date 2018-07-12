@@ -5,6 +5,7 @@
 
     <!-- Main app -->
     <div v-else>
+      <ConfirmationDialog />
       <transition name="fade">
         <OpenOrder v-show="isOpenOrderModalVisible" @close="isOpenOrderModalVisible = false" />
       </transition>
@@ -58,10 +59,12 @@ import Trades from './components/Trades'
 import Seller from './components/Seller'
 import Login from './components/Login'
 import ExecutedOrders from './components/ExecutedOrders'
+import ConfirmationDialog from './components/ConfirmationDialog'
 
 export default {
   name: 'App',
   components: {
+    ConfirmationDialog,
     ActiveOrders,
     ExecutedOrders,
     Balance,

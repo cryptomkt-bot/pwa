@@ -51,9 +51,12 @@ export default {
       this.$store.commit('changeMarket', market)
     },
     logout () {
-      if (confirm('¿Desea salir?')) {
-        this.$emit('loggedOut')
-      }
+      this.$store.commit('showDialog', {
+        text: '¿Desea salir?',
+        callback: () => {
+          this.$emit('loggedOut')
+        }
+      })
     }
   }
 }

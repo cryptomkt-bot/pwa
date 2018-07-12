@@ -145,9 +145,12 @@ export default {
       })
     },
     submit () {
-      if (!this.isOrderValid || !this.confirmOrder()) {
+      if (!this.isOrderValid) {
         return
       }
+      this.confirmOrder()
+    },
+    doSubmit () {
       this.isLoading = true
       const url = `/orders/${this.currentMarket.code}`
       this.apiService.post(url, this.order).then(() => {
@@ -168,8 +171,9 @@ export default {
       const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender'
       const amount = this.formatAmount(this.order.amount, this.currentMarket.baseCurrency)
       const price = this.formatAmount(this.order.price, this.currentMarket.quoteCurrency)
-      const msg = `¿Desea ${typeVerb} ${amount} a ${price}?`
-      return confirm(msg)
+      const text = `¿Desea ${typeVerb} ${amount} a ${price}?`
+      const callback = this.doSubmit
+      this.$store.commit('showDialog', { text, callback })
     },
     formatAmount
   }
