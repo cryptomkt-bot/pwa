@@ -122,6 +122,7 @@ export default {
   watch: {
     isModalVisible (newValue) {
       if (newValue === true) {
+        this.buyer = null
         this.apiService.get(this.endpoint).then(response => {
           this.buyer = response.data
         })
@@ -149,7 +150,6 @@ export default {
       this.isModalVisible = true
     },
     hideModal () {
-      this.buyer = null
       this.isModalVisible = false
     }
   }
