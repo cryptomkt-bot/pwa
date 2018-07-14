@@ -1,7 +1,9 @@
 <template>
   <div>
     <div v-if="!market || !sellBook.length || !buyBook.length" class="has-text-centered">
-      <span id="loading-message">Cargando ...</span>
+      <span class="icon">
+        <i class="fa fa-spinner fa-pulse"></i>
+      </span>
     </div>
     <table v-else id="order-book-table" class="table is-fullwidth is-size-7 is-marginless">
       <thead>
@@ -146,14 +148,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  $bodyHeight: 270px;
   #order-book-table {
     tr.selected {
       background-color: #fffde7;
     }
     tbody {
       display: block;
-      height: $bodyHeight;
+      height: 270px;
       overflow: auto;
     }
     thead, tbody tr {
@@ -164,9 +165,6 @@ export default {
   }
   #spread-row {
     background-color: #eceff1;
-  }
-  #loading-message {
-    line-height: $bodyHeight + 30px;
   }
   #updated-time {
     padding: 2px 4px;
