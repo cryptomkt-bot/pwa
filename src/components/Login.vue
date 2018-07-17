@@ -70,6 +70,7 @@ export default {
         password: this.password
       }).then(response => {
         this.token = response.data.access_token
+        api.setToken(this.token)
         this.saveToStorage()
         this.$emit('loggedIn')
       }).catch(() => {
