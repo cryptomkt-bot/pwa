@@ -80,51 +80,60 @@ export const markets = {
     {
       code: 'BTCBRL',
       baseCurrency: currencies['BTC'],
-      quoteCurrency: currencies['BRL']
+      quoteCurrency: currencies['BRL'],
+      step: 2
     },
     {
       code: 'ETHBRL',
       baseCurrency: currencies['ETH'],
-      quoteCurrency: currencies['BRL']
+      quoteCurrency: currencies['BRL'],
+      step: 0.2
     },
     {
       code: 'XLMBRL',
       baseCurrency: currencies['XLM'],
-      quoteCurrency: currencies['BRL']
+      quoteCurrency: currencies['BRL'],
+      step: 0.0005
     }
   ],
   'CLP': [
     {
       code: 'BTCCLP',
       baseCurrency: currencies['BTC'],
-      quoteCurrency: currencies['CLP']
+      quoteCurrency: currencies['CLP'],
+      step: 200
     },
     {
       code: 'ETHCLP',
       baseCurrency: currencies['ETH'],
-      quoteCurrency: currencies['CLP']
+      quoteCurrency: currencies['CLP'],
+      step: 20
     },
     {
       code: 'XLMCLP',
       baseCurrency: currencies['XLM'],
-      quoteCurrency: currencies['CLP']
+      quoteCurrency: currencies['CLP'],
+      step: 0.05
     }
   ],
   'EUR': [
     {
       code: 'BTCEUR',
       baseCurrency: currencies['BTC'],
-      quoteCurrency: currencies['EUR']
+      quoteCurrency: currencies['EUR'],
+      step: 1
     },
     {
       code: 'ETHEUR',
       baseCurrency: currencies['ETH'],
-      quoteCurrency: currencies['EUR']
+      quoteCurrency: currencies['EUR'],
+      step: 0.1
     },
     {
       code: 'XLMEUR',
       baseCurrency: currencies['XLM'],
-      quoteCurrency: currencies['EUR']
+      quoteCurrency: currencies['EUR'],
+      step: 0.0002
     }
   ]
 }
