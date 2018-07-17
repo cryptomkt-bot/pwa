@@ -97,6 +97,7 @@ export default {
     },
     logout () {
       this.isLogged = false
+      localStorage.removeItem('token')
       this.isTradesVisible = false
       this.isActiveOrdersVisible = false
       this.isExecutedOrdersVisible = false
