@@ -21,7 +21,7 @@
         </tr>
         <!-- Spread -->
         <tr id="spread-row">
-          <td>{{ formattedSpread }}</td>
+          <td id="spread">{{ formattedSpread }}</td>
           <td></td>
           <td>Spread</td>
         </tr>
@@ -165,6 +165,9 @@ export default {
   }
   #spread-row {
     background-color: #eceff1;
+  }
+  #spread {
+    white-space: nowrap
   }
   #updated-time {
     padding: 2px 4px;
