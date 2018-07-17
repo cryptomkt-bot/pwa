@@ -133,7 +133,7 @@ export default {
     setMaxFiat () {
       const url = `/balance/${this.currentMarket.quoteCurrency.code}`
       this.apiService.get(url).then(response => {
-        this.remainingFiat = Number(response.data.balance)
+        this.remainingFiat = Number(response.data.available)
       })
     },
     submit () {

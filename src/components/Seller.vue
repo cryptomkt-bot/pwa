@@ -123,7 +123,7 @@ export default {
     setMaxAmount () {
       const url = `/balance/${this.currentMarket.baseCurrency.code}`
       this.apiService.get(url).then(response => {
-        this.remainingAmount = Number(response.data.balance)
+        this.remainingAmount = Number(response.data.available)
       })
     },
     submit () {
