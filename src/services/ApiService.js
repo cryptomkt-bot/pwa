@@ -2,15 +2,27 @@ import axios from 'axios'
 import injector from 'vue-inject'
 
 export default class ApiService {
-  constructor (ip = null, port = null) {
-    const storageService = injector.get('storageService')
-    const baseIp = ip !== null ? ip : storageService.get('ip')
-    const basePort = port !== null ? port : storageService.get('port')
-    this.axios = axios.create({
-      baseURL: `https://${baseIp}:${basePort}`
-    })
-    const token = storageService.get('token')
+  constructor (baseURL = null) {
+    this.storageService = injector.get('storageService')
+    this.baseURL = baseURL || this.storageService.get('apiAddress')
+    if (this.baseURL !== null) {
+      this.axios = axios.create({ baseURL: `https://${this.baseURL}` })
+    } else {
+      this.axios = axios.create()
+    }
+    const token = this.storageService.get('token')
     this.setToken(token)
+  }
+
+  login (username, password) {
+    return this.post('/auth', { username, password }).then(response => {
+      const token = response.data.access_token
+      this.setToken(token)
+      // Save to storage
+      this.storageService.set('apiAddress', this.baseURL)
+      this.storageService.set('username', username)
+      this.storageService.set('token', token)
+    })
   }
 
   setToken (token) {
