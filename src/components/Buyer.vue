@@ -79,6 +79,7 @@ export default {
   data () {
     return {
       buyer: null,
+      remainingFiat: null,
       isModalVisible: false,
       updating: false
     }
@@ -109,22 +110,16 @@ export default {
       set (newValue) {
         this.buyer.remaining_amount = newValue
       }
-    },
-    remainingFiat: {
-      get () {
-        return this.buyer ? this.buyer.remaining_fiat : null
-      },
-      set (newValue) {
-        this.buyer.remaining_fiat = newValue
-      }
     }
   },
   watch: {
     isModalVisible (newValue) {
       if (newValue === true) {
         this.buyer = null
+        this.remainingFiat = null
         this.apiService.get(this.endpoint).then(response => {
           this.buyer = response.data
+          this.remainingFiat = this.buyer.remaining_fiat
         })
       }
     }
@@ -133,7 +128,8 @@ export default {
     setMaxFiat () {
       const url = `/balance/${this.currentMarket.quoteCurrency.code}`
       this.apiService.get(url).then(response => {
-        this.remainingFiat = Number(response.data.available)
+        const availableBalance = Number(response.data.available)
+        this.remainingFiat = this.buyer.remaining_fiat + availableBalance
       })
     },
     submit () {
@@ -141,6 +137,7 @@ export default {
         return
       }
       this.updating = true
+      this.buyer.remaining_fiat = this.remainingFiat
       this.apiService.patch(this.endpoint, this.buyer).then(() => {
         this.hideModal()
         this.updating = false

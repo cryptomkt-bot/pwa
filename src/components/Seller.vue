@@ -75,6 +75,7 @@ export default {
   data () {
     return {
       seller: null,
+      remainingAmount: null,
       isModalVisible: false,
       updating: false
     }
@@ -92,14 +93,6 @@ export default {
     inputsPlaceholder () {
       return this.seller === null ? 'Cargando ...' : ''
     },
-    remainingAmount: {
-      get () {
-        return this.seller ? this.seller.remaining_amount : null
-      },
-      set (newValue) {
-        this.seller.remaining_amount = newValue
-      }
-    },
     minSpread: {
       get () {
         return this.seller ? this.seller.min_spread : null
@@ -113,8 +106,10 @@ export default {
     isModalVisible (newValue) {
       if (newValue === true) {
         this.seller = null
+        this.remainingAmount = null
         this.apiService.get(this.endpoint).then(response => {
           this.seller = response.data
+          this.remainingAmount = this.seller.remaining_amount
         })
       }
     }
@@ -123,7 +118,8 @@ export default {
     setMaxAmount () {
       const url = `/balance/${this.currentMarket.baseCurrency.code}`
       this.apiService.get(url).then(response => {
-        this.remainingAmount = Number(response.data.available)
+        const availableBalance = Number(response.data.available)
+        this.remainingAmount = this.seller.remaining_amount + availableBalance
       })
     },
     submit () {
@@ -131,6 +127,7 @@ export default {
         return
       }
       this.updating = true
+      this.seller.remaining_amount = this.remainingAmount
       this.apiService.patch(this.endpoint, this.seller).then(() => {
         this.hideModal()
         this.updating = false
