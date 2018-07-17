@@ -149,7 +149,8 @@ export default {
         return
       }
       this.isLoading = true
-      this.apiService.post('/orders', this.order).then(() => {
+      const url = `/orders/${this.currentMarket.code}`
+      this.apiService.post(url, this.order).then(() => {
         this.isLoading = false
         this.hideModal()
         this.order = {

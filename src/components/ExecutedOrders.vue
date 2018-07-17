@@ -73,8 +73,8 @@ export default {
       })
     },
     getOrders () {
-      const params = { market: this.currentMarket.code }
-      return this.apiService.get('/orders/executed', params).then(
+      const url = `/orders/executed/${this.currentMarket.code}`
+      return this.apiService.get(url).then(
         response => new Promise(resolve => resolve(response.data))
       )
     },

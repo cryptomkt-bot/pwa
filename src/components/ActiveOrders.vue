@@ -71,8 +71,8 @@ export default {
       })
     },
     getOrders (market) {
-      const params = { market: market.code }
-      return this.apiService.get('/orders/active', params).then(response => {
+      const url = `/orders/active/${market.code}`
+      return this.apiService.get(url).then(response => {
         const orders = response.data
         this.$emit('ordersUpdated', orders)
         return new Promise(resolve => resolve(orders))
