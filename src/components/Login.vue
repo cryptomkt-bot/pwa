@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="title has-text-centered is-marginless">Iniciar sesión</h1>
+    <h1 class="title has-text-weight-light has-text-centered is-marginless">CryptoMKT Bot</h1>
     <div class="section">
       <div class="card">
         <form class="card-content" @submit.prevent="login">
@@ -34,6 +34,9 @@
         </form>
       </div>
     </div>
+    <span class="copyright is-size-7">
+      Built with <i class="fa fa-heart"></i> by <a target="_blank" href="https://github.com/tanoabeleyra">tanoabeleyra</a>
+    </span>
   </div>
 </template>
 
@@ -70,5 +73,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .card { background-color: #fbfbfb }
+  .copyright {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+  }
+  .fa-heart { color: #ee0000 }
 </style>

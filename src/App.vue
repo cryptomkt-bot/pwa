@@ -114,7 +114,7 @@ export default {
 <style lang="scss">
   #app {
     margin-top: 60px;
-    margin-bottom: 120px;
+    margin-bottom: 110px;
     -webkit-tap-highlight-color: transparent;
   }
   .section-name {
