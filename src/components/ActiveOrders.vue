@@ -8,17 +8,19 @@
     <span v-else-if="!orders.length" class="is-size-7">No hay órdenes abiertas.</span>
     <table v-else class="table is-fullwidth is-marginless is-size-7">
       <thead>
+        <th>ID</th>
         <th>Precio</th>
         <th>Cantidad</th>
-        <th></th>
+        <th>Eliminar</th>
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.id">
+          <td>{{ order.id }}</td>
           <td :class="orderColor(order)">{{ formatAmount(order.price, market.quoteCurrency) }}</td>
           <td>{{ formatAmount(order.amount.remaining, market.baseCurrency) }}</td>
           <td>
             <span class="icon is-small" @click="deleteOrder(order.id)">
-              <i class="fa fa-trash-o"></i>
+              <i class="fa fa-times"></i>
             </span>
           </td>
         </tr>
@@ -80,7 +82,7 @@ export default {
     },
     deleteOrder (orderId) {
       this.$store.commit('showDialog', {
-        text: '¿Estás seguro?',
+        text: `¿Desea eliminar la orden ${orderId}?`,
         callback: () => {
           this.doDeleteOrder(orderId)
         }
