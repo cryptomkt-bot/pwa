@@ -7,22 +7,25 @@
           <div class="field">
             <label for="apiAddress" class="label">Dirección de API</label>
             <div class="control">
-              <input id="apiAddress" class="input" type="text" required
-                     v-model="apiAddress" placeholder="Ingrese la dirección de la API">
+              <input id="apiAddress" class="input" type="text"
+                     v-model="apiAddress" @click="hideSignature" @blur="showSignature"
+                     placeholder="Ingrese la dirección de la API" required>
             </div>
           </div>
           <div class="field">
             <label for="username" class="label">Nombre de usuario</label>
             <div class="control">
-              <input id="username" class="input" type="text" autocapitalize="off" required
-                     v-model="username" placeholder="Ingrese su nombre de usuario">
+              <input id="username" class="input" type="text" autocapitalize="off"
+                     v-model="username" @click="hideSignature" @blur="showSignature"
+                     placeholder="Ingrese su nombre de usuario" required>
             </div>
           </div>
           <div class="field">
             <label for="password" class="label">Contraseña</label>
             <div class="control">
-              <input id="password" class="input" type="password" required
-                     v-model="password" placeholder="Ingrese su contraseña">
+              <input id="password" class="input" type="password"
+                     v-model="password" @click="hideSignature" @blur="showSignature"
+                     placeholder="Ingrese su contraseña" required>
             </div>
           </div>
           <div class="field">
@@ -34,7 +37,7 @@
         </form>
       </div>
     </div>
-    <span class="copyright is-size-7">
+    <span v-show="isSignatureVisible" class="copyright is-size-7">
       Built with <i class="fa fa-heart"></i> by <a target="_blank" href="https://github.com/tanoabeleyra">tanoabeleyra</a>
     </span>
   </div>
@@ -50,7 +53,8 @@ export default {
     return {
       apiAddress: null,
       username: '',
-      password: ''
+      password: '',
+      isSignatureVisible: true
     }
   },
   created () {
@@ -68,6 +72,12 @@ export default {
     restoreFromStorage () {
       this.apiAddress = this.storageService.get('apiAddress')
       this.username = this.storageService.get('username')
+    },
+    hideSignature () {
+      this.isSignatureVisible = false
+    },
+    showSignature () {
+      this.isSignatureVisible = true
     }
   }
 }
