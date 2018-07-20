@@ -73,7 +73,10 @@ export default {
     },
     getOrders () {
       const url = 'https://api.cryptomkt.com/v1/trades'
-      const params = { market: this.currentMarket.code }
+      const params = {
+        market: this.currentMarket.code,
+        limit: 100
+      }
       return axios.get(url, { params }).then(
         response => new Promise(resolve => resolve(response.data.data))
       )

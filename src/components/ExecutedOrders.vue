@@ -74,7 +74,7 @@ export default {
     },
     getOrders () {
       const url = `/orders/executed/${this.currentMarket.code}`
-      return this.apiService.get(url).then(
+      return this.apiService.get(url, { limit: 100 }).then(
         response => new Promise(resolve => resolve(response.data))
       )
     },
