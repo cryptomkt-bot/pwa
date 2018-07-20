@@ -1,7 +1,7 @@
 <template>
   <!-- Modal -->
   <div id="open-order-modal" class="modal is-active">
-    <div class="modal-background" @click="hideModal"></div>
+    <div class="modal-background"></div>
     <div class="modal-content" :class="[order.type === 'buy' ? 'green' : 'red']">
       <div class="card">
         <!-- Title -->
