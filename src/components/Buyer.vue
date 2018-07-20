@@ -15,39 +15,16 @@
             <div class="card-content">
               <!-- Amount -->
               <label for="amount" class="label is-small">Cantidad</label>
-              <div class="field has-addons">
-                <div class="control">
-                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.baseCurrency.code }}</span>
-                </div>
-                <div class="control">
-                  <input id="amount" class="input" type="number" v-model.number="remainingAmount"
-                         :step="currentMarket.baseCurrency.step" :placeholder="inputsPlaceholder" :disabled="isLoading">
-                </div>
-              </div>
+              <CurrencyField :id="'amount'" :currency="currentMarket.baseCurrency" v-model="remainingAmount"
+                             :placeholder="inputsPlaceholder" :disabled="isLoading" />
 
               <!-- Fiat -->
               <label for="fiat" class="label is-small">Fiat restante</label>
-              <div class="field has-addons">
-                <!-- Prefix -->
-                <div class="control" v-if="currentMarket.quoteCurrency.prefix">
-                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.prefix }}</span>
-                </div>
-                <div class="control" v-else>
-                  <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
-                </div>
-                <!-- Input -->
-                <div class="control">
-                  <input id="fiat" class="input" type="number" v-model.number="remainingFiat"
-                         :placeholder="inputsPlaceholder" :disabled="isLoading">
-                </div>
-                <!-- Postfix -->
-                <div class="control" v-if="currentMarket.quoteCurrency.postfix">
-                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.quoteCurrency.postfix }}</span>
-                </div>
-                <div class="control" v-else>
-                  <button class="button is-info" @click="setMaxFiat" :disabled="isLoading">Max</button>
-                </div>
-              </div>
+              <CurrencyField :id="'amount'" :currency="currentMarket.quoteCurrency" v-model="remainingFiat"
+                             :placeholder="inputsPlaceholder" :disabled="isLoading"
+                             :showMaxButton="true" @maxButtonClicked="setMaxFiat" />
+
+              <!-- Info -->
               <p class="is-size-7">Precio máximo: ${{ maxPrice }}</p>
             </div>
 
@@ -72,8 +49,11 @@
 </template>
 
 <script>
+import CurrencyField from './CurrencyField'
+
 export default {
   name: 'Buyer',
+  components: { CurrencyField },
   props: [ 'isButtonVisible' ],
   dependencies: ['apiService'],
   data () {

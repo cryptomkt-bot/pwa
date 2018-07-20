@@ -15,21 +15,9 @@
             <div class="card-content">
               <!-- Amount -->
               <label for="amount" class="label is-small">Cantidad</label>
-              <div class="field has-addons">
-                <!-- Currency code -->
-                <div class="control">
-                  <span class="button is-static" :disabled="isLoading">{{ currentMarket.baseCurrency.code }}</span>
-                </div>
-                <!-- Input -->
-                <div class="control">
-                  <input id="amount" class="input" type="number" v-model.number="remainingAmount"
-                         :step="currentMarket.baseCurrency.step" :placeholder="inputsPlaceholder" :disabled="isLoading">
-                </div>
-                <!-- Max button -->
-                <div class="control">
-                  <button class="button is-info" @click="setMaxAmount" :disabled="isLoading">Max</button>
-                </div>
-              </div>
+              <CurrencyField :id="'amount'" :currency="currentMarket.baseCurrency" v-model="remainingAmount"
+                             :placeholder="inputsPlaceholder" :disabled="isLoading"
+                             :showMaxButton="true" @maxButtonClicked="setMaxAmount" />
 
               <!-- Spread -->
               <label for="spread" class="label is-small">Spread</label>
@@ -68,8 +56,11 @@
 </template>
 
 <script>
+import CurrencyField from './CurrencyField'
+
 export default {
   name: 'Seller',
+  components: { CurrencyField },
   props: [ 'isButtonVisible' ],
   dependencies: ['apiService'],
   data () {

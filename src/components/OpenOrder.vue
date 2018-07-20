@@ -26,36 +26,12 @@
 
           <!-- Amount -->
           <label for="amount" class="label is-small">Cantidad</label>
-          <div class="field has-addons">
-            <div class="control">
-              <span class="button is-static">{{ currentMarket.baseCurrency.code }}</span>
-            </div>
-            <div class="control">
-              <input id="amount" class="input" v-model.number="order.amount" type="number" min="0"
-                     :step="currentMarket.baseCurrency.step">
-            </div>
-            <div class="control">
-              <button class="button is-info" @click="setMaxAmount">Max</button>
-            </div>
-          </div>
+          <CurrencyField :id="'amount'" :currency="currentMarket.baseCurrency" v-model="order.amount"
+                         :showMaxButton="true" @maxButtonClicked="setMaxAmount" />
 
           <!-- Price -->
-          <label for="price" class="label is-size-7">Precio</label>
-          <div class="field has-addons">
-            <!-- Prefix -->
-            <div class="control" v-if="currentMarket.quoteCurrency.prefix">
-              <span class="button is-static">{{ currentMarket.quoteCurrency.prefix }}</span>
-            </div>
-            <!-- Input -->
-            <div class="control">
-              <input id="price" class="input" v-model.number="order.price" type="number" min="0"
-                     :step="currentMarket.step">
-            </div>
-            <!-- Postfix -->
-            <div class="control" v-if="currentMarket.quoteCurrency.postfix">
-              <span class="button is-static">{{ currentMarket.quoteCurrency.postfix }}</span>
-            </div>
-          </div>
+          <label for="price" class="label is-small">Precio</label>
+          <CurrencyField :id="'price'" :currency="currentMarket.quoteCurrency" v-model="order.price" />
 
           <!-- Info message -->
           <p class="is-size-7">{{ infoMessage }}</p>
@@ -76,10 +52,12 @@
 </template>
 
 <script>
+import CurrencyField from './CurrencyField'
 import { formatAmount } from '../utils'
 
 export default {
   name: 'OpenOrder',
+  components: { CurrencyField },
   dependencies: ['apiService'],
   data () {
     return {
