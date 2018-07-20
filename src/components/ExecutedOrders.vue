@@ -15,8 +15,10 @@
       <tbody>
         <tr v-for="order in orders" :key="order.executed_at">
           <td>{{ order.executed_at + '-00:00' | date }}</td>
-          <td :class="orderColor(order)">{{ formatAmount(order.execution_price, market.quoteCurrency) }}</td>
-          <td>{{ formatAmount(order.amount.executed, market.baseCurrency) }}</td>
+          <td :class="orderColor(order)">
+            {{ formatAmount(order.execution_price, market.quoteCurrency, market.decimals) }}
+          </td>
+          <td>{{ formatAmount(order.amount.executed, market.baseCurrency, market.baseCurrency.decimals) }}</td>
         </tr>
       </tbody>
     </table>

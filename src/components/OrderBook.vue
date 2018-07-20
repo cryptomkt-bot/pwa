@@ -15,9 +15,9 @@
         <!-- Sell book -->
         <tr v-for="order in [...sellBook].reverse()" :key="order.timestamp"
             :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
-          <td class="has-text-danger">{{ formatAmount(order.price, market.quoteCurrency) }}</td>
-          <td>{{ formatAmount(order.amount, market.baseCurrency) }}</td>
-          <td>{{ formatAmount(order.accumulated, market.baseCurrency) }}</td>
+          <td class="has-text-danger">{{ formatAmount(order.price, market.quoteCurrency, market.decimals) }}</td>
+          <td>{{ formatAmount(order.amount, market.baseCurrency, market.baseCurrency.decimals) }}</td>
+          <td>{{ formatAmount(order.accumulated, market.baseCurrency, market.baseCurrency.decimals) }}</td>
         </tr>
         <!-- Spread -->
         <tr id="spread-row">
@@ -28,9 +28,9 @@
         <!-- Buy book -->
         <tr v-for="order in buyBook" :key="order.timestamp"
             :class="{ 'selected': activeOrdersTimestamp.includes(order.timestamp) }">
-          <td class="has-text-success">{{ formatAmount(order.price, market.quoteCurrency) }}</td>
-          <td>{{ formatAmount(order.amount, market.baseCurrency) }}</td>
-          <td>{{ formatAmount(order.accumulated, market.baseCurrency) }}</td>
+          <td class="has-text-success">{{ formatAmount(order.price, market.quoteCurrency, market.decimals) }}</td>
+          <td>{{ formatAmount(order.amount, market.baseCurrency, market.baseCurrency.decimals) }}</td>
+          <td>{{ formatAmount(order.accumulated, market.baseCurrency, market.baseCurrency.decimals) }}</td>
         </tr>
       </tbody>
     </table>
@@ -75,7 +75,7 @@ export default {
     },
     formattedSpread () {
       const currency = this.market.quoteCurrency
-      const spread = toDecimals(this.spread, currency.decimals)
+      const spread = toDecimals(this.spread, this.market.decimals)
       return `${currency.prefix}${spread} ${currency.postfix} (${this.spreadPercentage}%)`
     },
     spreadPercentage () {

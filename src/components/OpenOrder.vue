@@ -108,7 +108,8 @@ export default {
     },
     infoMessage () {
       let amount = this.order.amount * this.order.price
-      amount = this.formatAmount(amount, this.currentMarket.quoteCurrency)
+      const currency = this.currentMarket.quoteCurrency
+      amount = this.formatAmount(amount, currency, currency.decimals)
       if (this.order.type === 'buy') {
         return `Gastando ${amount}`
       } else {
@@ -168,9 +169,10 @@ export default {
       this.initialize()
     },
     confirmOrder () {
+      const baseCurrency = this.currentMarket.baseCurrency
+      const amount = this.formatAmount(this.order.amount, baseCurrency, baseCurrency.decimals)
+      const price = this.formatAmount(this.order.price, this.currentMarket.quoteCurrency, this.currentMarket.decimals)
       const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender'
-      const amount = this.formatAmount(this.order.amount, this.currentMarket.baseCurrency)
-      const price = this.formatAmount(this.order.price, this.currentMarket.quoteCurrency)
       const text = `¿Desea ${typeVerb} ${amount} a ${price}?`
       const callback = this.doSubmit
       this.$store.commit('showDialog', { text, callback })
