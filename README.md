@@ -1,6 +1,14 @@
 # CryptoMKT Bot
-![icon](https://tanoabeleyra.github.io/cryptomkt-bot-webapp/static/icon-192.png)
+<img src="https://tanoabeleyra.github.io/cryptomkt-bot-webapp/static/icon-512.png" label="icon" width="256px">
+
 > A web app for a trading bot running on [CryptoMarket](https://www.cryptomkt.com).
+
+## Screenshots
+<a href="https://user-images.githubusercontent.com/6851095/43031298-50406514-8c75-11e8-869e-db5ac7e657b8.png"><img src="https://user-images.githubusercontent.com/6851095/43031298-50406514-8c75-11e8-869e-db5ac7e657b8.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/43031499-8209d25c-8c79-11e8-9451-8d172b84f860.png"><img src="https://user-images.githubusercontent.com/6851095/43031499-8209d25c-8c79-11e8-9451-8d172b84f860.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/43031498-81e53bfe-8c79-11e8-8589-e24200a43ac2.png"><img src="https://user-images.githubusercontent.com/6851095/43031498-81e53bfe-8c79-11e8-8589-e24200a43ac2.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/43031297-50177da2-8c75-11e8-9ba0-ad0df3478f71.png"><img src="https://user-images.githubusercontent.com/6851095/43031297-50177da2-8c75-11e8-9ba0-ad0df3478f71.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/43031296-4ff4962a-8c75-11e8-8a95-d0f305d26eca.png"><img src="https://user-images.githubusercontent.com/6851095/43031296-4ff4962a-8c75-11e8-8a95-d0f305d26eca.png" width="160px"></a>
 
 ## Build Setup
 ``` bash
