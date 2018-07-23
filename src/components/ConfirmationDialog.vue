@@ -5,8 +5,8 @@
       <div class="modal-card">
         <section class="modal-card-body">{{ text }}</section>
         <footer class="modal-card-foot">
-          <button class="button" @click="hide">NO</button>
-          <button class="button is-primary" @click="submit">SI</button>
+          <button @click="hide" class="button">NO</button>
+          <button @click="submit" class="button is-primary">SI</button>
         </footer>
       </div>
     </div>
@@ -17,39 +17,39 @@
 export default {
   name: 'ConfirmationDialog',
   computed: {
-    isVisible () {
-      return this.$store.state.isDialogVisible
+    isVisible() {
+      return this.$store.state.isDialogVisible;
     },
-    text () {
-      return this.$store.state.dialogText
-    }
+    text() {
+      return this.$store.state.dialogText;
+    },
   },
   methods: {
-    hide () {
-      this.$store.commit('hideDialog')
+    hide() {
+      this.$store.commit('hideDialog');
     },
-    submit () {
-      this.$store.state.dialogCallback()
-      this.hide()
-    }
-  }
-}
+    submit() {
+      this.$store.state.dialogCallback();
+      this.hide();
+    },
+  },
+};
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   #confirmation-dialog {
-    z-index: 41
-  }
-  .modal-card-body {
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    padding: 24px;
-  }
-  .modal-card-foot {
-    justify-content: flex-end;
-    .button {
-      min-width: 80px;
-      font-weight: bold;
+    z-index: 41;
+    .modal-card-body {
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      padding: 24px;
+    }
+    .modal-card-foot {
+      justify-content: flex-end;
+      .button {
+        min-width: 80px;
+        font-weight: bold;
+      }
     }
   }
 </style>

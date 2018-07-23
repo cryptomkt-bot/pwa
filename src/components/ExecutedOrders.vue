@@ -8,9 +8,11 @@
     <span v-else-if="!orders.length" class="is-size-7">Ninguna órden.</span>
     <table v-else class="table is-fullwidth is-marginless is-size-7">
       <thead>
-        <th>Fecha</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
+        <tr>
+          <th>Fecha</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.executed_at">
@@ -18,7 +20,9 @@
           <td :class="orderColor(order)">
             {{ formatAmount(order.execution_price, market.quoteCurrency, market.decimals) }}
           </td>
-          <td>{{ formatAmount(order.amount.executed, market.baseCurrency, market.baseCurrency.decimals) }}</td>
+          <td>
+            {{ formatAmount(order.amount.executed, market.baseCurrency, market.baseCurrency.decimals) }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -26,67 +30,65 @@
 </template>
 
 <script>
-import { formatAmount } from '../utils'
+import { formatAmount } from '../utils';
 
 export default {
   name: 'ExecutedOrders',
   dependencies: ['apiService'],
   props: ['isVisible'],
-  data () {
+  data() {
     return {
       market: null,
       orders: [],
-      intervalId: null
-    }
+      intervalId: null,
+    };
   },
-  destroyed () {
-    clearInterval(this.intervalId)
-  },
-  watch: {
-    isVisible (newValue) {
-      if (newValue === true) { // The component is visible
-        this.init(this.currentMarket)
-      } else { // The component gets hidden
-        this.orders = []
-        clearInterval(this.intervalId) // Stop updating the orders
-      }
-    },
-    currentMarket (newMarket) {
-      this.init(newMarket)
-    }
+  destroyed() {
+    clearInterval(this.intervalId);
   },
   computed: {
-    currentMarket () {
-      return this.$store.state.currentMarket
-    }
+    currentMarket() {
+      return this.$store.state.currentMarket;
+    },
+  },
+  watch: {
+    isVisible(newValue) {
+      if (newValue === true) { // The component is visible
+        this.init();
+      } else { // The component is hidden
+        this.orders = [];
+        clearInterval(this.intervalId); // Stop updating the orders
+      }
+    },
+    currentMarket() {
+      this.init();
+    },
   },
   methods: {
-    init (market) {
-      this.market = null
-      this.getOrders().then(orders => {
-        this.orders = orders
-        this.market = market
-        clearInterval(this.intervalId)
-        this.intervalId = setInterval(() => {
-          this.getOrders(market).then(orders => {
-            this.orders = orders
-          })
-        }, 10000)
-      })
+    formatAmount,
+    init() {
+      clearInterval(this.intervalId);
+      this.market = null;
+      this.updateOrders().then(() => {
+        this.market = this.currentMarket;
+      });
+      // Update orders every 10 seconds
+      this.intervalId = setInterval(() => {
+        this.updateOrders();
+      }, 10000);
     },
-    getOrders () {
-      const url = `/orders/executed/${this.currentMarket.code}`
-      return this.apiService.get(url, { limit: 100 }).then(
-        response => new Promise(resolve => resolve(response.data))
-      )
+    updateOrders() {
+      const url = `/orders/executed/${this.currentMarket.code}`;
+      return this.apiService.get(url, { limit: 100 }).then((response) => {
+        this.orders = response.data;
+      });
     },
-    orderColor (order) {
-      const type = order.type === 'sell' ? 'danger' : 'success'
-      return `has-text-${type}`
+    orderColor(order) {
+      const type = order.type === 'sell' ? 'danger' : 'success';
+      return `has-text-${type}`;
     },
-    formatAmount
-  }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">

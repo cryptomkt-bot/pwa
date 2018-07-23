@@ -15,8 +15,8 @@
             <div class="card-content">
               <!-- Amount -->
               <label for="amount" class="label is-small">Cantidad</label>
-              <CurrencyField :id="'amount'" :currency="currentMarket.baseCurrency" v-model="remainingAmount"
-                             :placeholder="inputsPlaceholder" :disabled="isLoading"
+              <CurrencyField :id="'amount'" v-model="remainingAmount" :disabled="isLoading"
+                             :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
                              :showMaxButton="true" @maxButtonClicked="setMaxAmount" />
 
               <!-- Spread -->
@@ -24,12 +24,12 @@
               <div class="field has-addons">
                 <!-- Input -->
                 <div class="control">
-                  <input id="spread" class="input" type="number" step="0.01" v-model.number="minSpread"
-                         :placeholder="inputsPlaceholder" :disabled="isLoading">
+                  <input id="spread" type="number" step="0.01" v-model.number="minSpread"
+                         :placeholder="inputsPlaceholder" :disabled="isLoading" class="input">
                 </div>
                 <!-- Percent sign -->
                 <div class="control">
-                  <span class="button is-static" :disabled="isLoading">%</span>
+                  <span :disabled="isLoading" class="button is-static">%</span>
                 </div>
               </div>
             </div>
@@ -56,82 +56,82 @@
 </template>
 
 <script>
-import CurrencyField from './CurrencyField'
+import CurrencyField from './CurrencyField.vue';
 
 export default {
   name: 'Seller',
   components: { CurrencyField },
-  props: [ 'isButtonVisible' ],
+  props: ['isButtonVisible'],
   dependencies: ['apiService'],
-  data () {
+  data() {
     return {
       seller: null,
       remainingAmount: null,
       isModalVisible: false,
-      updating: false
-    }
+      updating: false,
+    };
   },
   computed: {
-    currentMarket () {
-      return this.$store.state.currentMarket
+    currentMarket() {
+      return this.$store.state.currentMarket;
     },
-    endpoint () {
-      return `seller/${this.currentMarket.code}`
+    endpoint() {
+      return `seller/${this.currentMarket.code}`;
     },
-    isLoading () {
-      return this.updating || this.seller === null
+    isLoading() {
+      return this.updating || this.seller === null;
     },
-    inputsPlaceholder () {
-      return this.seller === null ? 'Cargando ...' : ''
+    inputsPlaceholder() {
+      return this.seller === null ? 'Cargando ...' : '';
     },
     minSpread: {
-      get () {
-        return this.seller ? this.seller.min_spread : null
+      get() {
+        return this.seller ? this.seller.min_spread : null;
       },
-      set (newValue) {
-        this.seller.min_spread = newValue
-      }
-    }
+      set(newValue) {
+        this.seller.min_spread = newValue;
+      },
+    },
   },
   watch: {
-    isModalVisible (newValue) {
+    isModalVisible(newValue) {
       if (newValue === true) {
-        this.seller = null
-        this.remainingAmount = null
-        this.apiService.get(this.endpoint).then(response => {
-          this.seller = response.data
-          this.remainingAmount = this.seller.remaining_amount
-        })
+        this.seller = null;
+        this.remainingAmount = null;
+        this.apiService.get(this.endpoint).then((response) => {
+          this.seller = response.data;
+          this.remainingAmount = this.seller.remaining_amount;
+        });
       }
-    }
+    },
   },
   methods: {
-    setMaxAmount () {
-      const url = `/balance/${this.currentMarket.baseCurrency.code}`
-      this.apiService.get(url).then(response => {
-        const availableBalance = Number(response.data.available)
-        this.remainingAmount = this.seller.remaining_amount + availableBalance
-      })
+    setMaxAmount() {
+      const url = `/balance/${this.currentMarket.baseCurrency.code}`;
+      this.apiService.get(url).then((response) => {
+        const availableBalance = Number(response.data.available);
+        this.remainingAmount = this.seller.remaining_amount + availableBalance;
+      });
     },
-    submit () {
+    submit() {
       if (this.isLoading) {
-        return
+        return;
       }
-      this.updating = true
-      this.seller.remaining_amount = this.remainingAmount
+      this.updating = true;
+      this.seller.remaining_amount = this.remainingAmount;
       this.apiService.patch(this.endpoint, this.seller).then(() => {
-        this.hideModal()
-        this.updating = false
-      })
+        this.hideModal();
+        this.updating = false;
+      });
     },
-    showModal () {
-      this.isModalVisible = true
+    showModal() {
+      this.isModalVisible = true;
     },
-    hideModal () {
-      this.isModalVisible = false
-    }
-  }
-}
+    hideModal() {
+      this.isModalVisible = false;
+    },
+  },
+};
 </script>
 
 <style lang="scss">

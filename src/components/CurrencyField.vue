@@ -1,21 +1,20 @@
 <template>
   <div class="field has-addons">
-    <div class="control" v-if="showMaxButton && !currency.prefix">
-      <button class="button is-info" @click="setMaxAmount" :disabled="disabled">Max</button>
+    <div v-if="showMaxButton && !currency.prefix" class="control">
+      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">Max</button>
     </div>
-    <div class="control" v-else-if="currency.prefix">
-      <span class="button is-static" :disabled="disabled">{{ currency.prefix }}</span>
+    <div v-else-if="currency.prefix" class="control">
+      <span :disabled="disabled" class="button is-static">{{ currency.prefix }}</span>
     </div>
     <div class="control">
-      <input :id="id" class="input" :value="value" type="number" min="0" ref="input"
-             :step="currency.step" @input="emitValue"
-             :placeholder="placeholder" :disabled="disabled">
+      <input type="number" :id="id" ref="input" :value="value" min="0" :step="currency.step"
+             :placeholder="placeholder" :disabled="disabled" @input="emitValue" class="input">
     </div>
-    <div class="control" v-if="currency.postfix">
-      <span class="button is-static" :disabled="disabled">{{ currency.postfix }}</span>
+    <div v-if="currency.postfix" class="control">
+      <span :disabled="disabled" class="button is-static">{{ currency.postfix }}</span>
     </div>
-    <div class="control" v-else-if="showMaxButton">
-      <button class="button is-info" @click="setMaxAmount" :disabled="disabled">Max</button>
+    <div v-else-if="showMaxButton" class="control">
+      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">Max</button>
     </div>
   </div>
 </template>
@@ -23,19 +22,15 @@
 <script>
 export default {
   name: 'CurrencyField',
-  props: [ 'id', 'currency', 'value', 'showMaxButton', 'placeholder', 'disabled' ],
+  props: ['id', 'currency', 'value', 'showMaxButton', 'placeholder', 'disabled'],
   methods: {
-    emitValue () {
-      const value = Number(this.$refs.input.value)
-      this.$emit('input', value)
+    emitValue() {
+      const value = Number(this.$refs.input.value);
+      this.$emit('input', value);
     },
-    setMaxAmount () {
-      this.$emit('maxButtonClicked')
-    }
-  }
-}
+    setMaxAmount() {
+      this.$emit('maxButtonClicked');
+    },
+  },
+};
 </script>
-
-<style scoped>
-
-</style>

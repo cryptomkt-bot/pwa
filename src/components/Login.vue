@@ -3,35 +3,35 @@
     <h1 class="title has-text-weight-light has-text-centered is-marginless">CryptoMKT Bot</h1>
     <div class="section">
       <div class="card">
-        <form class="card-content" @submit.prevent="login">
+        <form @submit.prevent="login" class="card-content">
           <div class="field">
             <label for="apiAddress" class="label">Dirección de API</label>
             <div class="control">
-              <input id="apiAddress" class="input" type="text"
+              <input id="apiAddress" type="text" required
                      v-model="apiAddress" @click="hideSignature" @blur="showSignature"
-                     placeholder="Ingrese la dirección de la API" required>
+                     placeholder="Ingrese la dirección de la API" class="input">
             </div>
           </div>
           <div class="field">
-            <label for="username" class="label">Nombre de usuario</label>
+            <label for="username" class="label">Usuario</label>
             <div class="control">
-              <input id="username" class="input" type="text" autocapitalize="off"
+              <input id="username" type="text" autocapitalize="off" required
                      v-model="username" @click="hideSignature" @blur="showSignature"
-                     placeholder="Ingrese su nombre de usuario" required>
+                     placeholder="Ingrese su nombre de usuario" class="input">
             </div>
           </div>
           <div class="field">
             <label for="password" class="label">Contraseña</label>
             <div class="control">
-              <input id="password" class="input" type="password"
+              <input id="password" type="password" required
                      v-model="password" @click="hideSignature" @blur="showSignature"
-                     placeholder="Ingrese su contraseña" required>
+                     placeholder="Ingrese su contraseña" class="input">
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-primary is-fullwidth"
-                      :disabled="!this.username || !this.password">Iniciar sesión</button>
+              <button :disabled="!this.username || !this.password"
+                      class="button is-primary is-fullwidth">Iniciar sesión</button>
             </div>
           </div>
         </form>
@@ -44,43 +44,43 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService'
+import ApiService from '../services/ApiService';
+import StorageHelper from '../helpers/StorageHelper';
 
 export default {
   name: 'Login',
-  dependencies: ['storageService'],
-  data () {
+  data() {
     return {
       apiAddress: null,
       username: '',
       password: '',
-      isSignatureVisible: true
-    }
+      isSignatureVisible: true,
+    };
   },
-  created () {
-    this.restoreFromStorage()
+  created() {
+    this.restoreFromStorage();
   },
   methods: {
-    login () {
-      const api = new ApiService(this.apiAddress)
+    login() {
+      const api = new ApiService(this.apiAddress);
       api.login(this.username, this.password).then(() => {
-        this.$emit('loggedIn')
+        this.$emit('loggedIn');
       }).catch(() => {
-        alert('Usuario o contraseña incorrecta.')
-      })
+        alert('Usuario o contraseña incorrecta.');
+      });
     },
-    restoreFromStorage () {
-      this.apiAddress = this.storageService.get('apiAddress')
-      this.username = this.storageService.get('username')
+    restoreFromStorage() {
+      this.apiAddress = StorageHelper.get('apiAddress');
+      this.username = StorageHelper.get('username');
     },
-    hideSignature () {
-      this.isSignatureVisible = false
+    hideSignature() {
+      this.isSignatureVisible = false;
     },
-    showSignature () {
-      this.isSignatureVisible = true
-    }
-  }
-}
+    showSignature() {
+      this.isSignatureVisible = true;
+    },
+  },
+};
 </script>
 
 <style scoped>

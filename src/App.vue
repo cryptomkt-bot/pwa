@@ -20,7 +20,8 @@
       </div>
       <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
       <!-- Active orders -->
-      <div class="section-name has-text-centered" @click="isActiveOrdersVisible = !isActiveOrdersVisible">
+      <div @click="isActiveOrdersVisible = !isActiveOrdersVisible"
+           class="section-name has-text-centered">
         Órdenes abiertas
         <span class="icon is-size-7 is-pulled-right">
           <i v-if="isActiveOrdersVisible" class="fa fa-minus"></i>
@@ -29,7 +30,8 @@
       </div>
       <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
       <!-- Executed orders -->
-      <div class="section-name has-text-centered" @click="isExecutedOrdersVisible = !isExecutedOrdersVisible">
+      <div @click="isExecutedOrdersVisible = !isExecutedOrdersVisible"
+           class="section-name has-text-centered">
         Órdenes históricas
         <span class="icon is-size-7 is-pulled-right">
           <i v-if="isExecutedOrdersVisible" class="fa fa-minus"></i>
@@ -48,36 +50,36 @@
 </template>
 
 <script>
-import ActiveOrders from './components/ActiveOrders'
-import Balance from './components/Balance'
-import Buyer from './components/Buyer'
-import OpenOrder from './components/OpenOrder'
-import OrderBook from './components/OrderBook'
-import Footer from './components/Footer'
-import TopPanel from './components/TopPanel'
-import Trades from './components/Trades'
-import Seller from './components/Seller'
-import Login from './components/Login'
-import ExecutedOrders from './components/ExecutedOrders'
-import ConfirmationDialog from './components/ConfirmationDialog'
+import ActiveOrders from './components/ActiveOrders.vue';
+import Balance from './components/Balance.vue';
+import Buyer from './components/Buyer.vue';
+import ConfirmationDialog from './components/ConfirmationDialog.vue';
+import ExecutedOrders from './components/ExecutedOrders.vue';
+import Footer from './components/Footer.vue';
+import Login from './components/Login.vue';
+import OpenOrder from './components/OpenOrder.vue';
+import OrderBook from './components/OrderBook.vue';
+import Seller from './components/Seller.vue';
+import TopPanel from './components/TopPanel.vue';
+import Trades from './components/Trades.vue';
 
 export default {
   name: 'App',
   components: {
-    ConfirmationDialog,
     ActiveOrders,
-    ExecutedOrders,
+    ConfirmationDialog,
     Balance,
     Buyer,
+    ExecutedOrders,
     Footer,
     Login,
     OpenOrder,
     OrderBook,
     Seller,
+    TopPanel,
     Trades,
-    TopPanel
   },
-  data () {
+  data() {
     return {
       isLogged: false,
       ask: 0,
@@ -87,28 +89,28 @@ export default {
       isActiveOrdersVisible: false,
       isExecutedOrdersVisible: false,
       isOpenOrderModalVisible: false,
-      areTradersVisible: true
-    }
+      areTradersVisible: true,
+    };
   },
   methods: {
-    updateTicker (ask, bid) {
-      this.ask = ask
-      this.bid = bid
+    updateTicker(ask, bid) {
+      this.ask = ask;
+      this.bid = bid;
     },
-    updateActiveOrders (orders) {
-      this.activeOrders = orders
+    updateActiveOrders(orders) {
+      this.activeOrders = orders;
     },
-    logout () {
-      this.isLogged = false
-      localStorage.removeItem('token')
-      this.isTradesVisible = false
-      this.isActiveOrdersVisible = false
-      this.isExecutedOrdersVisible = false
-      this.isOpenOrderModalVisible = false
-      this.areTradersVisible = true
-    }
-  }
-}
+    logout() {
+      this.isLogged = false;
+      localStorage.removeItem('token');
+      this.isTradesVisible = false;
+      this.isActiveOrdersVisible = false;
+      this.isExecutedOrdersVisible = false;
+      this.isOpenOrderModalVisible = false;
+      this.areTradersVisible = true;
+    },
+  },
+};
 </script>
 
 <style lang="scss">

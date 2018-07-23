@@ -8,18 +8,24 @@
     <span v-else-if="!orders.length" class="is-size-7">No hay órdenes abiertas.</span>
     <table v-else class="table is-fullwidth is-marginless is-size-7">
       <thead>
-        <th>ID</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
-        <th>Eliminar</th>
+        <tr>
+          <th>ID</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Eliminar</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.id">
           <td>{{ order.id }}</td>
-          <td :class="orderColor(order)">{{ formatAmount(order.price, market.quoteCurrency, market.decimals) }}</td>
-          <td>{{ formatAmount(order.amount.remaining, market.baseCurrency, market.baseCurrency.decimals) }}</td>
+          <td :class="orderColor(order)">
+            {{ formatAmount(order.price, market.quoteCurrency, market.decimals) }}
+          </td>
           <td>
-            <span class="icon is-small" @click="deleteOrder(order.id)">
+            {{ formatAmount(order.amount.remaining, market.baseCurrency, market.baseCurrency.decimals) }}
+          </td>
+          <td>
+            <span @click="cancelOrder(order.id)" class="icon is-small">
               <i class="fa fa-times"></i>
             </span>
           </td>
@@ -30,79 +36,73 @@
 </template>
 
 <script>
-import { formatAmount } from '../utils'
+import { formatAmount } from '../utils';
 
 export default {
   name: 'ActiveOrders',
   dependencies: ['apiService'],
-  data () {
+  data() {
     return {
       market: null,
       orders: [],
-      intervalId: null
-    }
+      intervalId: null,
+    };
   },
-  created () {
-    this.init(this.currentMarket)
+  created() {
+    this.init();
   },
-  destroyed () {
-    clearInterval(this.intervalId)
+  destroyed() {
+    clearInterval(this.intervalId);
   },
   computed: {
-    currentMarket () {
-      return this.$store.state.currentMarket
-    }
+    currentMarket() {
+      return this.$store.state.currentMarket;
+    },
   },
   watch: {
-    currentMarket (newMarket) {
-      this.init(newMarket)
-    }
+    currentMarket() {
+      this.init();
+    },
   },
   methods: {
-    init (market) {
-      this.market = null
-      this.getOrders(market).then(orders => {
-        this.orders = orders
-        this.market = market
-        clearInterval(this.intervalId)
-        this.intervalId = setInterval(() => {
-          this.getOrders(market).then(orders => {
-            this.orders = orders
-          })
-        }, 10000)
-      })
+    formatAmount,
+    init() {
+      clearInterval(this.intervalId);
+      this.market = null;
+      this.updateOrders().then(() => {
+        this.market = this.currentMarket;
+      });
+      // Update orders every 10 seconds
+      this.intervalId = setInterval(() => {
+        this.updateOrders();
+      }, 10000);
     },
-    getOrders (market) {
-      const url = `/orders/active/${market.code}`
-      return this.apiService.get(url).then(response => {
-        const orders = response.data
-        this.$emit('ordersUpdated', orders)
-        return new Promise(resolve => resolve(orders))
-      })
+    updateOrders() {
+      const url = `/orders/active/${this.currentMarket.code}`;
+      return this.apiService.get(url).then((response) => {
+        this.orders = response.data;
+        this.$emit('ordersUpdated', this.orders);
+      });
     },
-    deleteOrder (orderId) {
+    cancelOrder(orderId) {
       this.$store.commit('showDialog', {
-        text: `¿Desea eliminar la orden ${orderId}?`,
+        text: `¿Desea cancelar la orden ${orderId}?`,
         callback: () => {
-          this.doDeleteOrder(orderId)
-        }
-      })
+          this.doCancelOrder(orderId);
+        },
+      });
     },
-    doDeleteOrder (orderId) {
-      const endpoint = `/orders/${orderId}`
-      this.apiService.delete(endpoint).then(response => {
-        orderId = response.data.id
-        this.orders = this.orders.filter(order => order.id !== orderId)
-      })
+    doCancelOrder(orderId) {
+      const endpoint = `/orders/${orderId}`;
+      this.apiService.delete(endpoint).then((response) => {
+        const cancelledOrder = response.data;
+        this.orders = this.orders.filter(order => order.id !== cancelledOrder.id);
+      });
     },
-    orderColor (order) {
-      const type = order.type === 'sell' ? 'danger' : 'success'
-      return `has-text-${type}`
+    orderColor(order) {
+      const type = order.type === 'sell' ? 'danger' : 'success';
+      return `has-text-${type}`;
     },
-    formatAmount
-  }
-}
+  },
+};
 </script>
-
-<style scoped>
-</style>

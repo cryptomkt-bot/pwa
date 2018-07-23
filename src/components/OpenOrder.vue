@@ -52,112 +52,110 @@
 </template>
 
 <script>
-import CurrencyField from './CurrencyField'
-import { formatAmount } from '../utils'
+import CurrencyField from './CurrencyField.vue';
+import { formatAmount } from '../utils';
 
 export default {
   name: 'OpenOrder',
   components: { CurrencyField },
   dependencies: ['apiService'],
-  data () {
+  data() {
     return {
       order: null,
-      isLoading: false
-    }
+      isLoading: false,
+    };
   },
-  created () {
-    this.initialize()
+  created() {
+    this.init();
   },
   computed: {
-    currentMarket () {
-      return this.$store.state.currentMarket
+    currentMarket() {
+      return this.$store.state.currentMarket;
     },
-    isOrderValid () {
-      if (this.order.type !== 'buy' && this.order.type !== 'sell') {
-        return false
-      }
-      if (this.order.price <= 0) {
-        return false
-      }
-      if (this.order.amount < this.currentMarket.baseCurrency.step) {
-        return false
-      }
-      return true
+    isOrderValid() {
+      return (
+        (this.order.price > 0) &&
+        (this.order.amount >= this.currentMarket.baseCurrency.step) &&
+        (this.order.type === 'buy' || this.order.type === 'sell')
+      );
     },
-    infoMessage () {
-      let amount = this.order.amount * this.order.price
-      const currency = this.currentMarket.quoteCurrency
-      amount = this.formatAmount(amount, currency, currency.decimals)
+    infoMessage() {
+      let amount = this.order.amount * this.order.price;
+      const currency = this.currentMarket.quoteCurrency;
+      amount = this.formatAmount(amount, currency, currency.decimals);
       if (this.order.type === 'buy') {
-        return `Gastando ${amount}`
-      } else {
-        return `Recibirás ${amount} (menos comisión)`
+        return `Gastando ${amount}`;
       }
-    }
+      return `Recibirás ${amount} (menos comisión)`;
+    },
   },
   methods: {
-    initialize () {
+    formatAmount,
+    init() {
       this.order = {
         type: 'buy',
         price: null,
-        amount: null
-      }
+        amount: null,
+      };
     },
-    setMaxAmount () {
-      let currency, amount
+    setMaxAmount() {
+      let currency;
       if (this.order.type === 'sell') {
-        currency = this.currentMarket.baseCurrency
+        currency = this.currentMarket.baseCurrency;
       } else {
-        currency = this.currentMarket.quoteCurrency
+        currency = this.currentMarket.quoteCurrency;
       }
-      const endpoint = `/balance/${currency.code}`
-      this.apiService.get(endpoint).then(response => {
-        amount = Number(response.data.available)
+      const endpoint = `/balance/${currency.code}`;
+      this.apiService.get(endpoint).then((response) => {
+        let amount = Number(response.data.available);
         if (this.order.type === 'buy') {
           if (this.order.price > 0) {
-            amount = amount / this.order.price
+            amount /= this.order.price;
           } else {
-            amount = 0
+            amount = 0;
           }
         }
-        this.order.amount = amount
-      })
+        this.order.amount = amount;
+      });
     },
-    submit () {
+    confirmOrder() {
+      const { baseCurrency } = this.currentMarket;
+      const amount = this.formatAmount(this.order.amount, baseCurrency, baseCurrency.decimals);
+      const price = this.formatAmount(
+        this.order.price,
+        this.currentMarket.quoteCurrency,
+        this.currentMarket.decimals
+      );
+      const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender';
+      const text = `¿Desea ${typeVerb} ${amount} a ${price}?`;
+      const callback = this.doSubmit;
+      this.$store.commit('showDialog', { text, callback });
+    },
+    submit() {
       if (!this.isOrderValid) {
-        return
+        return;
       }
-      this.confirmOrder()
+      this.confirmOrder();
     },
-    doSubmit () {
-      this.isLoading = true
-      const url = `/orders/${this.currentMarket.code}`
+    doSubmit() {
+      this.isLoading = true;
+      const url = `/orders/${this.currentMarket.code}`;
       this.apiService.post(url, this.order).then(() => {
-        this.isLoading = false
-        this.hideModal()
+        this.isLoading = false;
+        this.hideModal();
         this.order = {
           type: 'buy',
           price: null,
-          amount: null
-        }
-      })
+          amount: null,
+        };
+      });
     },
-    hideModal () {
-      this.$emit('close')
-      this.initialize()
+    hideModal() {
+      this.$emit('close');
+      this.init();
     },
-    confirmOrder () {
-      const baseCurrency = this.currentMarket.baseCurrency
-      const amount = this.formatAmount(this.order.amount, baseCurrency, baseCurrency.decimals)
-      const price = this.formatAmount(this.order.price, this.currentMarket.quoteCurrency, this.currentMarket.decimals)
-      const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender'
-      const text = `¿Desea ${typeVerb} ${amount} a ${price}?`
-      const callback = this.doSubmit
-      this.$store.commit('showDialog', { text, callback })
-    },
-    formatAmount
-  }
-}
+  },
+};
 </script>
 
 <style>

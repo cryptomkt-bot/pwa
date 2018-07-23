@@ -1,14 +1,15 @@
 <template>
   <div id="top-panel">
     <div id="market-select" class="select">
-      <select v-model="currentMarket">
+      <select v-model="currentMarket" title="Select market">
         <optgroup v-for="country in countries" :key="country" :label="country">
           <option v-for="market in markets[country]" :key="market.code" :value="market"
                   :selected="market.code === currentMarket.code">{{ market.code }}</option>
         </optgroup>
       </select>
     </div>
-    <button id="open-order" class="button is-success is-size-6" @click="$emit('openOrderModalOpened')">
+    <button id="open-order" @click="$emit('openOrderModalOpened')"
+            class="button is-success is-size-6">
       <span class="icon">+</span> Abrir orden
     </button>
     <button id="logout-button" @click="logout" class="button">
@@ -18,48 +19,45 @@
 </template>
 
 <script>
-import {countries, markets} from '../constants'
+import { countries, markets } from '../constants';
 
 export default {
   name: 'TopPanel',
-  data () {
+  data() {
     return {
       countries: [],
       markets: [],
-      isDropdownVisible: false
-    }
+      isDropdownVisible: false,
+    };
   },
-  created () {
-    this.countries = countries
-    this.markets = markets
+  created() {
+    this.countries = countries;
+    this.markets = markets;
   },
   computed: {
     currentMarket: {
-      get () {
-        return this.$store.state.currentMarket
+      get() {
+        return this.$store.state.currentMarket;
       },
-      set (newValue) {
-        this.$store.commit('changeMarket', newValue)
-      }
+      set(newValue) {
+        this.$store.commit('changeMarket', newValue);
+      },
     },
-    otherMarkets () {
-      return this.markets.filter(market => market.code !== this.currentMarket.code)
-    }
   },
   methods: {
-    changeMarket (market) {
-      this.$store.commit('changeMarket', market)
+    changeMarket(market) {
+      this.$store.commit('changeMarket', market);
     },
-    logout () {
+    logout() {
       this.$store.commit('showDialog', {
         text: '¿Desea salir?',
         callback: () => {
-          this.$emit('loggedOut')
-        }
-      })
-    }
-  }
-}
+          this.$emit('loggedOut');
+        },
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss">

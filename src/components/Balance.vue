@@ -9,9 +9,11 @@
     <div id="balance-content" v-show="isContentVisible">
       <table class="table is-fullwidth is-size-7">
         <thead>
-          <th></th>
-          <th>Saldo contable</th>
-          <th>Saldo disponible</th>
+          <tr>
+            <th></th>
+            <th>Saldo contable</th>
+            <th>Saldo disponible</th>
+          </tr>
         </thead>
         <tbody>
           <tr v-for="balance in balances" :key="balance.wallet">
@@ -35,31 +37,31 @@
 export default {
   name: 'Balance',
   dependencies: ['apiService'],
-  data () {
+  data() {
     return {
       isContentVisible: false,
-      balances: []
-    }
+      balances: [],
+    };
   },
-  created () {
-    this.getBalances()
+  created() {
+    this.getBalances();
   },
   watch: {
-    isContentVisible (newValue) {
-      this.$emit('visibilityChanged', newValue)
+    isContentVisible(newValue) {
+      this.$emit('visibilityChanged', newValue);
       if (newValue === true) {
-        this.getBalances()
+        this.getBalances();
       }
-    }
+    },
   },
   methods: {
-    getBalances () {
-      this.apiService.get('/balance').then(response => {
-        this.balances = response.data
-      })
-    }
-  }
-}
+    getBalances() {
+      this.apiService.get('/balance').then((response) => {
+        this.balances = response.data;
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss">

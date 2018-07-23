@@ -17,11 +17,11 @@ export default {
   name: 'Footer',
   props: ['ask', 'bid'],
   computed: {
-    currentMarket () {
-      return this.$store.state.currentMarket
-    }
-  }
-}
+    currentMarket() {
+      return this.$store.state.currentMarket;
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">

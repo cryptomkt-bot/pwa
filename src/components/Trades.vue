@@ -7,9 +7,11 @@
     </div>
     <table v-else class="table is-fullwidth is-marginless is-size-7">
       <thead>
-        <th>Fecha</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
+        <tr>
+          <th>Fecha</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.timestamp">
@@ -17,7 +19,9 @@
           <td :class="orderColor(order)">
             {{ formatAmount(order.price, currentMarket.quoteCurrency, currentMarket.decimals) }}
           </td>
-          <td>{{ formatAmount(order.amount, currentMarket.baseCurrency, currentMarket.baseCurrency.decimals) }}</td>
+          <td>
+            {{ formatAmount(order.amount, currentMarket.baseCurrency, currentMarket.baseCurrency.decimals) }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -25,71 +29,64 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { formatAmount } from '../utils'
+import { formatAmount } from '../utils';
+import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 export default {
   name: 'Trades',
   props: ['isVisible'],
-  data () {
+  data() {
     return {
       market: null,
       orders: [],
-      intervalId: null
-    }
+      intervalId: null,
+    };
   },
-  destroyed () {
-    clearInterval(this.intervalId)
+  destroyed() {
+    clearInterval(this.intervalId);
   },
   computed: {
-    currentMarket () {
-      return this.$store.state.currentMarket
-    }
+    currentMarket() {
+      return this.$store.state.currentMarket;
+    },
   },
   watch: {
-    isVisible (newValue) {
+    isVisible(newValue) {
       if (newValue === true) { // The component is visible
-        this.init(this.currentMarket) // Get latest orders
-      } else { // The component gets hidden
-        this.orders = []
-        clearInterval(this.intervalId) // Stop updating the orders
+        this.init();
+      } else { // The component is hidden
+        this.orders = [];
+        clearInterval(this.intervalId); // Stop updating the orders
       }
     },
-    currentMarket (newMarket) {
-      this.init(newMarket)
-    }
+    currentMarket() {
+      this.init();
+    },
   },
   methods: {
-    init (market) {
-      this.market = null
-      this.getOrders().then(orders => {
-        this.orders = orders
-        this.market = market
-        clearInterval(this.intervalId) // Stop updating the orders
-        this.intervalId = setInterval(() => {
-          this.getOrders(market).then(orders => {
-            this.orders = orders
-          })
-        }, 10000) // Update trades every 10 secs
-      })
+    formatAmount,
+    init() {
+      clearInterval(this.intervalId);
+      this.market = null;
+      this.updateOrders().then(() => {
+        this.market = this.currentMarket;
+      });
+      // Update orders every 10 seconds
+      this.intervalId = setInterval(() => {
+        this.updateOrders();
+      }, 10000);
     },
-    getOrders () {
-      const url = 'https://api.cryptomkt.com/v1/trades'
-      const params = {
-        market: this.currentMarket.code,
-        limit: 100
-      }
-      return axios.get(url, { params }).then(
-        response => new Promise(resolve => resolve(response.data.data))
-      )
+    updateOrders() {
+      return CryptoMktHelper.getTrades(this.currentMarket.code).then((orders) => {
+        this.orders = orders;
+      });
     },
-    orderColor (order) {
-      const type = order.market_taker === 'sell' ? 'danger' : 'success'
-      return `has-text-${type}`
+    orderColor(order) {
+      const type = order.market_taker === 'sell' ? 'danger' : 'success';
+      return `has-text-${type}`;
     },
-    formatAmount
-  }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">

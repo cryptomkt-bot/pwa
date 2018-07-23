@@ -16,12 +16,12 @@
               <!-- Amount -->
               <label for="amount" class="label is-small">Cantidad</label>
               <CurrencyField :id="'amount'" :currency="currentMarket.baseCurrency" v-model="remainingAmount"
-                             :placeholder="inputsPlaceholder" :disabled="isLoading" />
+                             :disabled="isLoading" :placeholder="inputsPlaceholder" />
 
               <!-- Fiat -->
               <label for="fiat" class="label is-small">Fiat restante</label>
               <CurrencyField :id="'amount'" :currency="currentMarket.quoteCurrency" v-model="remainingFiat"
-                             :placeholder="inputsPlaceholder" :disabled="isLoading"
+                             :disabled="isLoading" :placeholder="inputsPlaceholder"
                              :showMaxButton="true" @maxButtonClicked="setMaxFiat" />
 
               <!-- Info -->
@@ -49,88 +49,88 @@
 </template>
 
 <script>
-import CurrencyField from './CurrencyField'
+import CurrencyField from './CurrencyField.vue';
 
 export default {
   name: 'Buyer',
   components: { CurrencyField },
-  props: [ 'isButtonVisible' ],
+  props: ['isButtonVisible'],
   dependencies: ['apiService'],
-  data () {
+  data() {
     return {
       buyer: null,
       remainingFiat: null,
       isModalVisible: false,
-      updating: false
-    }
+      updating: false,
+    };
   },
   computed: {
-    currentMarket () {
-      return this.$store.state.currentMarket
+    currentMarket() {
+      return this.$store.state.currentMarket;
     },
-    endpoint () {
-      return `buyer/${this.currentMarket.code}`
+    endpoint() {
+      return `buyer/${this.currentMarket.code}`;
     },
-    maxPrice () {
+    maxPrice() {
       if (this.buyer === null || this.remainingAmount === 0) {
-        return 0
+        return 0;
       }
-      return Math.round(this.remainingFiat / this.remainingAmount)
+      return Math.round(this.remainingFiat / this.remainingAmount);
     },
-    isLoading () {
-      return this.updating || this.buyer === null
+    isLoading() {
+      return this.updating || this.buyer === null;
     },
-    inputsPlaceholder () {
-      return this.buyer === null ? 'Cargando ...' : ''
+    inputsPlaceholder() {
+      return this.buyer === null ? 'Cargando ...' : '';
     },
     remainingAmount: {
-      get () {
-        return this.buyer ? this.buyer.remaining_amount : null
+      get() {
+        return this.buyer ? this.buyer.remaining_amount : null;
       },
-      set (newValue) {
-        this.buyer.remaining_amount = newValue
-      }
-    }
+      set(newValue) {
+        this.buyer.remaining_amount = newValue;
+      },
+    },
   },
   watch: {
-    isModalVisible (newValue) {
+    isModalVisible(newValue) {
       if (newValue === true) {
-        this.buyer = null
-        this.remainingFiat = null
-        this.apiService.get(this.endpoint).then(response => {
-          this.buyer = response.data
-          this.remainingFiat = this.buyer.remaining_fiat
-        })
+        this.buyer = null;
+        this.remainingFiat = null;
+        this.apiService.get(this.endpoint).then((response) => {
+          this.buyer = response.data;
+          this.remainingFiat = this.buyer.remaining_fiat;
+        });
       }
-    }
+    },
   },
   methods: {
-    setMaxFiat () {
-      const url = `/balance/${this.currentMarket.quoteCurrency.code}`
-      this.apiService.get(url).then(response => {
-        const availableBalance = Number(response.data.available)
-        this.remainingFiat = this.buyer.remaining_fiat + availableBalance
-      })
+    setMaxFiat() {
+      const url = `/balance/${this.currentMarket.quoteCurrency.code}`;
+      this.apiService.get(url).then((response) => {
+        const availableBalance = Number(response.data.available);
+        this.remainingFiat = this.buyer.remaining_fiat + availableBalance;
+      });
     },
-    submit () {
+    submit() {
       if (this.isLoading) {
-        return
+        return;
       }
-      this.updating = true
-      this.buyer.remaining_fiat = this.remainingFiat
+      this.updating = true;
+      this.buyer.remaining_fiat = this.remainingFiat;
       this.apiService.patch(this.endpoint, this.buyer).then(() => {
-        this.hideModal()
-        this.updating = false
-      })
+        this.hideModal();
+        this.updating = false;
+      });
     },
-    showModal () {
-      this.isModalVisible = true
+    showModal() {
+      this.isModalVisible = true;
     },
-    hideModal () {
-      this.isModalVisible = false
-    }
-  }
-}
+    hideModal() {
+      this.isModalVisible = false;
+    },
+  },
+};
 </script>
 
 <style lang="scss">
