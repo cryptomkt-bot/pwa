@@ -1,5 +1,5 @@
 # CryptoMKT Bot
-<img src="https://tanoabeleyra.github.io/cryptomkt-bot-webapp/static/icon-512.png" label="icon" width="256px">
+<img src="https://tanoabeleyra.github.io/cryptomkt-bot-webapp/img/icons/android-chrome-512x512.png" label="icon" width="256px">
 
 > A web app for a trading bot running on [CryptoMarket](https://www.cryptomkt.com).
 
