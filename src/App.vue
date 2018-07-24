@@ -1,49 +1,52 @@
 <template>
   <div id="app" class="is-unselectable">
-    <!-- Login page -->
-    <Login v-if="!isLogged" @loggedIn="isLogged = true"/>
+    <Toast />
+    <div id="wrapper">
+      <!-- Login page -->
+      <Login v-if="!isLogged" @loggedIn="isLogged = true"/>
 
-    <!-- Main app -->
-    <div v-else>
-      <ConfirmationDialog />
-      <transition name="fade">
-        <OpenOrder v-show="isOpenOrderModalVisible" @close="isOpenOrderModalVisible = false" />
-      </transition>
-      <TopPanel @loggedOut="logout" @openOrderModalOpened="isOpenOrderModalVisible = true"/>
-      <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
-      <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
-        Últimas transacciones
-        <span class="icon is-size-7 is-pulled-right">
-          <i v-if="isTradesVisible" class="fa fa-minus"></i>
-          <i v-else class="fa fa-plus"></i>
-        </span>
-      </div>
-      <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
-      <!-- Active orders -->
-      <div @click="isActiveOrdersVisible = !isActiveOrdersVisible"
-           class="section-name has-text-centered">
-        Órdenes abiertas
-        <span class="icon is-size-7 is-pulled-right">
-          <i v-if="isActiveOrdersVisible" class="fa fa-minus"></i>
-          <i v-else class="fa fa-plus"></i>
-        </span>
-      </div>
-      <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
-      <!-- Executed orders -->
-      <div @click="isExecutedOrdersVisible = !isExecutedOrdersVisible"
-           class="section-name has-text-centered">
-        Órdenes históricas
-        <span class="icon is-size-7 is-pulled-right">
-          <i v-if="isExecutedOrdersVisible" class="fa fa-minus"></i>
-          <i v-else class="fa fa-plus"></i>
-        </span>
-      </div>
-      <ExecutedOrders v-show="isExecutedOrdersVisible" :isVisible="isExecutedOrdersVisible"/>
-      <div id="footer">
-        <Balance @visibilityChanged="areTradersVisible = !$event"/>
-        <Seller :isButtonVisible="areTradersVisible"/>
-        <Buyer :isButtonVisible="areTradersVisible"/>
-        <Footer :ask="ask" :bid="bid"/>
+      <!-- Main app -->
+      <div v-else>
+        <ConfirmationDialog />
+        <transition name="fade">
+          <OpenOrder v-show="isOpenOrderModalVisible" @close="isOpenOrderModalVisible = false" />
+        </transition>
+        <TopPanel @loggedOut="logout" @openOrderModalOpened="isOpenOrderModalVisible = true"/>
+        <OrderBook :activeOrders="activeOrders" @tickerUpdated="updateTicker(...$event)"/>
+        <div class="section-name has-text-centered" @click="isTradesVisible = !isTradesVisible">
+          Últimas transacciones
+          <span class="icon is-size-7 is-pulled-right">
+            <i v-if="isTradesVisible" class="fa fa-minus"></i>
+            <i v-else class="fa fa-plus"></i>
+          </span>
+        </div>
+        <Trades v-show="isTradesVisible" :isVisible="isTradesVisible"/>
+        <!-- Active orders -->
+        <div @click="isActiveOrdersVisible = !isActiveOrdersVisible"
+             class="section-name has-text-centered">
+          Órdenes abiertas
+          <span class="icon is-size-7 is-pulled-right">
+            <i v-if="isActiveOrdersVisible" class="fa fa-minus"></i>
+            <i v-else class="fa fa-plus"></i>
+          </span>
+        </div>
+        <ActiveOrders v-show="isActiveOrdersVisible" @ordersUpdated="updateActiveOrders"/>
+        <!-- Executed orders -->
+        <div @click="isExecutedOrdersVisible = !isExecutedOrdersVisible"
+             class="section-name has-text-centered">
+          Órdenes históricas
+          <span class="icon is-size-7 is-pulled-right">
+            <i v-if="isExecutedOrdersVisible" class="fa fa-minus"></i>
+            <i v-else class="fa fa-plus"></i>
+          </span>
+        </div>
+        <ExecutedOrders v-show="isExecutedOrdersVisible" :isVisible="isExecutedOrdersVisible"/>
+        <div id="footer">
+          <Balance @visibilityChanged="areTradersVisible = !$event"/>
+          <Seller :isButtonVisible="areTradersVisible"/>
+          <Buyer :isButtonVisible="areTradersVisible"/>
+          <Footer :ask="ask" :bid="bid"/>
+        </div>
       </div>
     </div>
   </div>
@@ -60,6 +63,7 @@ import Login from './components/Login.vue';
 import OpenOrder from './components/OpenOrder.vue';
 import OrderBook from './components/OrderBook.vue';
 import Seller from './components/Seller.vue';
+import Toast from './components/Toast.vue';
 import TopPanel from './components/TopPanel.vue';
 import Trades from './components/Trades.vue';
 
@@ -76,6 +80,7 @@ export default {
     OpenOrder,
     OrderBook,
     Seller,
+    Toast,
     TopPanel,
     Trades,
   },
@@ -114,7 +119,7 @@ export default {
 </script>
 
 <style lang="scss">
-  #app {
+  #wrapper {
     margin-top: 60px;
     margin-bottom: 110px;
     -webkit-tap-highlight-color: transparent;

@@ -12,6 +12,9 @@ export default new Vuex.Store({
     isDialogVisible: false,
     dialogText: '',
     dialogCallback: null,
+    toastText: '',
+    toastIsError: false,
+    isToastVisible: false,
   },
   mutations: {
     changeMarket(state, market) {
@@ -25,6 +28,21 @@ export default new Vuex.Store({
     },
     hideDialog(state) {
       state.isDialogVisible = false;
+    },
+    showToast(state, payload) {
+      let timeout = 0;
+      if (state.isToastVisible) {
+        state.isToastVisible = false;
+        timeout = 500;
+      }
+      setTimeout(() => {
+        state.toastText = payload.text;
+        state.toastIsError = payload.isError;
+        state.isToastVisible = true;
+      }, timeout);
+    },
+    hideToast(state) {
+      state.isToastVisible = false;
     },
   },
 });

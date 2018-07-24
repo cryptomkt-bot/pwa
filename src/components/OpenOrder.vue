@@ -143,6 +143,8 @@ export default {
       this.apiService.post(url, this.order).then(() => {
         this.isLoading = false;
         this.hideModal();
+        const text = 'Orden de mercado abierta.';
+        this.$store.commit('showToast', { text });
         this.order = {
           type: 'buy',
           price: null,

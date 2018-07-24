@@ -95,6 +95,8 @@ export default {
     doCancelOrder(orderId) {
       const endpoint = `/orders/${orderId}`;
       this.apiService.delete(endpoint).then((response) => {
+        const text = 'Orden cancelada satisfactoriamente.';
+        this.$store.commit('showToast', { text });
         const cancelledOrder = response.data;
         this.orders = this.orders.filter(order => order.id !== cancelledOrder.id);
       });

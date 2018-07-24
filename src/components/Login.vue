@@ -65,8 +65,13 @@ export default {
       const api = new ApiService(this.apiAddress);
       api.login(this.username, this.password).then(() => {
         this.$emit('loggedIn');
-      }).catch(() => {
-        alert('Usuario o contraseña incorrecta.');
+        this.$store.commit('hideToast');
+      }).catch((error) => {
+        let toastText;
+        if (error.response.status === 401) {
+          toastText = 'Usuario o contraseña incorrecta.';
+        }
+        this.showErrorToast(toastText);
       });
     },
     restoreFromStorage() {
@@ -78,6 +83,12 @@ export default {
     },
     showSignature() {
       this.isSignatureVisible = true;
+    },
+    showErrorToast(text) {
+      if (!text) {
+        text = 'Lo sentimos, ocurrió un error.';
+      }
+      this.$store.commit('showToast', { text, isError: true });
     },
   },
 };
