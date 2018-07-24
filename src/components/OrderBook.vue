@@ -118,7 +118,7 @@ export default {
       }, 10000);
     },
     updateBooks() {
-      return CryptoMktHelper.getBooks(this.currentMarket.code)
+      return CryptoMktHelper.getBooks(this.currentMarket.code, 50)
         .then((books) => {
           const { buyBook, sellBook } = books;
           this.updatedAt = new Date();
