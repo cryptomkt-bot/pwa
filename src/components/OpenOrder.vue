@@ -140,17 +140,22 @@ export default {
     doSubmit() {
       this.isLoading = true;
       const url = `/orders/${this.currentMarket.code}`;
-      this.apiService.post(url, this.order).then(() => {
-        this.isLoading = false;
-        this.hideModal();
-        const text = 'Orden de mercado abierta.';
-        this.$store.commit('showToast', { text });
-        this.order = {
-          type: 'buy',
-          price: null,
-          amount: null,
-        };
-      });
+      this.apiService.post(url, this.order)
+        .then(() => {
+          this.isLoading = false;
+          this.hideModal();
+          const toastText = 'Orden de mercado abierta.';
+          this.$store.dispatch('showToast', toastText);
+          this.order = {
+            type: 'buy',
+            price: null,
+            amount: null,
+          };
+        })
+        .catch(() => {
+          this.isLoading = false;
+          this.$store.dispatch('showErrorToast');
+        });
     },
     hideModal() {
       this.$emit('close');

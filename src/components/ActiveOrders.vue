@@ -25,7 +25,7 @@
             {{ formatAmount(order.amount.remaining, market.baseCurrency, market.baseCurrency.decimals) }}
           </td>
           <td>
-            <span @click="cancelOrder(order.id)" class="icon is-small">
+            <span @click="cancelOrder(order)" class="icon is-small">
               <i class="fa fa-times"></i>
             </span>
           </td>
@@ -84,22 +84,25 @@ export default {
         this.$emit('ordersUpdated', this.orders);
       });
     },
-    cancelOrder(orderId) {
+    cancelOrder(order) {
       this.$store.commit('showDialog', {
-        text: `¿Desea cancelar la orden ${orderId}?`,
+        text: `¿Desea cancelar la orden ${order.id}?`,
         callback: () => {
-          this.doCancelOrder(orderId);
+          this.doCancelOrder(order);
         },
       });
     },
-    doCancelOrder(orderId) {
-      const endpoint = `/orders/${orderId}`;
-      this.apiService.delete(endpoint).then((response) => {
-        const text = 'Orden cancelada satisfactoriamente.';
-        this.$store.commit('showToast', { text });
-        const cancelledOrder = response.data;
-        this.orders = this.orders.filter(order => order.id !== cancelledOrder.id);
-      });
+    doCancelOrder(order) {
+      const endpoint = `/orders/${order.id}`;
+      this.apiService.delete(endpoint)
+        .then(() => {
+          const toastText = 'Orden cancelada satisfactoriamente.';
+          this.$store.dispatch('showToast', toastText);
+          this.orders = this.orders.filter(o => o.id !== order.id);
+        })
+        .catch(() => {
+          this.$store.dispatch('showErrorToast');
+        });
     },
     orderColor(order) {
       const type = order.type === 'sell' ? 'danger' : 'success';

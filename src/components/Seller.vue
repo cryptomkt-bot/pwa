@@ -119,10 +119,14 @@ export default {
       }
       this.updating = true;
       this.seller.remaining_amount = this.remainingAmount;
-      this.apiService.patch(this.endpoint, this.seller).then(() => {
-        this.hideModal();
-        this.updating = false;
-      });
+      this.apiService.patch(this.endpoint, this.seller)
+        .then(() => {
+          this.hideModal();
+          this.updating = false;
+        })
+        .catch(() => {
+          this.$store.dispatch('showErrorToast');
+        });
     },
     showModal() {
       this.isModalVisible = true;

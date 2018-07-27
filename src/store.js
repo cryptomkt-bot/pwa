@@ -16,6 +16,17 @@ export default new Vuex.Store({
     toastIsError: false,
     isToastVisible: false,
   },
+  actions: {
+    showToast(context, text) {
+      context.commit('showToast', { text });
+    },
+    showErrorToast(context, text) {
+      if (!text) {
+        text = 'Lo sentimos, ocurrió un error.';
+      }
+      context.commit('showToast', { text, isError: true });
+    },
+  },
   mutations: {
     changeMarket(state, market) {
       state.currentMarket = market;
@@ -29,15 +40,15 @@ export default new Vuex.Store({
     hideDialog(state) {
       state.isDialogVisible = false;
     },
-    showToast(state, payload) {
+    showToast(state, { text, isError }) {
       let timeout = 0;
       if (state.isToastVisible) {
         state.isToastVisible = false;
         timeout = 500;
       }
       setTimeout(() => {
-        state.toastText = payload.text;
-        state.toastIsError = payload.isError;
+        state.toastText = text;
+        state.toastIsError = isError;
         state.isToastVisible = true;
       }, timeout);
     },

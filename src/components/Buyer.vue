@@ -118,10 +118,14 @@ export default {
       }
       this.updating = true;
       this.buyer.remaining_fiat = this.remainingFiat;
-      this.apiService.patch(this.endpoint, this.buyer).then(() => {
-        this.hideModal();
-        this.updating = false;
-      });
+      this.apiService.patch(this.endpoint, this.buyer)
+        .then(() => {
+          this.hideModal();
+          this.updating = false;
+        })
+        .catch(() => {
+          this.$store.dispatch('showErrorToast');
+        });
     },
     showModal() {
       this.isModalVisible = true;
