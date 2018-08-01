@@ -25,7 +25,7 @@
                              :showMaxButton="true" @maxButtonClicked="setMaxFiat" />
 
               <!-- Info -->
-              <p class="is-size-7">Precio máximo: ${{ maxPrice }}</p>
+              <p class="is-size-7">Precio máximo: {{ maxPrice }}</p>
             </div>
 
             <!-- Action buttons -->
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { formatAmount } from '../utils';
 import CurrencyField from './CurrencyField.vue';
 
 export default {
@@ -75,7 +76,12 @@ export default {
       if (this.buyer === null || this.remainingAmount === 0) {
         return 0;
       }
-      return Math.round(this.remainingFiat / this.remainingAmount);
+      const amount = this.remainingFiat / this.remainingAmount;
+      return this.formatAmount(
+        amount,
+        this.currentMarket.quoteCurrency,
+        this.currentMarket.decimals,
+      );
     },
     isLoading() {
       return this.updating || this.buyer === null;
@@ -105,6 +111,7 @@ export default {
     },
   },
   methods: {
+    formatAmount,
     setMaxFiat() {
       const url = `/balance/${this.currentMarket.quoteCurrency.code}`;
       this.apiService.get(url).then((response) => {

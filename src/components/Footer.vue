@@ -3,22 +3,33 @@
     <span>{{ currentMarket.code }}</span>
     <div class="price has-text-centered">
       <div class="price-label has-text-weight-light">venta</div>
-      <div>${{ bid }}</div>
+      <div>{{ formatPrice(bid) }}</div>
     </div>
     <div class="price has-text-centered">
       <div class="price-label has-text-weight-light">compra</div>
-      <div>${{ ask }}</div>
+      <div>{{ formatPrice(ask) }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import { formatAmount } from '../utils';
+
 export default {
   name: 'Footer',
   props: ['ask', 'bid'],
   computed: {
     currentMarket() {
       return this.$store.state.currentMarket;
+    },
+  },
+  methods: {
+    formatPrice(price) {
+      return formatAmount(
+        price,
+        this.currentMarket.quoteCurrency,
+        this.currentMarket.decimals,
+      );
     },
   },
 };
