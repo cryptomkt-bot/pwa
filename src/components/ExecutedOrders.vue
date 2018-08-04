@@ -61,6 +61,9 @@ export default {
       }
     },
     currentMarket() {
+      if (!this.isVisible) {
+        return;
+      }
       this.init();
     },
   },
