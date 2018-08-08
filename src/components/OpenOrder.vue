@@ -26,12 +26,15 @@
 
           <!-- Amount -->
           <label for="amount" class="label is-small">Cantidad</label>
-          <CurrencyField :id="'amount'" :currency="currentMarket.baseCurrency" v-model="order.amount"
-                         :showMaxButton="true" @maxButtonClicked="setMaxAmount" />
+          <CurrencyField v-model="order.amount" :id="'amount'" :showMaxButton="true"
+                         :currency="currentMarket.baseCurrency"
+                         :step="currentMarket.baseCurrency.step"
+                         @maxButtonClicked="setMaxAmount" />
 
           <!-- Price -->
           <label for="price" class="label is-small">Precio</label>
-          <CurrencyField :id="'price'" :currency="currentMarket.quoteCurrency" v-model="order.price" />
+          <CurrencyField v-model="order.price" :id="'price'"
+                         :currency="currentMarket.quoteCurrency" :step="currentMarket.step" />
 
           <!-- Info message -->
           <p class="is-size-7">{{ infoMessage }}</p>
@@ -124,7 +127,7 @@ export default {
       const price = this.formatAmount(
         this.order.price,
         this.currentMarket.quoteCurrency,
-        this.currentMarket.decimals
+        this.currentMarket.decimals,
       );
       const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender';
       const text = `¿Desea ${typeVerb} ${amount} a ${price}?`;

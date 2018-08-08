@@ -15,9 +15,10 @@
             <div class="card-content">
               <!-- Amount -->
               <label for="amount" class="label is-small">Cantidad</label>
-              <CurrencyField :id="'amount'" v-model="remainingAmount" :disabled="isLoading"
+              <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
                              :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
-                             :showMaxButton="true" @maxButtonClicked="setMaxAmount" />
+                             :step="currentMarket.baseCurrency.step" :showMaxButton="true"
+                             @maxButtonClicked="setMaxAmount" />
 
               <!-- Spread -->
               <label for="spread" class="label is-small">Spread</label>

@@ -15,14 +15,16 @@
             <div class="card-content">
               <!-- Amount -->
               <label for="amount" class="label is-small">Cantidad</label>
-              <CurrencyField :id="'amount'" :currency="currentMarket.baseCurrency" v-model="remainingAmount"
-                             :disabled="isLoading" :placeholder="inputsPlaceholder" />
+              <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
+                             :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
+                             :step="currentMarket.baseCurrency.step" />
 
               <!-- Fiat -->
               <label for="fiat" class="label is-small">Fiat restante</label>
-              <CurrencyField :id="'amount'" :currency="currentMarket.quoteCurrency" v-model="remainingFiat"
+              <CurrencyField v-model="remainingFiat" :id="'amount'" :showMaxButton="true"
+                             :currency="currentMarket.quoteCurrency"
                              :disabled="isLoading" :placeholder="inputsPlaceholder"
-                             :showMaxButton="true" @maxButtonClicked="setMaxFiat" />
+                             @maxButtonClicked="setMaxFiat" />
 
               <!-- Info -->
               <p class="is-size-7">Precio máximo: {{ maxPrice }}</p>
