@@ -7,7 +7,7 @@ export default {
     const date = new Date(timestamp);
     return date.toLocaleString('es-AR', {
       day: 'numeric',
-      month: 'long',
+      month: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
     });
