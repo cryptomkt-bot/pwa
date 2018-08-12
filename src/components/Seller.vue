@@ -1,56 +1,51 @@
 <template>
   <div>
-    <transition name="fade">
-      <!-- Modal -->
-      <div v-show="isModalVisible" id="seller-modal" class="modal is-active">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <div class="card">
-            <!-- Title -->
-            <header class="card-header">
-              <p class="card-header-title">Vendedor</p>
-            </header>
+    <!-- Modal -->
+    <b-modal :active.sync="isModalVisible" :canCancel="false">
+      <div id="seller-card" class="card">
+        <!-- Title -->
+        <header class="card-header">
+          <p class="card-header-title">Vendedor</p>
+        </header>
 
-            <!-- Body -->
-            <div class="card-content">
-              <!-- Amount -->
-              <label for="amount" class="label is-small">Cantidad</label>
-              <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
-                             :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
-                             :step="currentMarket.baseCurrency.step" :showMaxButton="true"
-                             @maxButtonClicked="setMaxAmount" />
+        <!-- Body -->
+        <div class="card-content">
+          <!-- Amount -->
+          <label for="amount" class="label is-small">Cantidad</label>
+          <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
+                         :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
+                         :step="currentMarket.baseCurrency.step" :showMaxButton="true"
+                         @maxButtonClicked="setMaxAmount" />
 
-              <!-- Spread -->
-              <label for="spread" class="label is-small">Spread</label>
-              <div class="field has-addons">
-                <!-- Input -->
-                <div class="control">
-                  <input id="spread" type="number" step="0.01" v-model.number="minSpread"
-                         :placeholder="inputsPlaceholder" :disabled="isLoading" class="input">
-                </div>
-                <!-- Percent sign -->
-                <div class="control">
-                  <span :disabled="isLoading" class="button is-static">%</span>
-                </div>
-              </div>
+          <!-- Spread -->
+          <label for="spread" class="label is-small">Spread</label>
+          <div class="field has-addons">
+            <!-- Input -->
+            <div class="control">
+              <input id="spread" type="number" step="0.01" v-model.number="minSpread"
+                     :placeholder="inputsPlaceholder" :disabled="isLoading" class="input">
             </div>
-            <!--/ End body -->
-
-            <!-- Action buttons -->
-            <footer class="card-footer">
-              <a class="card-footer-item" @click="hideModal">Cancelar</a>
-              <a class="card-footer-item" @click="submit">
-                <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-                <span v-else>Actualizar</span>
-              </a>
-            </footer>
+            <!-- Percent sign -->
+            <div class="control">
+              <span :disabled="isLoading" class="button is-static">%</span>
+            </div>
           </div>
         </div>
+        <!--/ End body -->
+
+        <!-- Action buttons -->
+        <footer class="card-footer">
+          <a class="card-footer-item" @click="isModalVisible = false">Cancelar</a>
+          <a class="card-footer-item" @click="submit">
+            <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+            <span v-else>Actualizar</span>
+          </a>
+        </footer>
       </div>
-      <!--/ End modal -->
-    </transition>
+    </b-modal>
+    <!-- Button -->
     <transition name="scale">
-      <div v-show="isButtonVisible" id="seller-button" @click="showModal"
+      <div v-show="isButtonVisible" id="seller-button" @click="isModalVisible = true"
            class="button is-rounded has-text-weight-bold">V</div>
     </transition>
   </div>
@@ -122,18 +117,16 @@ export default {
       this.seller.remaining_amount = this.remainingAmount;
       this.apiService.patch(this.endpoint, this.seller)
         .then(() => {
-          this.hideModal();
+          this.isModalVisible = false;
           this.updating = false;
         })
         .catch(() => {
-          this.$store.dispatch('showErrorToast');
+          this.$snackbar.open({
+            message: 'Lo sentimos, ha ocurrido un error.',
+            type: 'is-danger',
+            indefinite: true,
+          });
         });
-    },
-    showModal() {
-      this.isModalVisible = true;
-    },
-    hideModal() {
-      this.isModalVisible = false;
     },
   },
 };
@@ -141,7 +134,7 @@ export default {
 
 <style lang="scss">
   $red: #f44336;
-  #seller-modal .modal-content {
+  #seller-card {
     border-top: 6px solid $red;
     border-radius: 4px;
   }

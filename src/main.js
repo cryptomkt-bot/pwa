@@ -1,5 +1,6 @@
 import injector from 'vue-inject';
 import Vue from 'vue';
+import Buefy from 'buefy';
 import Vuex from 'vuex';
 import App from './App.vue';
 import './helpers/StorageHelper';
@@ -7,6 +8,10 @@ import store from './store';
 import filters from './filters';
 import { formatAmount } from './utils';
 
+Vue.use(Buefy, {
+  defaultDialogConfirmText: 'Si',
+  defaultDialogCancelText: 'No',
+});
 Vue.use(Vuex);
 Vue.use(injector);
 

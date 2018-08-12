@@ -15,8 +15,13 @@
 <script>
 export default {
   name: 'Footer',
-  props: ['ask', 'bid'],
   computed: {
+    ask() {
+      return this.$store.state.ask;
+    },
+    bid() {
+      return this.$store.state.bid;
+    },
     currentMarket() {
       return this.$store.state.currentMarket;
     },

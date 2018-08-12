@@ -49,9 +49,9 @@ export default {
       this.$store.commit('changeMarket', market);
     },
     logout() {
-      this.$store.commit('showDialog', {
-        text: '¿Desea salir?',
-        callback: () => {
+      this.$dialog.confirm({
+        message: '¿Desea salir?',
+        onConfirm: () => {
           this.$emit('loggedOut');
         },
       });

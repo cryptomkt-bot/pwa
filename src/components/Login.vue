@@ -66,14 +66,17 @@ export default {
       api.login(this.username, this.password)
         .then(() => {
           this.$emit('loggedIn');
-          this.$store.commit('hideToast');
         })
         .catch((error) => {
-          let toastText;
+          let message = 'Lo sentimos, ha ocurrido un error';
           if (error.response && error.response.status === 401) {
-            toastText = 'Usuario o contraseña incorrecta.';
+            message = 'Usuario o contraseña incorrecta';
           }
-          this.$store.dispatch('showErrorToast', toastText);
+          this.$toast.open({
+            message,
+            type: 'is-danger',
+            duration: 3000,
+          });
         });
     },
     restoreFromStorage() {

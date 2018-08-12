@@ -1,50 +1,45 @@
 <template>
   <div>
-    <transition name="fade">
-      <!-- Modal -->
-      <div v-show="isModalVisible" id="buyer-modal" class="modal is-active">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-          <div class="card">
-            <!-- Title -->
-            <header class="card-header">
-              <p class="card-header-title">Comprador</p>
-            </header>
+    <!-- Modal -->
+    <b-modal :active.sync="isModalVisible" :canCancel="false">
+      <div id="buyer-card" class="card">
+        <!-- Title -->
+        <header class="card-header">
+          <p class="card-header-title">Comprador</p>
+        </header>
 
-            <!-- Body -->
-            <div class="card-content">
-              <!-- Amount -->
-              <label for="amount" class="label is-small">Cantidad</label>
-              <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
-                             :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
-                             :step="currentMarket.baseCurrency.step" />
+        <!-- Body -->
+        <div class="card-content">
+          <!-- Amount -->
+          <label for="amount" class="label is-small">Cantidad</label>
+          <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
+                         :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
+                         :step="currentMarket.baseCurrency.step" />
 
-              <!-- Fiat -->
-              <label for="fiat" class="label is-small">Fiat restante</label>
-              <CurrencyField v-model="remainingFiat" :id="'amount'" :showMaxButton="true"
-                             :currency="currentMarket.quoteCurrency"
-                             :disabled="isLoading" :placeholder="inputsPlaceholder"
-                             @maxButtonClicked="setMaxFiat" />
+          <!-- Fiat -->
+          <label for="fiat" class="label is-small">Fiat restante</label>
+          <CurrencyField v-model="remainingFiat" :id="'amount'" :showMaxButton="true"
+                         :currency="currentMarket.quoteCurrency"
+                         :disabled="isLoading" :placeholder="inputsPlaceholder"
+                         @maxButtonClicked="setMaxFiat" />
 
-              <!-- Info -->
-              <p class="is-size-7">Precio máximo: {{ maxPrice }}</p>
-            </div>
-
-            <!-- Action buttons -->
-            <footer class="card-footer">
-              <a class="card-footer-item" @click="hideModal">Cancelar</a>
-              <a class="card-footer-item" @click="submit">
-                <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-                <span v-else>Actualizar</span>
-              </a>
-            </footer>
-          </div>
+          <!-- Info -->
+          <p class="is-size-7">Precio máximo: {{ maxPrice }}</p>
         </div>
+
+        <!-- Action buttons -->
+        <footer class="card-footer">
+          <a class="card-footer-item" @click="isModalVisible = false">Cancelar</a>
+          <a class="card-footer-item" @click="submit">
+            <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+            <span v-else>Actualizar</span>
+          </a>
+        </footer>
       </div>
-      <!--/ End modal -->
-    </transition>
+    </b-modal>
+    <!-- Button -->
     <transition name="scale">
-      <div v-show="isButtonVisible" id="buyer-button" @click="showModal"
+      <div v-show="isButtonVisible" id="buyer-button" @click="isModalVisible = true"
            class="button is-rounded has-text-weight-bold">C</div>
     </transition>
   </div>
@@ -127,18 +122,16 @@ export default {
       this.buyer.remaining_fiat = this.remainingFiat;
       this.apiService.patch(this.endpoint, this.buyer)
         .then(() => {
-          this.hideModal();
+          this.isModalVisible = false;
           this.updating = false;
         })
         .catch(() => {
-          this.$store.dispatch('showErrorToast');
+          this.$snackbar.open({
+            message: 'Lo sentimos, ha ocurrido un error.',
+            type: 'is-danger',
+            indefinite: true,
+          });
         });
-    },
-    showModal() {
-      this.isModalVisible = true;
-    },
-    hideModal() {
-      this.isModalVisible = false;
     },
   },
 };
@@ -146,7 +139,7 @@ export default {
 
 <style lang="scss">
   $green: #4caf50;
-  #buyer-modal .modal-content {
+  #buyer-card {
     border-top: 6px solid $green;
     border-radius: 4px;
   }

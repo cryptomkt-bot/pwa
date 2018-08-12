@@ -1,57 +1,53 @@
 <template>
   <!-- Modal -->
-  <div id="open-order-modal" class="modal is-active">
-    <div class="modal-background"></div>
-    <div class="modal-content" :class="[order.type === 'buy' ? 'green' : 'red']">
-      <div class="card">
-        <!-- Title -->
-        <header class="card-header">
-          <p class="card-header-title">Abrir orden de mercado</p>
-        </header>
+  <b-modal :active.sync="isModalVisible" :canCancel="false">
+    <div id="open-order-card" class="card" :class="[order.type === 'buy' ? 'green' : 'red']">
+      <!-- Title -->
+      <header class="card-header">
+        <p class="card-header-title">Abrir orden de mercado</p>
+      </header>
 
-        <!-- Body -->
-        <div class="card-content">
-          <!-- Order type -->
-          <div class="field">
-            <div class="control">
-              <label for="order-type" class="label is-size-7">Tipo de orden</label>
-              <div class="select">
-                <select id="order-type" v-model="order.type">
-                  <option value="buy">Orden de compra</option>
-                  <option value="sell">Orden de venta</option>
-                </select>
-              </div>
+      <!-- Body -->
+      <div class="card-content">
+        <!-- Order type -->
+        <div class="field">
+          <div class="control">
+            <label for="order-type" class="label is-size-7">Tipo de orden</label>
+            <div class="select">
+              <select id="order-type" v-model="order.type">
+                <option value="buy">Orden de compra</option>
+                <option value="sell">Orden de venta</option>
+              </select>
             </div>
           </div>
-
-          <!-- Amount -->
-          <label for="amount" class="label is-small">Cantidad</label>
-          <CurrencyField v-model="order.amount" :id="'amount'" :showMaxButton="true"
-                         :currency="currentMarket.baseCurrency"
-                         :step="currentMarket.baseCurrency.step"
-                         @maxButtonClicked="setMaxAmount" />
-
-          <!-- Price -->
-          <label for="price" class="label is-small">Precio</label>
-          <CurrencyField v-model="order.price" :id="'price'"
-                         :currency="currentMarket.quoteCurrency" :step="currentMarket.step" />
-
-          <!-- Info message -->
-          <p class="is-size-7">{{ infoMessage }}</p>
         </div>
 
-        <!-- Action buttons -->
-        <footer class="card-footer">
-          <a class="card-footer-item" @click="hideModal">Cancelar</a>
-          <a class="card-footer-item" @click="submit">
-            <span v-if="isLoading" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-            <span v-else>Abrir orden</span>
-          </a>
-        </footer>
+        <!-- Amount -->
+        <label for="amount" class="label is-small">Cantidad</label>
+        <CurrencyField v-model="order.amount" :id="'amount'" :showMaxButton="true"
+                       :currency="currentMarket.baseCurrency"
+                       :step="currentMarket.baseCurrency.step"
+                       @maxButtonClicked="setMaxAmount" />
+
+        <!-- Price -->
+        <label for="price" class="label is-small">Precio</label>
+        <CurrencyField v-model="order.price" :id="'price'"
+                       :currency="currentMarket.quoteCurrency" :step="currentMarket.step" />
+
+        <!-- Info message -->
+        <p class="is-size-7">{{ infoMessage }}</p>
       </div>
+
+      <!-- Action buttons -->
+      <footer class="card-footer">
+        <a class="card-footer-item" @click="close">Cancelar</a>
+        <a class="card-footer-item" @click="submit">
+          <span v-if="isLoading" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+          <span v-else>Abrir orden</span>
+        </a>
+      </footer>
     </div>
-  </div>
-  <!--/ End modal -->
+  </b-modal>
 </template>
 
 <script>
@@ -59,6 +55,7 @@ import CurrencyField from './CurrencyField.vue';
 
 export default {
   name: 'OpenOrder',
+  props: ['isModalVisible'],
   components: { CurrencyField },
   dependencies: ['apiService'],
   data() {
@@ -128,9 +125,12 @@ export default {
         this.currentMarket.decimals,
       );
       const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender';
-      const text = `¿Desea ${typeVerb} ${amount} a ${price}?`;
-      const callback = this.doSubmit;
-      this.$store.commit('showDialog', { text, callback });
+      this.$dialog.confirm({
+        message: `¿Desea ${typeVerb} ${amount} a ${price}?`,
+        onConfirm: () => {
+          this.doSubmit();
+        },
+      });
     },
     submit() {
       if (!this.isOrderValid) {
@@ -144,9 +144,11 @@ export default {
       this.apiService.post(url, this.order)
         .then(() => {
           this.isLoading = false;
-          this.hideModal();
-          const toastText = 'Orden de mercado abierta.';
-          this.$store.dispatch('showToast', toastText);
+          this.close();
+          this.$toast.open({
+            message: 'Orden de mercado abierta',
+            type: 'is-info',
+          });
           this.order = {
             type: 'buy',
             price: null,
@@ -155,10 +157,14 @@ export default {
         })
         .catch(() => {
           this.isLoading = false;
-          this.$store.dispatch('showErrorToast');
+          this.$snackbar.open({
+            message: 'Lo sentimos, ha ocurrido un error.',
+            type: 'is-danger',
+            indefinite: true,
+          });
         });
     },
-    hideModal() {
+    close() {
       this.$emit('close');
       this.init();
     },
@@ -166,11 +172,11 @@ export default {
 };
 </script>
 
-<style>
-  #open-order-modal .modal-content {
+<style lang="scss">
+  #open-order-card {
     border-top: 6px solid;
     border-radius: 4px;
+    &.green { border-top-color: #4caf50 !important }
+    &.red { border-top-color: #f44336 !important }
   }
-  .green { border-top-color: #4caf50 !important }
-  .red { border-top-color: #f44336 !important }
 </style>

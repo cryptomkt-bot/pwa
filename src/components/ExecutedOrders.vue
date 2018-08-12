@@ -1,12 +1,8 @@
 <template>
-  <div>
-    <div v-if="!market" class="has-text-centered">
-      <span class="icon">
-        <i class="fa fa-spinner fa-pulse"></i>
-      </span>
-    </div>
-    <span v-else-if="!orders.length" class="is-size-7">Ninguna órden.</span>
-    <table v-else class="table is-fullwidth is-marginless is-size-7">
+  <div class="loading-wrapper">
+    <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+    <span v-if="!isLoading && !orders.length" class="is-size-7">Ninguna órden.</span>
+    <table v-if="!isLoading && orders.length" class="table is-fullwidth is-marginless is-size-7">
       <thead>
         <tr>
           <th>Fecha</th>
@@ -18,10 +14,10 @@
         <tr v-for="order in orders" :key="order.executed_at">
           <td>{{ order.executed_at + '-00:00' | date }}</td>
           <td :class="orderColor(order)">
-            {{ formatAmount(order.execution_price, market.quoteCurrency, market.decimals) }}
+            {{ formatAmount(order.execution_price, currentMarket.quoteCurrency, currentMarket.decimals) }}
           </td>
           <td>
-            {{ formatAmount(order.amount.executed, market.baseCurrency, market.baseCurrency.decimals) }}
+            {{ formatAmount(order.amount.executed, currentMarket.baseCurrency, currentMarket.baseCurrency.decimals) }}
           </td>
         </tr>
       </tbody>
@@ -33,13 +29,15 @@
 export default {
   name: 'ExecutedOrders',
   dependencies: ['apiService'],
-  props: ['isVisible'],
   data() {
     return {
-      market: null,
+      isLoading: true,
       orders: [],
       intervalId: null,
     };
+  },
+  created() {
+    this.init();
   },
   destroyed() {
     clearInterval(this.intervalId);
@@ -50,27 +48,15 @@ export default {
     },
   },
   watch: {
-    isVisible(newValue) {
-      if (newValue === true) { // The component is visible
-        this.init();
-      } else { // The component is hidden
-        this.orders = [];
-        clearInterval(this.intervalId); // Stop updating the orders
-      }
-    },
     currentMarket() {
-      if (!this.isVisible) {
-        return;
-      }
       this.init();
     },
   },
   methods: {
     init() {
       clearInterval(this.intervalId);
-      this.market = null;
       this.updateOrders().then(() => {
-        this.market = this.currentMarket;
+        this.isLoading = false;
       });
       // Update orders every 10 seconds
       this.intervalId = setInterval(() => {

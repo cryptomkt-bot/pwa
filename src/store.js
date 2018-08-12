@@ -8,52 +8,22 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    ask: 0,
+    bid: 0,
     currentMarket: StorageHelper.get('currentMarket') || markets.ARS[1],
-    isDialogVisible: false,
-    dialogText: '',
-    dialogCallback: null,
-    toastText: '',
-    toastIsError: false,
-    isToastVisible: false,
-  },
-  actions: {
-    showToast(context, text) {
-      context.commit('showToast', { text });
-    },
-    showErrorToast(context, text) {
-      if (!text) {
-        text = 'Lo sentimos, ocurrió un error.';
-      }
-      context.commit('showToast', { text, isError: true });
-    },
+    activeOrders: [],
   },
   mutations: {
     changeMarket(state, market) {
       state.currentMarket = market;
       StorageHelper.set('currentMarket', market);
     },
-    showDialog(state, payload) {
-      state.dialogText = payload.text;
-      state.dialogCallback = payload.callback;
-      state.isDialogVisible = true;
+    updatePrices(state, payload) {
+      state.ask = payload.ask;
+      state.bid = payload.bid;
     },
-    hideDialog(state) {
-      state.isDialogVisible = false;
-    },
-    showToast(state, { text, isError }) {
-      let timeout = 0;
-      if (state.isToastVisible) {
-        state.isToastVisible = false;
-        timeout = 500;
-      }
-      setTimeout(() => {
-        state.toastText = text;
-        state.toastIsError = isError;
-        state.isToastVisible = true;
-      }, timeout);
-    },
-    hideToast(state) {
-      state.isToastVisible = false;
+    updateActiveOrders(state, orders) {
+      state.activeOrders = orders;
     },
   },
 });

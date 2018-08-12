@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "buefy": "^0.6.6",
     "vue": "^2.5.16",
     "vue-inject": "^2.1.0",
     "vuex": "^3.0.1"

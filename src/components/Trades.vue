@@ -1,11 +1,7 @@
 <template>
-  <div>
-    <div v-if="!market" class="has-text-centered">
-      <span class="icon">
-        <i class="fa fa-spinner fa-pulse"></i>
-      </span>
-    </div>
-    <table v-else class="table is-fullwidth is-marginless is-size-7">
+  <div class="loading-wrapper">
+    <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+    <table class="table is-fullwidth is-marginless is-size-7">
       <thead>
         <tr>
           <th>Fecha</th>
@@ -33,13 +29,15 @@ import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 export default {
   name: 'Trades',
-  props: ['isVisible'],
   data() {
     return {
-      market: null,
+      isLoading: true,
       orders: [],
       intervalId: null,
     };
+  },
+  created() {
+    this.init();
   },
   destroyed() {
     clearInterval(this.intervalId);
@@ -50,27 +48,16 @@ export default {
     },
   },
   watch: {
-    isVisible(newValue) {
-      if (newValue === true) { // The component is visible
-        this.init();
-      } else { // The component is hidden
-        this.orders = [];
-        clearInterval(this.intervalId); // Stop updating the orders
-      }
-    },
     currentMarket() {
-      if (!this.isVisible) {
-        return;
-      }
       this.init();
     },
   },
   methods: {
     init() {
+      this.isLoading = true;
       clearInterval(this.intervalId);
-      this.market = null;
       this.updateOrders().then(() => {
-        this.market = this.currentMarket;
+        this.isLoading = false;
       });
       // Update orders every 10 seconds
       this.intervalId = setInterval(() => {
