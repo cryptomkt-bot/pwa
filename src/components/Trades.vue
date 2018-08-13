@@ -29,7 +29,6 @@
 </template>
 
 <script>
-import { formatAmount } from '../utils';
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 export default {
@@ -67,7 +66,6 @@ export default {
     },
   },
   methods: {
-    formatAmount,
     init() {
       clearInterval(this.intervalId);
       this.market = null;

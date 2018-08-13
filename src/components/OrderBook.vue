@@ -56,7 +56,7 @@
 
 <script>
 import axios from 'axios';
-import { formatAmount, toDecimals } from '../utils';
+import { toDecimals } from '../utils';
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 export default {
@@ -104,7 +104,6 @@ export default {
     },
   },
   methods: {
-    formatAmount,
     init() {
       clearInterval(this.intervalId);
       this.market = null;

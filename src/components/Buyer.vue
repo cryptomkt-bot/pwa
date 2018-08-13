@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { formatAmount } from '../utils';
 import CurrencyField from './CurrencyField.vue';
 
 export default {
@@ -113,7 +112,6 @@ export default {
     },
   },
   methods: {
-    formatAmount,
     setMaxFiat() {
       const url = `/balance/${this.currentMarket.quoteCurrency.code}`;
       this.apiService.get(url).then((response) => {

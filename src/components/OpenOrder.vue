@@ -56,7 +56,6 @@
 
 <script>
 import CurrencyField from './CurrencyField.vue';
-import { formatAmount } from '../utils';
 
 export default {
   name: 'OpenOrder',
@@ -93,7 +92,6 @@ export default {
     },
   },
   methods: {
-    formatAmount,
     init() {
       this.order = {
         type: 'buy',

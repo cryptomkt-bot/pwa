@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import { formatAmount } from '../utils';
-
 export default {
   name: 'ActiveOrders',
   dependencies: ['apiService'],
@@ -65,7 +63,6 @@ export default {
     },
   },
   methods: {
-    formatAmount,
     init() {
       clearInterval(this.intervalId);
       this.market = null;

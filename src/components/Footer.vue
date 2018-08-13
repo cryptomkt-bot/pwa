@@ -13,8 +13,6 @@
 </template>
 
 <script>
-import { formatAmount } from '../utils';
-
 export default {
   name: 'Footer',
   props: ['ask', 'bid'],
@@ -25,7 +23,7 @@ export default {
   },
   methods: {
     formatPrice(price) {
-      return formatAmount(
+      return this.formatAmount(
         price,
         this.currentMarket.quoteCurrency,
         this.currentMarket.decimals,
