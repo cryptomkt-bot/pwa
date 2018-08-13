@@ -20,17 +20,19 @@
 </template>
 
 <script>
-export default {
-  name: 'CurrencyField',
+import { Component, Vue } from 'vue-property-decorator';
+
+@Component({
   props: ['id', 'currency', 'step', 'value', 'showMaxButton', 'placeholder', 'disabled'],
-  methods: {
-    emitValue() {
-      const value = Number(this.$refs.input.value);
-      this.$emit('input', value);
-    },
-    setMaxAmount() {
-      this.$emit('maxButtonClicked');
-    },
-  },
-};
+})
+export default class CurrencyField extends Vue {
+  emitValue() {
+    const value = Number(this.$refs.input.value);
+    this.$emit('input', value);
+  }
+
+  setMaxAmount() {
+    this.$emit('maxButtonClicked');
+  }
+}
 </script>

@@ -1,12 +1,12 @@
 <template>
   <div id="balance" class="has-text-centered">
-    <div class="button is-primary" @click="isContentVisible = !isContentVisible">
+    <div class="button is-primary" @click="isBalanceVisible = !isBalanceVisible">
       <span class="icon is-size-7">
-        <i class="fa" :class="[isContentVisible ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
+        <i class="fa" :class="[isBalanceVisible ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
       </span>
       <span id="balance-label" class="has-text-weight-light">Balances</span>
     </div>
-    <div id="balance-content" v-show="isContentVisible">
+    <div id="balance-content" v-show="isBalanceVisible">
       <table class="table is-fullwidth is-size-7">
         <thead>
           <tr>
@@ -34,34 +34,33 @@
 </template>
 
 <script>
-export default {
-  name: 'Balance',
+import { Component, Vue, Watch } from 'vue-property-decorator';
+
+@Component({
   dependencies: ['apiService'],
-  data() {
-    return {
-      isContentVisible: false,
-      balances: [],
-    };
-  },
+})
+export default class Balance extends Vue {
+  isBalanceVisible = false;
+  balances = [];
+
   created() {
     this.getBalances();
-  },
-  watch: {
-    isContentVisible(newValue) {
-      this.$emit('visibilityChanged', newValue);
-      if (newValue === true) {
-        this.getBalances();
-      }
-    },
-  },
-  methods: {
-    getBalances() {
-      this.apiService.get('/balance').then((response) => {
-        this.balances = response.data;
-      });
-    },
-  },
-};
+  }
+
+  @Watch('isBalanceVisible')
+  onContentVisibilityChanged(isVisible) {
+    this.$emit('visibilityChanged', isVisible);
+    if (isVisible === true) {
+      this.getBalances();
+    }
+  }
+
+  getBalances() {
+    this.apiService.get('/balance').then((response) => {
+      this.balances = response.data;
+    });
+  }
+}
 </script>
 
 <style lang="scss">

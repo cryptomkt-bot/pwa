@@ -37,7 +37,7 @@
         <footer class="card-footer">
           <a class="card-footer-item" @click="isModalVisible = false">Cancelar</a>
           <a class="card-footer-item" @click="submit">
-            <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
+            <span v-if="isUpdating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
             <span v-else>Actualizar</span>
           </a>
         </footer>
@@ -52,84 +52,85 @@
 </template>
 
 <script>
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import CurrencyField from './CurrencyField.vue';
 
-export default {
-  name: 'Seller',
+@Component({
   components: { CurrencyField },
   props: ['isButtonVisible'],
   dependencies: ['apiService'],
-  data() {
-    return {
-      seller: null,
-      remainingAmount: null,
-      isModalVisible: false,
-      updating: false,
-    };
-  },
-  computed: {
-    currentMarket() {
-      return this.$store.state.currentMarket;
-    },
-    endpoint() {
-      return `seller/${this.currentMarket.code}`;
-    },
-    isLoading() {
-      return this.updating || this.seller === null;
-    },
-    inputsPlaceholder() {
-      return this.seller === null ? 'Cargando ...' : '';
-    },
-    minSpread: {
-      get() {
-        return this.seller ? this.seller.min_spread : null;
-      },
-      set(newValue) {
-        this.seller.min_spread = newValue;
-      },
-    },
-  },
-  watch: {
-    isModalVisible(newValue) {
-      if (newValue === true) {
-        this.seller = null;
-        this.remainingAmount = null;
-        this.apiService.get(this.endpoint).then((response) => {
-          this.seller = response.data;
-          this.remainingAmount = this.seller.remaining_amount;
+})
+export default class Seller extends Vue {
+  seller = null;
+  remainingAmount = 0;
+  isModalVisible = false;
+  isUpdating = false;
+
+  get currentMarket() {
+    return this.$store.state.currentMarket;
+  }
+
+  get endpoint() {
+    return `seller/${this.currentMarket.code}`;
+  }
+
+  get isLoading() {
+    return this.isUpdating || this.seller === null;
+  }
+
+  get inputsPlaceholder() {
+    return this.seller === null ? 'Cargando ...' : '';
+  }
+
+  get minSpread() {
+    return this.seller ? this.seller.min_spread : null;
+  }
+
+  set minSpread(spread) {
+    this.seller.min_spread = spread;
+  }
+
+  @Watch('isModalVisible')
+  onModalVisibilityChanged(isVisible) {
+    if (!isVisible) {
+      return;
+    }
+    this.seller = null;
+    this.remainingAmount = 0;
+    this.apiService.get(this.endpoint).then((response) => {
+      this.seller = response.data;
+      this.remainingAmount = this.seller.remaining_amount;
+    });
+  }
+
+  setMaxAmount() {
+    const url = `/balance/${this.currentMarket.baseCurrency.code}`;
+    this.apiService.get(url).then((response) => {
+      const availableBalance = Number(response.data.available);
+      this.remainingAmount = this.seller.remaining_amount + availableBalance;
+    });
+  }
+
+  submit() {
+    if (this.isLoading) {
+      return;
+    }
+    this.isUpdating = true;
+    this.seller.remaining_amount = this.remainingAmount;
+    this.apiService.patch(this.endpoint, this.seller)
+      .then(() => {
+        this.isModalVisible = false;
+        this.isUpdating = false;
+      })
+      .catch(() => {
+        this.$snackbar.open({
+          message: 'Lo sentimos, ha ocurrido un error.',
+          type: 'is-danger',
+          indefinite: true,
         });
-      }
-    },
-  },
-  methods: {
-    setMaxAmount() {
-      const url = `/balance/${this.currentMarket.baseCurrency.code}`;
-      this.apiService.get(url).then((response) => {
-        const availableBalance = Number(response.data.available);
-        this.remainingAmount = this.seller.remaining_amount + availableBalance;
       });
-    },
-    submit() {
-      if (this.isLoading) {
-        return;
-      }
-      this.updating = true;
-      this.seller.remaining_amount = this.remainingAmount;
-      this.apiService.patch(this.endpoint, this.seller)
-        .then(() => {
-          this.isModalVisible = false;
-          this.updating = false;
-        })
-        .catch(() => {
-          this.$snackbar.open({
-            message: 'Lo sentimos, ha ocurrido un error.',
-            type: 'is-danger',
-            indefinite: true,
-          });
-        });
-    },
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss">

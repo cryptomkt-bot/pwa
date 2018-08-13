@@ -25,56 +25,55 @@
 </template>
 
 <script>
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
-export default {
-  name: 'Trades',
-  data() {
-    return {
-      isLoading: true,
-      orders: [],
-      intervalId: null,
-    };
-  },
+@Component
+export default class Trades extends Vue {
+  isLoading = true;
+  orders = [];
+  intervalId = null;
+
   created() {
     this.init();
-  },
+  }
+
   destroyed() {
     clearInterval(this.intervalId);
-  },
-  computed: {
-    currentMarket() {
-      return this.$store.state.currentMarket;
-    },
-  },
-  watch: {
-    currentMarket() {
-      this.init();
-    },
-  },
-  methods: {
-    init() {
-      this.isLoading = true;
-      clearInterval(this.intervalId);
-      this.updateOrders().then(() => {
-        this.isLoading = false;
-      });
-      // Update orders every 10 seconds
-      this.intervalId = setInterval(() => {
-        this.updateOrders();
-      }, 10000);
-    },
-    updateOrders() {
-      return CryptoMktHelper.getTrades(this.currentMarket.code).then((orders) => {
-        this.orders = orders;
-      });
-    },
-    orderColor(order) {
-      const type = order.market_taker === 'sell' ? 'danger' : 'success';
-      return `has-text-${type}`;
-    },
-  },
-};
+  }
+
+  get currentMarket() {
+    return this.$store.state.currentMarket;
+  }
+
+  @Watch('currentMarket')
+  onCurrentMarketChanged() {
+    this.init();
+  }
+
+  init() {
+    this.isLoading = true;
+    clearInterval(this.intervalId);
+    this.updateOrders().then(() => {
+      this.isLoading = false;
+    });
+    // Update orders every 10 seconds
+    this.intervalId = window.setInterval(() => {
+      this.updateOrders();
+    }, 10000);
+  }
+
+  updateOrders() {
+    return CryptoMktHelper.getTrades(this.currentMarket.code).then((orders) => {
+      this.orders = orders;
+    });
+  }
+
+  orderColor(order) {
+    const type = order.market_taker === 'sell' ? 'danger' : 'success';
+    return `has-text-${type}`;
+  }
+}
 </script>
 
 <style scoped lang="scss">

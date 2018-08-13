@@ -15,6 +15,7 @@
     "buefy": "^0.6.6",
     "vue": "^2.5.16",
     "vue-inject": "^2.1.0",
+    "vue-property-decorator": "^7.0.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

@@ -12,13 +12,12 @@
 </template>
 
 <script>
-export default {
-  name: 'Section',
+import { Component, Vue } from 'vue-property-decorator';
+
+@Component({
   props: ['title'],
-  data() {
-    return {
-      isVisible: false,
-    };
-  },
-};
+})
+export default class Section extends Vue {
+  isVisible = false;
+}
 </script>

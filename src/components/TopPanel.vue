@@ -19,45 +19,36 @@
 </template>
 
 <script>
+import { Component, Vue } from 'vue-property-decorator';
 import { countries, markets } from '../constants';
 
-export default {
-  name: 'TopPanel',
-  data() {
-    return {
-      countries: [],
-      markets: [],
-      isDropdownVisible: false,
-    };
-  },
+@Component
+export default class TopPanel extends Vue {
+  countries = [];
+  markets = [];
+
   created() {
     this.countries = countries;
     this.markets = markets;
-  },
-  computed: {
-    currentMarket: {
-      get() {
-        return this.$store.state.currentMarket;
+  }
+
+  get currentMarket() {
+    return this.$store.state.currentMarket;
+  }
+
+  set currentMarket(market) {
+    this.$store.commit('changeMarket', market);
+  }
+
+  logout() {
+    this.$dialog.confirm({
+      message: '¿Desea salir?',
+      onConfirm: () => {
+        this.$emit('loggedOut');
       },
-      set(newValue) {
-        this.$store.commit('changeMarket', newValue);
-      },
-    },
-  },
-  methods: {
-    changeMarket(market) {
-      this.$store.commit('changeMarket', market);
-    },
-    logout() {
-      this.$dialog.confirm({
-        message: '¿Desea salir?',
-        onConfirm: () => {
-          this.$emit('loggedOut');
-        },
-      });
-    },
-  },
-};
+    });
+  }
+}
 </script>
 
 <style lang="scss">

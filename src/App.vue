@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { Component, Vue } from 'vue-property-decorator';
 import ActiveOrders from './components/ActiveOrders.vue';
 import Balance from './components/Balance.vue';
 import Buyer from './components/Buyer.vue';
@@ -51,8 +52,7 @@ import Seller from './components/Seller.vue';
 import TopPanel from './components/TopPanel.vue';
 import Trades from './components/Trades.vue';
 
-export default {
-  name: 'App',
+@Component({
   components: {
     ActiveOrders,
     Balance,
@@ -67,25 +67,22 @@ export default {
     TopPanel,
     Trades,
   },
-  data() {
-    return {
-      isLogged: false,
-      ask: 0,
-      bid: 0,
-      activeOrders: [],
-      isOpenOrderModalVisible: false,
-      areTradersVisible: true,
-    };
-  },
-  methods: {
-    logout() {
-      this.isLogged = false;
-      localStorage.removeItem('token');
-      this.isOpenOrderModalVisible = false;
-      this.areTradersVisible = true;
-    },
-  },
-};
+})
+export default class App extends Vue {
+  isLogged = false;
+  ask = 0;
+  bid = 0;
+  activeOrders = [];
+  isOpenOrderModalVisible = false;
+  areTradersVisible = true;
+
+  logout() {
+    this.isLogged = false;
+    localStorage.removeItem('token');
+    this.isOpenOrderModalVisible = false;
+    this.areTradersVisible = true;
+  }
+}
 </script>
 
 <style lang="scss">

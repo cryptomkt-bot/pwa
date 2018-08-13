@@ -44,53 +44,53 @@
 </template>
 
 <script>
-import ApiService from '../services/ApiService';
+import { Component, Vue } from 'vue-property-decorator';
 import StorageHelper from '../helpers/StorageHelper';
+import ApiService from '../services/ApiService';
 
-export default {
-  name: 'Login',
-  data() {
-    return {
-      apiAddress: null,
-      username: '',
-      password: '',
-      isSignatureVisible: true,
-    };
-  },
+@Component
+export default class Login extends Vue {
+  apiAddress = null;
+  username = '';
+  password = '';
+  isSignatureVisible = true;
+
   created() {
     this.restoreFromStorage();
-  },
-  methods: {
-    login() {
-      const api = new ApiService(this.apiAddress);
-      api.login(this.username, this.password)
-        .then(() => {
-          this.$emit('loggedIn');
-        })
-        .catch((error) => {
-          let message = 'Lo sentimos, ha ocurrido un error';
-          if (error.response && error.response.status === 401) {
-            message = 'Usuario o contraseña incorrecta';
-          }
-          this.$toast.open({
-            message,
-            type: 'is-danger',
-            duration: 3000,
-          });
+  }
+
+  login() {
+    const api = new ApiService(this.apiAddress);
+    api.login(this.username, this.password)
+      .then(() => {
+        this.$emit('loggedIn');
+      })
+      .catch((error) => {
+        let message = 'Lo sentimos, ha ocurrido un error';
+        if (error.response && error.response.status === 401) {
+          message = 'Usuario o contraseña incorrecta';
+        }
+        this.$toast.open({
+          message,
+          type: 'is-danger',
+          duration: 3000,
         });
-    },
-    restoreFromStorage() {
-      this.apiAddress = StorageHelper.get('apiAddress');
-      this.username = StorageHelper.get('username');
-    },
-    hideSignature() {
-      this.isSignatureVisible = false;
-    },
-    showSignature() {
-      this.isSignatureVisible = true;
-    },
-  },
-};
+      });
+  }
+
+  restoreFromStorage() {
+    this.apiAddress = StorageHelper.get('apiAddress');
+    this.username = StorageHelper.get('username');
+  }
+
+  hideSignature() {
+    this.isSignatureVisible = false;
+  }
+
+  showSignature() {
+    this.isSignatureVisible = true;
+  }
+}
 </script>
 
 <style scoped>

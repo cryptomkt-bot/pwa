@@ -32,81 +32,84 @@
 </template>
 
 <script>
-export default {
-  name: 'ActiveOrders',
+import { Component, Vue, Watch } from 'vue-property-decorator';
+
+@Component({
   dependencies: ['apiService'],
-  data() {
-    return {
-      orders: [],
-      intervalId: null,
-      isLoading: false,
-    };
-  },
+})
+export default class ActiveOrders extends Vue {
+  orders = [];
+  intervalId = null;
+  isLoading = false;
+
   created() {
     this.init();
-  },
+  }
+
   destroyed() {
     clearInterval(this.intervalId);
-  },
-  computed: {
-    currentMarket() {
-      return this.$store.state.currentMarket;
-    },
-  },
-  watch: {
-    currentMarket() {
-      this.init();
-    },
-  },
-  methods: {
-    init() {
-      clearInterval(this.intervalId);
-      this.isLoading = true;
-      this.updateOrders().then(() => {
-        this.isLoading = false;
-      });
-      // Update orders every 10 seconds
-      this.intervalId = setInterval(() => {
-        this.updateOrders();
-      }, 10000);
-    },
-    updateOrders() {
-      const url = `/orders/active/${this.currentMarket.code}`;
-      return this.apiService.get(url).then((response) => {
-        this.orders = response.data;
-        this.$store.commit('updateActiveOrders', this.orders);
-      });
-    },
-    cancelOrder(order) {
-      this.$dialog.confirm({
-        message: `¿Desea cancelar la orden ${order.id}?`,
-        onConfirm: () => {
-          this.doCancelOrder(order);
-        },
-      });
-    },
-    doCancelOrder(order) {
-      const endpoint = `/orders/${order.id}`;
-      this.apiService.delete(endpoint)
-        .then(() => {
-          this.$toast.open({
-            message: 'Orden cancelada satisfactoriamente',
-            type: 'is-info',
-          });
-          this.orders = this.orders.filter(o => o.id !== order.id);
-        })
-        .catch(() => {
-          this.$snackbar.open({
-            message: 'Lo sentimos, ha ocurrido un error.',
-            type: 'is-danger',
-            indefinite: true,
-          });
+  }
+
+  get currentMarket() {
+    return this.$store.state.currentMarket;
+  }
+
+  @Watch('currentMarket')
+  onCurrentMarketChanged() {
+    this.init();
+  }
+
+  init() {
+    clearInterval(this.intervalId);
+    this.isLoading = true;
+    this.updateOrders().then(() => {
+      this.isLoading = false;
+    });
+    // Update orders every 10 seconds
+    this.intervalId = setInterval(() => {
+      this.updateOrders();
+    }, 10000);
+  }
+
+  updateOrders() {
+    const url = `/orders/active/${this.currentMarket.code}`;
+    return this.apiService.get(url).then((response) => {
+      this.orders = response.data;
+      this.$store.commit('updateActiveOrders', this.orders);
+    });
+  }
+
+  cancelOrder(order) {
+    this.$dialog.confirm({
+      message: `¿Desea cancelar la orden ${order.id}?`,
+      onConfirm: () => {
+        this.doCancelOrder(order);
+      },
+    });
+  }
+
+  doCancelOrder(order) {
+    const endpoint = `/orders/${order.id}`;
+    this.apiService.delete(endpoint)
+      .then(() => {
+        this.$toast.open({
+          message: 'Orden cancelada satisfactoriamente',
+          type: 'is-info',
         });
-    },
-    orderColor(order) {
-      const type = order.type === 'sell' ? 'danger' : 'success';
-      return `has-text-${type}`;
-    },
-  },
-};
+        this.orders = this.orders.filter(o => o.id !== order.id);
+      })
+      .catch(() => {
+        this.$snackbar.open({
+          message: 'Lo sentimos, ha ocurrido un error.',
+          type: 'is-danger',
+          indefinite: true,
+        });
+      });
+  }
+
+  orderColor(order) {
+    const type = order.type === 'sell' ? 'danger' : 'success';
+    return `has-text-${type}`;
+  }
+}
 </script>

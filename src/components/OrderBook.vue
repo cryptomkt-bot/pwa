@@ -51,108 +51,115 @@
 </template>
 
 <script>
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { toDecimals } from '../utils';
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
-export default {
-  name: 'OrderBook',
+@Component({
   props: ['activeOrders'],
-  data() {
-    return {
-      isLoading: true,
-      buyBook: [],
-      sellBook: [],
-      intervalId: null,
-      updatedAt: null,
-    };
-  },
+})
+export default class OrderBook extends Vue {
+  isLoading = true;
+  buyBook = [];
+  sellBook = [];
+  intervalId = null;
+  updatedAt = null;
+
   created() {
     this.init();
-  },
+  }
+
   destroyed() {
     clearInterval(this.intervalId);
-  },
-  computed: {
-    currentMarket() {
-      return this.$store.state.currentMarket;
-    },
-    ask() {
-      return this.sellBook.length ? Number(this.sellBook[0].price) : 0;
-    },
-    bid() {
-      return this.buyBook.length ? Number(this.buyBook[0].price) : 0;
-    },
-    spread() {
-      return this.ask - this.bid;
-    },
-    formattedSpread() {
-      const currency = this.currentMarket.quoteCurrency;
-      const spread = toDecimals(this.spread, this.currentMarket.decimals);
-      return `${currency.prefix}${spread} ${currency.postfix} (${this.spreadPercentage}%)`;
-    },
-    spreadPercentage() {
-      const spreadPercentage = (this.spread / this.ask) * 100;
-      return spreadPercentage.toFixed(2);
-    },
-    activeOrdersTimestamp() {
-      const { activeOrders } = this.$store.state;
-      return activeOrders.map(order => order.created_at);
-    },
-  },
-  methods: {
-    init() {
-      this.isLoading = true;
-      clearInterval(this.intervalId);
-      this.updateBooks().then(() => { // Get the order books
-        setTimeout(() => {
-          this.centerBook();
-          this.isLoading = false;
-        }, 500); // Center books
-      });
-      // Update books every 10 seconds
-      this.intervalId = setInterval(() => {
-        this.updateBooks();
-      }, 10000);
-    },
-    updateBooks() {
-      return CryptoMktHelper.getBooks(this.currentMarket.code, 50)
-        .then((books) => {
-          const { buyBook, sellBook } = books;
-          this.updatedAt = new Date();
-          // Add accumulated amount to the books
-          this.addAccumulated(buyBook);
-          this.addAccumulated(sellBook);
-          // Update the books
-          this.buyBook = buyBook;
-          this.sellBook = sellBook;
-          this.$store.commit('updatePrices', {
-            ask: this.ask,
-            bid: this.bid,
-          });
+  }
+
+  get currentMarket() {
+    return this.$store.state.currentMarket;
+  }
+
+  get ask() {
+    return this.sellBook.length ? Number(this.sellBook[0].price) : 0;
+  }
+
+  get bid() {
+    return this.buyBook.length ? Number(this.buyBook[0].price) : 0;
+  }
+
+  get spread() {
+    return this.ask - this.bid;
+  }
+
+  get formattedSpread() {
+    const currency = this.currentMarket.quoteCurrency;
+    const spread = toDecimals(this.spread, this.currentMarket.decimals);
+    return `${currency.prefix}${spread} ${currency.postfix} (${this.spreadPercentage}%)`;
+  }
+
+  get spreadPercentage() {
+    const spreadPercentage = (this.spread / this.ask) * 100;
+    return spreadPercentage.toFixed(2);
+  }
+
+  get activeOrdersTimestamp() {
+    const { activeOrders } = this.$store.state;
+    return activeOrders.map(order => order.created_at);
+  }
+
+  init() {
+    this.isLoading = true;
+    clearInterval(this.intervalId);
+    this.updateBooks().then(() => { // Get the order books
+      setTimeout(() => {
+        this.centerBook();
+        this.isLoading = false;
+      }, 500); // Center books
+    });
+    // Update books every 10 seconds
+    this.intervalId = setInterval(() => {
+      this.updateBooks();
+    }, 10000);
+  }
+
+  updateBooks() {
+    return CryptoMktHelper.getBooks(this.currentMarket.code, 50)
+      .then((books) => {
+        const { buyBook, sellBook } = books;
+        this.updatedAt = new Date();
+        // Add accumulated amount to the books
+        this.addAccumulated(buyBook);
+        this.addAccumulated(sellBook);
+        // Update the books
+        this.buyBook = buyBook;
+        this.sellBook = sellBook;
+        this.$store.commit('updatePrices', {
+          ask: this.ask,
+          bid: this.bid,
         });
-    },
-    addAccumulated(book) {
-      /** Add accumulated amount to the book */
-      let accumulated = 0;
-      book.forEach((order) => {
-        accumulated += Number(order.amount);
-        order.accumulated = accumulated;
       });
-    },
-    centerBook() {
-      let target = document.getElementById('spread-row');
-      for (let i = 0; i < 4; i += 1) {
-        target = target.previousElementSibling;
-      }
-      target.scrollIntoView();
-    },
-  },
-  watch: {
-    currentMarket() {
-      this.init();
-    },
-  },
-};
+  }
+
+  addAccumulated(book) {
+    /** Add accumulated amount to the book */
+    let accumulated = 0;
+    book.forEach((order) => {
+      accumulated += Number(order.amount);
+      order.accumulated = accumulated;
+    });
+  }
+
+  centerBook() {
+    let target = document.getElementById('spread-row');
+    for (let i = 0; i < 4; i += 1) {
+      target = target.previousElementSibling;
+    }
+    target.scrollIntoView();
+  }
+
+  @Watch('currentMarket')
+  onCurrentMarketChanged() {
+    this.init();
+  }
+}
 </script>
 
 <style scoped lang="scss">

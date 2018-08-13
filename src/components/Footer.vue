@@ -13,29 +13,30 @@
 </template>
 
 <script>
-export default {
-  name: 'Footer',
-  computed: {
-    ask() {
-      return this.$store.state.ask;
-    },
-    bid() {
-      return this.$store.state.bid;
-    },
-    currentMarket() {
-      return this.$store.state.currentMarket;
-    },
-  },
-  methods: {
-    formatPrice(price) {
-      return this.formatAmount(
-        price,
-        this.currentMarket.quoteCurrency,
-        this.currentMarket.decimals,
-      );
-    },
-  },
-};
+import { Component, Vue } from 'vue-property-decorator';
+
+@Component
+export default class Footer extends Vue {
+  get ask() {
+    return this.$store.state.ask;
+  }
+
+  get bid() {
+    return this.$store.state.bid;
+  }
+
+  get currentMarket() {
+    return this.$store.state.currentMarket;
+  }
+
+  formatPrice(price) {
+    return this.formatAmount(
+      price,
+      this.currentMarket.quoteCurrency,
+      this.currentMarket.decimals,
+    );
+  }
+}
 </script>
 
 <style scoped lang="scss">

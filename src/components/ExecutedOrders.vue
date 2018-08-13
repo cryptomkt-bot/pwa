@@ -26,55 +26,56 @@
 </template>
 
 <script>
-export default {
-  name: 'ExecutedOrders',
+import { Component, Vue, Watch } from 'vue-property-decorator';
+
+@Component({
   dependencies: ['apiService'],
-  data() {
-    return {
-      isLoading: true,
-      orders: [],
-      intervalId: null,
-    };
-  },
+})
+export default class ExecutedOrders extends Vue {
+  isLoading = true;
+  orders = [];
+  intervalId = null;
+
   created() {
     this.init();
-  },
+  }
+
   destroyed() {
     clearInterval(this.intervalId);
-  },
-  computed: {
-    currentMarket() {
-      return this.$store.state.currentMarket;
-    },
-  },
-  watch: {
-    currentMarket() {
-      this.init();
-    },
-  },
-  methods: {
-    init() {
-      clearInterval(this.intervalId);
-      this.updateOrders().then(() => {
-        this.isLoading = false;
-      });
-      // Update orders every 10 seconds
-      this.intervalId = setInterval(() => {
-        this.updateOrders();
-      }, 10000);
-    },
-    updateOrders() {
-      const url = `/orders/executed/${this.currentMarket.code}`;
-      return this.apiService.get(url, { limit: 100 }).then((response) => {
-        this.orders = response.data;
-      });
-    },
-    orderColor(order) {
-      const type = order.type === 'sell' ? 'danger' : 'success';
-      return `has-text-${type}`;
-    },
-  },
-};
+  }
+
+  get currentMarket() {
+    return this.$store.state.currentMarket;
+  }
+
+  @Watch('currentMarket')
+  onCurrentMarketChanged() {
+    this.init();
+  }
+
+  init() {
+    clearInterval(this.intervalId);
+    this.updateOrders().then(() => {
+      this.isLoading = false;
+    });
+    // Update orders every 10 seconds
+    this.intervalId = setInterval(() => {
+      this.updateOrders();
+    }, 10000);
+  }
+
+  updateOrders() {
+    const url = `/orders/executed/${this.currentMarket.code}`;
+    return this.apiService.get(url, { limit: 100 }).then((response) => {
+      this.orders = response.data;
+    });
+  }
+
+  orderColor(order) {
+    const type = order.type === 'sell' ? 'danger' : 'success';
+    return `has-text-${type}`;
+  }
+}
 </script>
 
 <style scoped lang="scss">
