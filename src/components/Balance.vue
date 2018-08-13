@@ -18,14 +18,8 @@
         <tbody>
           <tr v-for="balance in balances" :key="balance.wallet">
             <td>{{ balance.wallet }}</td>
-            <td>
-              {{ balance.currency_prefix }}{{ balance.balance | toDecimals(balance.currency_decimal) }}
-              {{ balance.currency_postfix }}
-            </td>
-            <td>
-              {{ balance.currency_prefix }}{{ balance.available | toDecimals(balance.currency_decimal) }}
-              {{ balance.currency_postfix }}
-            </td>
+            <td>{{ getFormattedBalanceTotal(balance) }}</td>
+            <td>{{ getFormattedBalanceAvailable(balance) }}</td>
           </tr>
         </tbody>
       </table>
@@ -45,6 +39,23 @@ export default class Balance extends Vue {
 
   created() {
     this.getBalances();
+  }
+
+  getFormattedBalanceTotal(balance) {
+    return this.getFormattedBalance(balance, balance.balance);
+  }
+
+  getFormattedBalanceAvailable(balance) {
+    return this.getFormattedBalance(balance, balance.available);
+  }
+
+  getFormattedBalance(balance, amount) {
+    const currency = {
+      prefix: balance.currency_prefix,
+      postfix: balance.currency_postfix,
+    };
+
+    return this.formatAmount(amount, currency, balance.currency_decimal);
   }
 
   @Watch('isBalanceVisible')
