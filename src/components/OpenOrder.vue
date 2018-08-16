@@ -67,6 +67,14 @@ export default class OpenOrder extends Vue {
     this.init();
   }
 
+  init() {
+    this.order = {
+      type: 'buy',
+      price: null,
+      amount: null,
+    };
+  }
+
   get currentMarket() {
     return this.$store.state.currentMarket;
   }
@@ -87,14 +95,6 @@ export default class OpenOrder extends Vue {
       return `Gastando ${amount}`;
     }
     return `Recibirás ${amount} (menos comisión)`;
-  }
-
-  init() {
-    this.order = {
-      type: 'buy',
-      price: null,
-      amount: null,
-    };
   }
 
   setMaxAmount() {

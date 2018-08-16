@@ -106,8 +106,11 @@ export default class Seller extends Vue {
   setMaxAmount() {
     const url = `/balance/${this.currentMarket.baseCurrency.code}`;
     this.apiService.get(url).then((response) => {
-      const availableBalance = Number(response.data.available);
-      this.remainingAmount = this.seller.remaining_amount + availableBalance;
+      const grossBalance = Number(response.data.balance);
+      const netBalance = Number(response.data.available);
+      const remainingAmount = this.seller.remaining_amount + netBalance;
+      // Make sure the amount isn't higher than the gross balance
+      this.remainingAmount = Math.min(remainingAmount, grossBalance);
     });
   }
 

@@ -112,8 +112,11 @@ export default class Buyer extends Vue {
   setMaxFiat() {
     const url = `/balance/${this.currentMarket.quoteCurrency.code}`;
     this.apiService.get(url).then((response) => {
-      const availableBalance = Number(response.data.available);
-      this.remainingFiat = this.buyer.remaining_fiat + availableBalance;
+      const grossBalance = Number(response.data.balance);
+      const netBalance = Number(response.data.available);
+      const remainingFiat = this.buyer.remaining_fiat + netBalance;
+      // Make sure the amount isn't higher than the gross balance
+      this.remainingFiat = Math.min(remainingFiat, grossBalance);
     });
   }
 
