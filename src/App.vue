@@ -91,15 +91,6 @@ export default class App extends Vue {
     margin-bottom: 110px;
     -webkit-tap-highlight-color: transparent;
   }
-  .section-name {
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #eee;
-    padding: 8px;
-    .icon {
-      position: absolute;
-      right: 16px;
-    }
-  }
   #footer {
     position: fixed;
     bottom: 0;

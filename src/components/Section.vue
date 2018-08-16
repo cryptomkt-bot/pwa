@@ -21,3 +21,15 @@ export default class Section extends Vue {
   isVisible = false;
 }
 </script>
+
+<style lang="scss">
+  .section-name {
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #eee;
+    padding: 8px;
+    .icon {
+      position: absolute;
+      right: 16px;
+    }
+  }
+</style>
