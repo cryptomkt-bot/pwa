@@ -13,17 +13,16 @@
         <OrderBook/>
         <!-- Trades -->
         <Section :title="'Últimas transacciones'">
-          <Trades/>
+          <b-tabs expanded position="is-centered" class="is-marginless">
+            <b-tab-item label="Todas"><Trades/></b-tab-item>
+            <b-tab-item label="Mías"><ExecutedOrders/></b-tab-item>
+          </b-tabs>
         </Section>
         <!-- Active orders -->
         <Section :title="'Órdenes abiertas'">
           <template slot="show">
             <ActiveOrders/>
           </template>
-        </Section>
-        <!-- Executed orders -->
-        <Section :title="'Órdenes históricas'">
-          <ExecutedOrders/>
         </Section>
         <!-- Footer -->
         <div id="footer">
@@ -90,6 +89,7 @@ export default class App extends Vue {
     margin-top: 60px;
     margin-bottom: 110px;
     -webkit-tap-highlight-color: transparent;
+    .tab-content { padding: 0 !important }
   }
   #footer {
     position: fixed;
