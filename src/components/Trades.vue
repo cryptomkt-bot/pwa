@@ -1,5 +1,5 @@
 <template>
-  <div class="loading-wrapper">
+  <div :class="{ 'loading-wrapper': isLoading }">
     <b-loading :active="isLoading" :is-full-page="false"></b-loading>
     <table class="table is-fullwidth is-marginless is-size-7">
       <thead>
