@@ -60,6 +60,7 @@ export default class TopPanel extends Vue {
     height: 50px;
     position: fixed;
     top: 0;
+    z-index: 1;
     box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
     .button {
       border-radius: 0;
