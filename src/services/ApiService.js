@@ -6,7 +6,7 @@ export default class ApiService {
   constructor(baseURL = null) {
     this.baseURL = baseURL || StorageHelper.get('apiAddress');
     if (this.baseURL !== null) {
-      this.axios = axios.create({ baseURL: `https://${this.baseURL}` });
+      this.axios = axios.create({ baseURL: `https://${this.baseURL}`, headers: {} });
     } else {
       this.axios = axios.create();
     }
@@ -26,7 +26,7 @@ export default class ApiService {
   }
 
   setToken(token) {
-    this.axios.defaults.headers.common.Authorization = `JWT ${token}`;
+    this.axios.defaults.headers['Authorization'] = `JWT ${token}`;
   }
 
   get(endpoint, params = null) {
