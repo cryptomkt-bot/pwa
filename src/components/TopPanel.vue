@@ -79,6 +79,7 @@ export default class TopPanel extends Vue {
       border: 0;
       border-radius: 0;
       height: $panelHeight;
+      width: 100%;
       box-shadow: none !important;
     }
   }
