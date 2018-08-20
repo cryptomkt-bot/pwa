@@ -1,4 +1,4 @@
-export const countries = ['ARS', 'BRL', 'CLP', 'EUR'];
+export const countries = ['ARS', 'BRL', 'CLP', 'EUR', 'MXN'];
 
 const currencies = {
   ARS: {
@@ -43,6 +43,14 @@ const currencies = {
     name: 'Euro',
     prefix: '',
     postfix: '€',
+    decimals: 2,
+  },
+  MXN: {
+    code: 'MXN',
+    name: 'Peso Mexicano',
+    prefix: '$',
+    postfix: 'XLM',
+    step: 1,
     decimals: 2,
   },
   XLM: {
@@ -146,6 +154,29 @@ export const markets = {
       quoteCurrency: currencies.EUR,
       step: 0.0002,
       decimals: 4,
+    },
+  ],
+  MXN: [
+    {
+      code: 'BTCMXN',
+      baseCurrency: currencies.BTC,
+      quoteCurrency: currencies.MXN,
+      step: 10,
+      decimals: 0,
+    },
+    {
+      code: 'ETHMXN',
+      baseCurrency: currencies.ETH,
+      quoteCurrency: currencies.MXN,
+      step: 1,
+      decimals: 0,
+    },
+    {
+      code: 'XLMMXN',
+      baseCurrency: currencies.XLM,
+      quoteCurrency: currencies.MXN,
+      step: 0.002,
+      decimals: 3,
     },
   ],
 };
