@@ -4,11 +4,11 @@
 > A web app for a trading bot running on [CryptoMarket](https://www.cryptomkt.com).
 
 ## Screenshots
-<a href="https://user-images.githubusercontent.com/6851095/43031298-50406514-8c75-11e8-869e-db5ac7e657b8.png"><img src="https://user-images.githubusercontent.com/6851095/43031298-50406514-8c75-11e8-869e-db5ac7e657b8.png" width="160px"></a>
-<a href="https://user-images.githubusercontent.com/6851095/43031499-8209d25c-8c79-11e8-9451-8d172b84f860.png"><img src="https://user-images.githubusercontent.com/6851095/43031499-8209d25c-8c79-11e8-9451-8d172b84f860.png" width="160px"></a>
-<a href="https://user-images.githubusercontent.com/6851095/43031498-81e53bfe-8c79-11e8-8589-e24200a43ac2.png"><img src="https://user-images.githubusercontent.com/6851095/43031498-81e53bfe-8c79-11e8-8589-e24200a43ac2.png" width="160px"></a>
-<a href="https://user-images.githubusercontent.com/6851095/43031297-50177da2-8c75-11e8-9ba0-ad0df3478f71.png"><img src="https://user-images.githubusercontent.com/6851095/43031297-50177da2-8c75-11e8-9ba0-ad0df3478f71.png" width="160px"></a>
-<a href="https://user-images.githubusercontent.com/6851095/43031296-4ff4962a-8c75-11e8-8a95-d0f305d26eca.png"><img src="https://user-images.githubusercontent.com/6851095/43031296-4ff4962a-8c75-11e8-8a95-d0f305d26eca.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/44629187-fd17a400-a921-11e8-8e18-f8822a617c6c.png"><img src="https://user-images.githubusercontent.com/6851095/44629187-fd17a400-a921-11e8-8e18-f8822a617c6c.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/44629210-47992080-a922-11e8-8b8f-ab2bd592e077.png"><img src="https://user-images.githubusercontent.com/6851095/44629210-47992080-a922-11e8-8b8f-ab2bd592e077.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/44629244-af4f6b80-a922-11e8-9814-f8686ad4add0.png"><img src="https://user-images.githubusercontent.com/6851095/44629244-af4f6b80-a922-11e8-9814-f8686ad4add0.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/44629263-de65dd00-a922-11e8-9496-1e8ab16bfd62.png"><img src="https://user-images.githubusercontent.com/6851095/44629263-de65dd00-a922-11e8-9496-1e8ab16bfd62.png" width="160px"></a>
+<a href="https://user-images.githubusercontent.com/6851095/44629266-e45bbe00-a922-11e8-91d1-ea79146b5228.png"><img src="https://user-images.githubusercontent.com/6851095/44629266-e45bbe00-a922-11e8-91d1-ea79146b5228.png" width="160px"></a>
 
 ## Build Setup
 ``` bash

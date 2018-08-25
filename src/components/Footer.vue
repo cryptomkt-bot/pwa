@@ -2,11 +2,11 @@
   <div id="footer-content" class="has-text-centered">
     <span>{{ currentMarket.code }}</span>
     <div class="price has-text-centered">
-      <div class="price-label has-text-weight-light">venta</div>
+      <div class="price-label has-text-weight-light">{{ $t('bidPrice') }}</div>
       <div>{{ formatPrice(bid) }}</div>
     </div>
     <div class="price has-text-centered">
-      <div class="price-label has-text-weight-light">compra</div>
+      <div class="price-label has-text-weight-light">{{ $t('askPrice') }}</div>
       <div>{{ formatPrice(ask) }}</div>
     </div>
   </div>

@@ -4,9 +4,9 @@
     <table id="order-book-table" class="table is-fullwidth is-size-7 is-marginless">
       <thead>
         <tr>
-          <th>Precio</th>
-          <th>Cantidad</th>
-          <th>Acumulado</th>
+          <th>{{ $t('price') }}</th>
+          <th>{{ $t('amount') }}</th>
+          <th>{{ $t('accumulated') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +27,7 @@
         <tr v-show="sellBook.length && buyBook.length" id="spread-row">
           <td id="spread">{{ formattedSpread }}</td>
           <td></td>
-          <td>Spread</td>
+          <td>{{ $t('spread') }}</td>
         </tr>
         <!-- Buy book -->
         <tr v-for="order in buyBook" :key="order.timestamp"
@@ -44,15 +44,15 @@
         </tr>
       </tbody>
     </table>
-    <p id="updated-time" v-if="updatedAt" class="is-size-7">
-      Actualizado a las {{ updatedAt | localeTime }}
+    <p id="updated-time" v-if="updateTime" class="is-size-7">
+      {{ $t('updatedAt', { updateTime }) }}
     </p>
   </div>
 </template>
 
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { toDecimals } from '../utils';
+import { localeTime, toDecimals } from '../utils';
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 @Component({
@@ -63,7 +63,7 @@ export default class OrderBook extends Vue {
   buyBook = [];
   sellBook = [];
   intervalId = null;
-  updatedAt = null;
+  updateTime = null;
 
   created() {
     this.init();
@@ -124,7 +124,7 @@ export default class OrderBook extends Vue {
     return CryptoMktHelper.getBooks(this.currentMarket.code, 50)
       .then((books) => {
         const { buyBook, sellBook } = books;
-        this.updatedAt = new Date();
+        this.updateTime = localeTime(new Date());
         // Add accumulated amount to the books
         this.addAccumulated(buyBook);
         this.addAccumulated(sellBook);

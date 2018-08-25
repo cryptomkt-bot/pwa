@@ -5,34 +5,34 @@
       <div id="buyer-card" class="card">
         <!-- Title -->
         <header class="card-header">
-          <p class="card-header-title">Comprador</p>
+          <p class="card-header-title">{{ $t('buyer') }}</p>
         </header>
 
         <!-- Body -->
         <div class="card-content">
           <!-- Amount -->
-          <label for="amount" class="label is-small">Cantidad</label>
+          <label for="amount" class="label is-small">{{ $t('amount') }}</label>
           <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
                          :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
                          :step="currentMarket.baseCurrency.step" />
 
           <!-- Fiat -->
-          <label for="fiat" class="label is-small">Fiat restante</label>
+          <label for="fiat" class="label is-small">{{ $t('remainingFiat') }}</label>
           <CurrencyField v-model="remainingFiat" :id="'amount'" :showMaxButton="true"
                          :currency="currentMarket.quoteCurrency"
                          :disabled="isLoading" :placeholder="inputsPlaceholder"
                          @maxButtonClicked="setMaxFiat" />
 
           <!-- Info -->
-          <p class="is-size-7">Precio máximo: {{ maxPrice }}</p>
+          <p class="is-size-7">{{ $t('maxPrice') }}: {{ maxPrice }}</p>
         </div>
 
         <!-- Action buttons -->
         <footer class="card-footer">
-          <a class="card-footer-item" @click="isModalVisible = false">Cancelar</a>
+          <a class="card-footer-item" @click="isModalVisible = false">{{ $t('cancel') }}</a>
           <a class="card-footer-item" @click="submit">
             <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-            <span v-else>Actualizar</span>
+            <span v-else>{{ $t('update') }}</span>
           </a>
         </footer>
       </div>
@@ -40,7 +40,7 @@
     <!-- Button -->
     <transition name="scale">
       <div v-show="isButtonVisible" id="buyer-button" @click="isModalVisible = true"
-           class="button is-rounded has-text-weight-bold">C</div>
+           class="button is-rounded has-text-weight-bold">{{ $t('buyer')[0] }}</div>
     </transition>
   </div>
 </template>
@@ -85,7 +85,8 @@ export default class Buyer extends Vue {
   }
 
   get inputsPlaceholder() {
-    return this.buyer === null ? 'Cargando ...' : '';
+    const loadingMsg = this.$t('loading');
+    return this.buyer === null ? `${loadingMsg} ...` : '';
   }
 
   get remainingAmount() {
@@ -133,7 +134,7 @@ export default class Buyer extends Vue {
       })
       .catch(() => {
         this.$snackbar.open({
-          message: 'Lo sentimos, ha ocurrido un error.',
+          message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,
         });

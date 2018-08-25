@@ -10,7 +10,7 @@
     </div>
     <button id="open-order" @click="$emit('openOrderModalOpened')"
             class="button is-success is-size-6">
-      <span class="icon">+</span> Abrir orden
+      <span class="icon">+</span> {{ $t('openOrder') }}
     </button>
     <button id="logout-button" @click="logout" class="button">
       <span class="icon has-text-danger"><i class="fa fa-power-off"></i></span>
@@ -41,8 +41,8 @@ export default class TopPanel extends Vue {
   }
 
   logout() {
-    this.$dialog.confirm({
-      message: '¿Desea salir?',
+    this.confirm({
+      message: this.$t('logoutConfirm'),
       onConfirm: () => {
         this.$emit('loggedOut');
       },

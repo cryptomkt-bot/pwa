@@ -4,15 +4,15 @@
       <span class="icon is-size-7">
         <i class="fa" :class="[isBalanceVisible ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
       </span>
-      <span id="balance-label" class="has-text-weight-light">Balances</span>
+      <span id="balance-label" class="has-text-weight-light">{{ $t('balances') }}</span>
     </div>
     <div id="balance-content" v-show="isBalanceVisible">
       <table class="table is-fullwidth is-size-7">
         <thead>
           <tr>
             <th></th>
-            <th>Saldo contable</th>
-            <th>Saldo disponible</th>
+            <th>{{ $t('totalBalance') }}</th>
+            <th>{{ $t('availableBalance') }}</th>
           </tr>
         </thead>
         <tbody>

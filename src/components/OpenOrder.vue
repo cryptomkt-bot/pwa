@@ -4,7 +4,7 @@
     <div id="open-order-card" class="card" :class="[order.type === 'buy' ? 'green' : 'red']">
       <!-- Title -->
       <header class="card-header">
-        <p class="card-header-title">Abrir orden de mercado</p>
+        <p class="card-header-title">{{ $t('openMarketOrder') }}</p>
       </header>
 
       <!-- Body -->
@@ -12,25 +12,25 @@
         <!-- Order type -->
         <div class="field">
           <div class="control">
-            <label for="order-type" class="label is-size-7">Tipo de orden</label>
+            <label for="order-type" class="label is-size-7">{{ $t('orderType') }}</label>
             <div class="select">
               <select id="order-type" v-model="order.type">
-                <option value="buy">Orden de compra</option>
-                <option value="sell">Orden de venta</option>
+                <option value="buy">{{ $t('buyOrder') }}</option>
+                <option value="sell">{{ $t('sellOrder') }}</option>
               </select>
             </div>
           </div>
         </div>
 
         <!-- Amount -->
-        <label for="amount" class="label is-small">Cantidad</label>
+        <label for="amount" class="label is-small">{{ $t('amount') }}</label>
         <CurrencyField v-model="order.amount" :id="'amount'" :showMaxButton="true"
                        :currency="currentMarket.baseCurrency"
                        :step="currentMarket.baseCurrency.step"
                        @maxButtonClicked="setMaxAmount" />
 
         <!-- Price -->
-        <label for="price" class="label is-small">Precio</label>
+        <label for="price" class="label is-small">{{ $t('price') }}</label>
         <CurrencyField v-model="order.price" :id="'price'"
                        :currency="currentMarket.quoteCurrency" :step="currentMarket.step" />
 
@@ -40,10 +40,10 @@
 
       <!-- Action buttons -->
       <footer class="card-footer">
-        <a class="card-footer-item" @click="close">Cancelar</a>
+        <a class="card-footer-item" @click="close">{{ $t('cancel') }}</a>
         <a class="card-footer-item" @click="submit">
           <span v-if="isLoading" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-          <span v-else>Abrir orden</span>
+          <span v-else>{{ $t('openOrder') }}</span>
         </a>
       </footer>
     </div>
@@ -92,9 +92,9 @@ export default class OpenOrder extends Vue {
     const currency = this.currentMarket.quoteCurrency;
     amount = this.formatAmount(amount, currency, currency.decimals);
     if (this.order.type === 'buy') {
-      return `Gastando ${amount}`;
+      return this.$t('spending', { amount });
     }
-    return `Recibirás ${amount} (menos comisión)`;
+    return this.$t('earningLessFee', { amount });
   }
 
   setMaxAmount() {
@@ -126,9 +126,10 @@ export default class OpenOrder extends Vue {
       this.currentMarket.quoteCurrency,
       this.currentMarket.decimals,
     );
-    const typeVerb = this.order.type === 'buy' ? 'comprar' : 'vender';
-    this.$dialog.confirm({
-      message: `¿Desea ${typeVerb} ${amount} a ${price}?`,
+    const orderTypeCapitalize = this.order.type.charAt(0).toUpperCase();
+    const confirmMsgKey = `confirm${orderTypeCapitalize}Order`;
+    this.confirm({
+      message: this.$t(confirmMsgKey, { amount, price }),
       onConfirm: () => {
         this.doSubmit();
       },
@@ -150,7 +151,7 @@ export default class OpenOrder extends Vue {
         this.isLoading = false;
         this.close();
         this.$toast.open({
-          message: 'Orden de mercado abierta',
+          message: this.$t('orderOpened'),
           type: 'is-info',
         });
         this.order = {
@@ -162,7 +163,7 @@ export default class OpenOrder extends Vue {
       .catch(() => {
         this.isLoading = false;
         this.$snackbar.open({
-          message: 'Lo sentimos, ha ocurrido un error.',
+          message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,
         });

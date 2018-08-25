@@ -5,20 +5,20 @@
       <div id="seller-card" class="card">
         <!-- Title -->
         <header class="card-header">
-          <p class="card-header-title">Vendedor</p>
+          <p class="card-header-title">{{ $t('seller') }}</p>
         </header>
 
         <!-- Body -->
         <div class="card-content">
           <!-- Amount -->
-          <label for="amount" class="label is-small">Cantidad</label>
+          <label for="amount" class="label is-small">{{ $t('amount') }}</label>
           <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
                          :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
                          :step="currentMarket.baseCurrency.step" :showMaxButton="true"
                          @maxButtonClicked="setMaxAmount" />
 
           <!-- Spread -->
-          <label for="spread" class="label is-small">Spread</label>
+          <label for="spread" class="label is-small">{{ $t('spread') }}</label>
           <div class="field has-addons">
             <!-- Input -->
             <div class="control">
@@ -35,10 +35,10 @@
 
         <!-- Action buttons -->
         <footer class="card-footer">
-          <a class="card-footer-item" @click="isModalVisible = false">Cancelar</a>
+          <a class="card-footer-item" @click="isModalVisible = false">{{ $t('cancel') }}</a>
           <a class="card-footer-item" @click="submit">
             <span v-if="isUpdating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-            <span v-else>Actualizar</span>
+            <span v-else>{{ $t('update') }}</span>
           </a>
         </footer>
       </div>
@@ -46,7 +46,7 @@
     <!-- Button -->
     <transition name="scale">
       <div v-show="isButtonVisible" id="seller-button" @click="isModalVisible = true"
-           class="button is-rounded has-text-weight-bold">V</div>
+           class="button is-rounded has-text-weight-bold">{{ $t('seller')[0] }}</div>
     </transition>
   </div>
 </template>
@@ -79,7 +79,8 @@ export default class Seller extends Vue {
   }
 
   get inputsPlaceholder() {
-    return this.seller === null ? 'Cargando ...' : '';
+    const loadingMsg = this.$t('loading');
+    return this.seller === null ? `${loadingMsg} ...` : '';
   }
 
   get minSpread() {
@@ -127,7 +128,7 @@ export default class Seller extends Vue {
       })
       .catch(() => {
         this.$snackbar.open({
-          message: 'Lo sentimos, ha ocurrido un error.',
+          message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,
         });

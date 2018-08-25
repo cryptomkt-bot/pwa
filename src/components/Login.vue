@@ -5,46 +5,56 @@
       <div class="card">
         <form @submit.prevent="login" class="card-content">
           <div class="field">
-            <label for="apiAddress" class="label">Dirección de API</label>
+            <label for="apiAddress" class="label">{{ $t('apiUrl') }}</label>
             <div class="control">
               <input id="apiAddress" type="text" required
                      v-model="apiAddress" @click="hideSignature" @blur="showSignature"
-                     placeholder="Ingrese la dirección de la API" class="input">
+                     :placeholder="$t('enterApiUrl')" class="input">
             </div>
           </div>
           <div class="field">
-            <label for="username" class="label">Usuario</label>
+            <label for="username" class="label">{{ $t('username') }}</label>
             <div class="control">
               <input id="username" type="text" autocapitalize="off" required
                      v-model="username" @click="hideSignature" @blur="showSignature"
-                     placeholder="Ingrese su nombre de usuario" class="input">
+                     :placeholder="$t('enterUsername')" class="input">
             </div>
           </div>
           <div class="field">
-            <label for="password" class="label">Contraseña</label>
+            <label for="password" class="label">{{ $t('password') }}</label>
             <div class="control">
               <input id="password" type="password" required
                      v-model="password" @click="hideSignature" @blur="showSignature"
-                     placeholder="Ingrese su contraseña" class="input">
+                     :placeholder="$t('enterPassword')" class="input">
             </div>
           </div>
           <div class="field">
             <div class="control">
               <button :disabled="!this.username || !this.password"
-                      class="button is-primary is-fullwidth">Iniciar sesión</button>
+                      class="button is-primary is-fullwidth">{{ $t('login') }}</button>
             </div>
           </div>
         </form>
       </div>
+      <div id="lang-select" class="select is-pulled-right">
+        <select @change="changeLang($event.target.value)">
+          <option v-for="(lang, i) in langs" :key="i" :value="lang"
+                  :selected="lang === $i18n.locale">
+            {{ langName(lang) }}
+          </option>
+        </select>
+      </div>
     </div>
     <span v-show="isSignatureVisible" class="copyright is-size-7">
-      Built with <i class="fa fa-heart"></i> by <a target="_blank" href="https://github.com/tanoabeleyra">tanoabeleyra</a>
+      {{ $t('builtWithLoveBy[0]') }} <i class="fa fa-heart"></i> {{ $t('builtWithLoveBy[1]') }}
+      <a target="_blank" href="https://github.com/tanoabeleyra">tanoabeleyra</a>
     </span>
   </div>
 </template>
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
+import { config, setOptions } from 'buefy';
 import StorageHelper from '../helpers/StorageHelper';
 import ApiService from '../services/ApiService';
 
@@ -54,6 +64,7 @@ export default class Login extends Vue {
   username = '';
   password = '';
   isSignatureVisible = true;
+  langs = ['en', 'es'];
 
   created() {
     this.restoreFromStorage();
@@ -66,9 +77,9 @@ export default class Login extends Vue {
         this.$emit('loggedIn');
       })
       .catch((error) => {
-        let message = 'Lo sentimos, ha ocurrido un error';
+        let message = this.$t('errorMsg');
         if (error.response && error.response.status === 401) {
-          message = 'Usuario o contraseña incorrecta';
+          message = this.$t('wrongUsernameOrPassword');
         }
         this.$toast.open({
           message,
@@ -90,10 +101,21 @@ export default class Login extends Vue {
   showSignature() {
     this.isSignatureVisible = true;
   }
+
+  langName(lang) {
+    const langKey = `language.${lang}`;
+    return this.$t(langKey);
+  }
+
+  changeLang(lang) {
+    this.$i18n.locale = lang;
+    StorageHelper.set('lang', lang);
+  }
 }
 </script>
 
 <style scoped>
+  #lang-select { margin-top: 16px }
   .card { background-color: #fbfbfb }
   .copyright {
     position: absolute;

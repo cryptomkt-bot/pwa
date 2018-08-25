@@ -12,14 +12,14 @@
         <!-- Order book -->
         <OrderBook/>
         <!-- Trades -->
-        <Section :title="'Últimas transacciones'">
+        <Section :title="$t('latestTransactions')">
           <b-tabs expanded position="is-centered" class="is-marginless">
-            <b-tab-item label="Todas"><Trades/></b-tab-item>
-            <b-tab-item label="Mías"><ExecutedOrders/></b-tab-item>
+            <b-tab-item :label="$t('allOrders')"><Trades/></b-tab-item>
+            <b-tab-item :label="$t('myOrders')"><ExecutedOrders/></b-tab-item>
           </b-tabs>
         </Section>
         <!-- Active orders -->
-        <Section :title="'Órdenes abiertas'">
+        <Section :title="$t('activeOrders')">
           <template slot="show">
             <ActiveOrders/>
           </template>

@@ -4,9 +4,9 @@
     <table class="table is-fullwidth is-marginless is-size-7">
       <thead>
         <tr>
-          <th>Fecha</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
+          <th>{{ $t('date') }}</th>
+          <th>{{ $t('price') }}</th>
+          <th>{{ $t('amount') }}</th>
         </tr>
       </thead>
       <tbody>

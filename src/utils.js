@@ -1,3 +1,5 @@
+import i18n from './locale/i18n';
+
 export function toDecimals(number, decimals) {
   /** Truncate a number to a given number of decimals */
   number = number.toString(); // It needs to be a string
@@ -10,6 +12,10 @@ export function toDecimals(number, decimals) {
   }
   const i = decimalPointI + 1;
   return number.slice(0, i) + number.substr(i, decimals);
+}
+
+export function localeTime(date) {
+  return date.toLocaleTimeString(i18n.locale);
 }
 
 export function formatAmount(amount, currency, decimals) {

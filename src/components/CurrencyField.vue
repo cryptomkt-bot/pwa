@@ -1,7 +1,9 @@
 <template>
   <div class="field has-addons">
     <div v-if="showMaxButton && !currency.prefix" class="control">
-      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">Max</button>
+      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">
+        {{ $t('max') }}
+      </button>
     </div>
     <div v-else-if="currency.prefix" class="control">
       <span :disabled="disabled" class="button is-static">{{ currency.prefix }}</span>
@@ -14,7 +16,9 @@
       <span :disabled="disabled" class="button is-static">{{ currency.postfix }}</span>
     </div>
     <div v-else-if="showMaxButton" class="control">
-      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">Max</button>
+      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">
+        {{ $t('max') }}
+      </button>
     </div>
   </div>
 </template>

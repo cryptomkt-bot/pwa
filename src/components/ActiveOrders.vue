@@ -1,14 +1,14 @@
 <template>
   <div :class="{ 'loading-wrapper': isLoading }">
     <b-loading :active="isLoading" :is-full-page="false"></b-loading>
-    <span v-if="!isLoading && !orders.length" class="is-size-7">No hay órdenes abiertas.</span>
+    <span v-if="!isLoading && !orders.length" class="is-size-7">{{ $t('noOpenOrders') }}</span>
     <table v-if="!isLoading && orders.length" class="table is-fullwidth is-marginless is-size-7">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Precio</th>
-          <th>Cantidad</th>
-          <th>Eliminar</th>
+          <th>{{ $t('id') }}</th>
+          <th>{{ $t('price') }}</th>
+          <th>{{ $t('amount') }}</th>
+          <th>{{ $t('cancel') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -80,8 +80,8 @@ export default class ActiveOrders extends Vue {
   }
 
   cancelOrder(order) {
-    this.$dialog.confirm({
-      message: `¿Desea cancelar la orden ${order.id}?`,
+    this.confirm({
+      message: this.$t('cancelOrderConfirm', { id: order.id }),
       onConfirm: () => {
         this.doCancelOrder(order);
       },
@@ -93,14 +93,14 @@ export default class ActiveOrders extends Vue {
     this.apiService.delete(endpoint)
       .then(() => {
         this.$toast.open({
-          message: 'Orden cancelada satisfactoriamente',
+          message: this.$t('orderCancelled'),
           type: 'is-info',
         });
         this.orders = this.orders.filter(o => o.id !== order.id);
       })
       .catch(() => {
         this.$snackbar.open({
-          message: 'Lo sentimos, ha ocurrido un error.',
+          message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,
         });
