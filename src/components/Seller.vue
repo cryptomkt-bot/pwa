@@ -1,8 +1,11 @@
 <template>
   <div>
     <!-- Modal -->
-    <b-modal :active.sync="isModalVisible" :canCancel="false">
+    <b-modal :active.sync="isModalVisible">
       <div id="seller-card" class="card">
+        <!-- Loading spinner -->
+        <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+
         <!-- Title -->
         <header class="card-header">
           <p class="card-header-title">{{ $t('seller') }}</p>
@@ -12,10 +15,9 @@
         <div class="card-content">
           <!-- Amount -->
           <label for="amount" class="label is-small">{{ $t('amount') }}</label>
-          <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
-                         :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
-                         :step="currentMarket.baseCurrency.step" :showMaxButton="true"
-                         @maxButtonClicked="setMaxAmount" />
+          <CurrencyField v-model="remainingAmount" :id="'amount'"
+                         :currency="currentMarket.baseCurrency" :showMaxButton="true"
+                         :step="currentMarket.baseCurrency.step" @maxButtonClicked="setMaxAmount" />
 
           <!-- Spread -->
           <label for="spread" class="label is-small">{{ $t('spread') }}</label>
@@ -23,7 +25,7 @@
             <!-- Input -->
             <div class="control">
               <input id="spread" type="number" step="0.01" v-model.number="minSpread"
-                     :placeholder="inputsPlaceholder" :disabled="isLoading" class="input">
+                     :disabled="isLoading" class="input">
             </div>
             <!-- Percent sign -->
             <div class="control">
@@ -36,10 +38,7 @@
         <!-- Action buttons -->
         <footer class="card-footer">
           <a class="card-footer-item" @click="isModalVisible = false">{{ $t('cancel') }}</a>
-          <a class="card-footer-item" @click="submit">
-            <span v-if="isUpdating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-            <span v-else>{{ $t('update') }}</span>
-          </a>
+          <a class="card-footer-item" @click="submit">{{ $t('update') }}</a>
         </footer>
       </div>
     </b-modal>
@@ -64,7 +63,7 @@ export default class Seller extends Vue {
   seller = null;
   remainingAmount = 0;
   isModalVisible = false;
-  isUpdating = false;
+  isLoading = true;
 
   get currentMarket() {
     return this.$store.state.currentMarket;
@@ -72,15 +71,6 @@ export default class Seller extends Vue {
 
   get endpoint() {
     return `seller/${this.currentMarket.code}`;
-  }
-
-  get isLoading() {
-    return this.isUpdating || this.seller === null;
-  }
-
-  get inputsPlaceholder() {
-    const loadingMsg = this.$t('loading');
-    return this.seller === null ? `${loadingMsg} ...` : '';
   }
 
   get minSpread() {
@@ -96,12 +86,17 @@ export default class Seller extends Vue {
     if (!isVisible) {
       return;
     }
+    this.isLoading = true;
     this.seller = null;
     this.remainingAmount = 0;
-    this.apiService.get(this.endpoint).then((response) => {
-      this.seller = response.data;
-      this.remainingAmount = this.seller.remaining_amount;
-    });
+    this.apiService.get(this.endpoint)
+      .then((response) => {
+        this.seller = response.data;
+        this.remainingAmount = this.seller.remaining_amount;
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   setMaxAmount() {
@@ -116,15 +111,11 @@ export default class Seller extends Vue {
   }
 
   submit() {
-    if (this.isLoading) {
-      return;
-    }
-    this.isUpdating = true;
+    this.isLoading = true;
     this.seller.remaining_amount = this.remainingAmount;
     this.apiService.patch(this.endpoint, this.seller)
       .then(() => {
         this.isModalVisible = false;
-        this.isUpdating = false;
       })
       .catch(() => {
         this.$snackbar.open({
@@ -132,6 +123,9 @@ export default class Seller extends Vue {
           type: 'is-danger',
           indefinite: true,
         });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }

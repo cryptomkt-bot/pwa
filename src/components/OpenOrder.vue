@@ -1,7 +1,10 @@
 <template>
   <!-- Modal -->
-  <b-modal :active.sync="isModalVisible" :canCancel="false">
+  <b-modal :active.sync="isModalVisible">
     <div id="open-order-card" class="card" :class="[order.type === 'buy' ? 'green' : 'red']">
+      <!-- Loading spinner -->
+      <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+
       <!-- Title -->
       <header class="card-header">
         <p class="card-header-title">{{ $t('openMarketOrder') }}</p>
@@ -41,10 +44,7 @@
       <!-- Action buttons -->
       <footer class="card-footer">
         <a class="card-footer-item" @click="close">{{ $t('cancel') }}</a>
-        <a class="card-footer-item" @click="submit">
-          <span v-if="isLoading" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-          <span v-else>{{ $t('openOrder') }}</span>
-        </a>
+        <a class="card-footer-item" @click="submit">{{ $t('openOrder') }}</a>
       </footer>
     </div>
   </b-modal>
@@ -149,7 +149,6 @@ export default class OpenOrder extends Vue {
     const url = `/orders/${this.currentMarket.code}`;
     this.apiService.post(url, this.order)
       .then(() => {
-        this.isLoading = false;
         this.close();
         this.$toast.open({
           message: this.$t('orderOpened'),
@@ -162,12 +161,14 @@ export default class OpenOrder extends Vue {
         };
       })
       .catch(() => {
-        this.isLoading = false;
         this.$snackbar.open({
           message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,
         });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 

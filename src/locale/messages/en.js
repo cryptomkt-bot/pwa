@@ -23,7 +23,6 @@ export default {
   errorMsg: 'Sorry, something went wrong',
   id: 'ID',
   latestTransactions: 'Latest transactions',
-  loading: 'Loading',
   login: 'Login',
   logoutConfirm: 'Logout?',
   max: 'Max',

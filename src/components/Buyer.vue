@@ -1,8 +1,11 @@
 <template>
   <div>
     <!-- Modal -->
-    <b-modal :active.sync="isModalVisible" :canCancel="false">
+    <b-modal :active.sync="isModalVisible">
       <div id="buyer-card" class="card">
+        <!-- Loading spinner -->
+        <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+
         <!-- Title -->
         <header class="card-header">
           <p class="card-header-title">{{ $t('buyer') }}</p>
@@ -12,16 +15,14 @@
         <div class="card-content">
           <!-- Amount -->
           <label for="amount" class="label is-small">{{ $t('amount') }}</label>
-          <CurrencyField v-model="remainingAmount" :id="'amount'" :disabled="isLoading"
-                         :currency="currentMarket.baseCurrency" :placeholder="inputsPlaceholder"
+          <CurrencyField v-model="remainingAmount" :id="'amount'"
+                         :currency="currentMarket.baseCurrency"
                          :step="currentMarket.baseCurrency.step" />
 
           <!-- Fiat -->
           <label for="fiat" class="label is-small">{{ $t('remainingFiat') }}</label>
           <CurrencyField v-model="remainingFiat" :id="'amount'" :showMaxButton="true"
-                         :currency="currentMarket.quoteCurrency"
-                         :disabled="isLoading" :placeholder="inputsPlaceholder"
-                         @maxButtonClicked="setMaxFiat" />
+                         :currency="currentMarket.quoteCurrency" @maxButtonClicked="setMaxFiat" />
 
           <!-- Info -->
           <p class="is-size-7">{{ $t('maxPrice') }}: {{ maxPrice }}</p>
@@ -30,10 +31,7 @@
         <!-- Action buttons -->
         <footer class="card-footer">
           <a class="card-footer-item" @click="isModalVisible = false">{{ $t('cancel') }}</a>
-          <a class="card-footer-item" @click="submit">
-            <span v-if="updating" class="icon"><i class="fa fa-spinner fa-pulse"></i></span>
-            <span v-else>{{ $t('update') }}</span>
-          </a>
+          <a class="card-footer-item" @click="submit">{{ $t('update') }}</a>
         </footer>
       </div>
     </b-modal>
@@ -58,7 +56,7 @@ export default class Buyer extends Vue {
   buyer = null;
   remainingFiat = null;
   isModalVisible = false;
-  updating = false;
+  isLoading = true;
 
   get currentMarket() {
     return this.$store.state.currentMarket;
@@ -80,15 +78,6 @@ export default class Buyer extends Vue {
     );
   }
 
-  get isLoading() {
-    return this.updating || this.buyer === null;
-  }
-
-  get inputsPlaceholder() {
-    const loadingMsg = this.$t('loading');
-    return this.buyer === null ? `${loadingMsg} ...` : '';
-  }
-
   get remainingAmount() {
     return this.buyer ? this.buyer.remaining_amount : null;
   }
@@ -102,12 +91,17 @@ export default class Buyer extends Vue {
     if (!isVisible) {
       return;
     }
+    this.isLoading = true;
     this.buyer = null;
     this.remainingFiat = null;
-    this.apiService.get(this.endpoint).then((response) => {
-      this.buyer = response.data;
-      this.remainingFiat = this.buyer.remaining_fiat;
-    });
+    this.apiService.get(this.endpoint)
+      .then((response) => {
+        this.buyer = response.data;
+        this.remainingFiat = this.buyer.remaining_fiat;
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   setMaxFiat() {
@@ -122,15 +116,11 @@ export default class Buyer extends Vue {
   }
 
   submit() {
-    if (this.isLoading) {
-      return;
-    }
-    this.updating = true;
+    this.isLoading = true;
     this.buyer.remaining_fiat = this.remainingFiat;
     this.apiService.patch(this.endpoint, this.buyer)
       .then(() => {
         this.isModalVisible = false;
-        this.updating = false;
       })
       .catch(() => {
         this.$snackbar.open({
@@ -138,6 +128,9 @@ export default class Buyer extends Vue {
           type: 'is-danger',
           indefinite: true,
         });
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }

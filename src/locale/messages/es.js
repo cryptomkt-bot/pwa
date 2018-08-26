@@ -23,7 +23,6 @@ export default {
   errorMsg: 'Lo sentimos, ha ocurrido un error',
   id: 'ID',
   latestTransactions: 'Últimas transacciones',
-  loading: 'Cargando',
   login: 'Iniciar sesión',
   logoutConfirm: '¿Desea salir?',
   max: 'Max',
