@@ -14,6 +14,10 @@ export function toDecimals(number, decimals) {
   return number.slice(0, i) + number.substr(i, decimals);
 }
 
+export function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
 export function localeTime(date) {
   return date.toLocaleTimeString(i18n.locale);
 }

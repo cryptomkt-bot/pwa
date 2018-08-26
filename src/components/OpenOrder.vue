@@ -53,6 +53,7 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 import CurrencyField from './CurrencyField.vue';
+import { capitalize } from '../utils';
 
 @Component({
   components: { CurrencyField },
@@ -126,8 +127,8 @@ export default class OpenOrder extends Vue {
       this.currentMarket.quoteCurrency,
       this.currentMarket.decimals,
     );
-    const orderTypeCapitalize = this.order.type.charAt(0).toUpperCase();
-    const confirmMsgKey = `confirm${orderTypeCapitalize}Order`;
+    const orderTypeCapitalized = capitalize(this.order.type);
+    const confirmMsgKey = `confirm${orderTypeCapitalized}Order`;
     this.confirm({
       message: this.$t(confirmMsgKey, { amount, price }),
       onConfirm: () => {

@@ -1,7 +1,8 @@
 import i18n from './locale/i18n';
-import { localeTime, toDecimals } from './utils';
+import { capitalize, localeTime, toDecimals } from './utils';
 
 export default {
+  capitalize,
   toDecimals,
   localeTime,
   date: (timestamp) => {
