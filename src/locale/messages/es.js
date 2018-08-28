@@ -41,6 +41,7 @@ export default {
   remainingFiat: 'Fiat restante',
   seller: 'Vendedor',
   sellOrder: 'Orden de venta',
+  sessionExpired: 'Sesión expirada',
   spending: 'Gastando {amount}',
   spread: 'Spread',
   totalBalance: 'Saldo total',

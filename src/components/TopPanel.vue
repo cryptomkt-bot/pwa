@@ -44,7 +44,7 @@ export default class TopPanel extends Vue {
     this.confirm({
       message: this.$t('logoutConfirm'),
       onConfirm: () => {
-        this.$emit('loggedOut');
+        this.$store.dispatch('logout');
       },
     });
   }

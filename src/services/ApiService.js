@@ -1,5 +1,8 @@
 import axios from 'axios';
 import injector from 'vue-inject';
+import { Toast } from 'buefy';
+import i18n from '../locale/i18n';
+import store from '../store';
 import StorageHelper from '../helpers/StorageHelper';
 
 export default class ApiService {
@@ -10,6 +13,7 @@ export default class ApiService {
     } else {
       this.axios = axios.create();
     }
+    this.intercept401();
     const token = StorageHelper.get('token');
     this.setToken(token);
   }
@@ -27,6 +31,19 @@ export default class ApiService {
 
   setToken(token) {
     this.axios.defaults.headers['Authorization'] = `JWT ${token}`;
+  }
+
+  intercept401() {
+    this.axios.interceptors.response.use(null, (error) => {
+      if (error.response.status === 401 && store.state.isLogged) {
+        store.dispatch('logout');
+        Toast.open({
+          message: i18n.t('sessionExpired'),
+          type: 'is-info',
+          duration: 5000,
+        });
+      }
+    });
   }
 
   get(endpoint, params = null) {

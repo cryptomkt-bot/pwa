@@ -73,7 +73,7 @@ export default class Login extends Vue {
     const api = new ApiService(this.apiAddress);
     api.login(this.username, this.password)
       .then(() => {
-        this.$emit('loggedIn');
+        this.$store.commit('login');
       })
       .catch((error) => {
         let message = this.$t('errorMsg');

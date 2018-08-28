@@ -7,4 +7,7 @@ export default class {
     const jsonValue = JSON.stringify(value);
     localStorage.setItem(key, jsonValue);
   }
+  static remove(key) {
+    localStorage.removeItem(key);
+  }
 }

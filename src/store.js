@@ -12,6 +12,13 @@ export default new Vuex.Store({
     bid: 0,
     currentMarket: StorageHelper.get('currentMarket') || markets.ARS[1],
     activeOrders: [],
+    isLogged: false,
+  },
+  actions: {
+    logout(context) {
+      StorageHelper.remove('token');
+      context.commit('logout');
+    },
   },
   mutations: {
     changeMarket(state, market) {
@@ -24,6 +31,12 @@ export default new Vuex.Store({
     },
     updateActiveOrders(state, orders) {
       state.activeOrders = orders;
+    },
+    login(state) {
+      state.isLogged = true;
+    },
+    logout(state) {
+      state.isLogged = false;
     },
   },
 });

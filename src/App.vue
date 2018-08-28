@@ -2,13 +2,13 @@
   <div id="app" class="is-unselectable">
     <div id="wrapper">
       <!-- Login page -->
-      <Login v-if="!isLogged" @loggedIn="isLogged = true"/>
+      <Login v-if="!isLogged" />
 
       <!-- Main app -->
       <div v-else>
         <OpenOrder :isModalVisible="isOpenOrderModalVisible"
                    @close="isOpenOrderModalVisible = false"/>
-        <TopPanel @loggedOut="logout" @openOrderModalOpened="isOpenOrderModalVisible = true"/>
+        <TopPanel @openOrderModalOpened="isOpenOrderModalVisible = true"/>
         <!-- Order book -->
         <OrderBook/>
         <!-- Trades -->
@@ -68,18 +68,14 @@ import Trades from './components/Trades.vue';
   },
 })
 export default class App extends Vue {
-  isLogged = false;
   ask = 0;
   bid = 0;
   activeOrders = [];
   isOpenOrderModalVisible = false;
   areTradersVisible = true;
 
-  logout() {
-    this.isLogged = false;
-    localStorage.removeItem('token');
-    this.isOpenOrderModalVisible = false;
-    this.areTradersVisible = true;
+  get isLogged() {
+    return this.$store.state.isLogged;
   }
 }
 </script>
