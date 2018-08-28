@@ -43,6 +43,7 @@ export default class ApiService {
           duration: 5000,
         });
       }
+      return Promise.reject(error);
     });
   }
 
