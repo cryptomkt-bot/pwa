@@ -54,7 +54,6 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
-import { config, setOptions } from 'buefy';
 import StorageHelper from '../helpers/StorageHelper';
 import ApiService from '../services/ApiService';
 
