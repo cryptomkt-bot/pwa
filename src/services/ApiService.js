@@ -6,34 +6,40 @@ import store from '../store';
 import StorageHelper from '../helpers/StorageHelper';
 
 export default class ApiService {
-  constructor(baseURL = null) {
-    this.baseURL = baseURL || StorageHelper.get('apiAddress');
-    if (this.baseURL !== null) {
-      this.axios = axios.create({ baseURL: `https://${this.baseURL}`, headers: {} });
-    } else {
-      this.axios = axios.create();
-    }
-    this.intercept401();
-    const token = StorageHelper.get('token');
-    this.setToken(token);
+  constructor() {
+    this.axios = axios.create({ headers: {}});
+    this.init()
   }
 
-  login(username, password) {
+  init() {
+    const apiAddress = StorageHelper.get('apiAddress');
+    const token = StorageHelper.get('token', token);
+    if (!apiAddress || !token) {
+      return;
+    }
+    this.axios.defaults.baseURL = `https://${apiAddress}`;
+    this.axios.defaults.headers.Authorization = `JWT ${token}`;
+    this.subscribe401();
+    store.commit('login');
+  }
+
+  login(apiAddress, username, password) {
+    this.axios.defaults.baseURL = `https://${apiAddress}`;
     return this.post('/auth', { username, password }).then((response) => {
+      // Set token
       const token = response.data.access_token;
-      this.setToken(token);
+      this.axios.defaults.headers.Authorization = `JWT ${token}`;
+
       // Save to storage
-      StorageHelper.set('apiAddress', this.baseURL);
+      StorageHelper.set('apiAddress', apiAddress);
       StorageHelper.set('username', username);
       StorageHelper.set('token', token);
+
+      this.subscribe401();
     });
   }
 
-  setToken(token) {
-    this.axios.defaults.headers['Authorization'] = `JWT ${token}`;
-  }
-
-  intercept401() {
+  subscribe401() {
     this.axios.interceptors.response.use(null, (error) => {
       if (error.response.status === 401 && store.state.isLogged) {
         store.dispatch('logout');
@@ -42,9 +48,14 @@ export default class ApiService {
           type: 'is-info',
           duration: 5000,
         });
+        this.unsubscribe401();
       }
       return Promise.reject(error);
     });
+  }
+
+  unsubscribe401() {
+    this.axios.interceptors.response(null, null);
   }
 
   get(endpoint, params = null) {

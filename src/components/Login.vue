@@ -57,7 +57,9 @@ import { Component, Vue } from 'vue-property-decorator';
 import StorageHelper from '../helpers/StorageHelper';
 import ApiService from '../services/ApiService';
 
-@Component
+@Component({
+  dependencies: ['apiService'],
+})
 export default class Login extends Vue {
   apiAddress = null;
   username = '';
@@ -70,8 +72,7 @@ export default class Login extends Vue {
   }
 
   login() {
-    const api = new ApiService(this.apiAddress);
-    api.login(this.username, this.password)
+    this.apiService.login(this.apiAddress, this.username, this.password)
       .then(() => {
         this.$store.commit('login');
       })
