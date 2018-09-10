@@ -148,6 +148,9 @@ export default class OrderBook extends Vue {
   }
 
   centerBook() {
+    if (this.sellBook.length < 4) { // Not enough rows
+      return;
+    }
     let target = document.getElementById('spread-row');
     for (let i = 0; i < 4; i += 1) {
       target = target.previousElementSibling;
