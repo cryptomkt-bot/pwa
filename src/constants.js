@@ -30,6 +30,14 @@ const currencies = {
     postfix: '',
     decimals: 0,
   },
+  EOS: {
+    code: 'EOS',
+    name: 'EOS',
+    prefix: '',
+    postfix: 'EOS',
+    step: 0.0001,
+    decimals: 4,
+  },
   ETH: {
     code: 'ETH',
     name: 'Ether',
@@ -73,6 +81,13 @@ export const markets = {
       decimals: 0,
     },
     {
+      code: 'EOSARS',
+      baseCurrency: currencies.EOS,
+      quoteCurrency: currencies.ARS,
+      step: 0.05,
+      decimals: 2,
+    },
+    {
       code: 'ETHARS',
       baseCurrency: currencies.ETH,
       quoteCurrency: currencies.ARS,
@@ -94,6 +109,13 @@ export const markets = {
       quoteCurrency: currencies.BRL,
       step: 2,
       decimals: 0,
+    },
+    {
+      code: 'EOSBRL',
+      baseCurrency: currencies.EOS,
+      quoteCurrency: currencies.BRL,
+      step: 0.005,
+      decimals: 3,
     },
     {
       code: 'ETHBRL',
@@ -119,6 +141,13 @@ export const markets = {
       decimals: 0,
     },
     {
+      code: 'EOSCLP',
+      baseCurrency: currencies.EOS,
+      quoteCurrency: currencies.CLP,
+      step: 0.5,
+      decimals: 1,
+    },
+    {
       code: 'ETHCLP',
       baseCurrency: currencies.ETH,
       quoteCurrency: currencies.CLP,
@@ -142,6 +171,13 @@ export const markets = {
       decimals: 0,
     },
     {
+      code: 'EOSEUR',
+      baseCurrency: currencies.EOS,
+      quoteCurrency: currencies.EUR,
+      step: 0.002,
+      decimals: 3,
+    },
+    {
       code: 'ETHEUR',
       baseCurrency: currencies.ETH,
       quoteCurrency: currencies.EUR,
@@ -163,6 +199,13 @@ export const markets = {
       quoteCurrency: currencies.MXN,
       step: 10,
       decimals: 0,
+    },
+    {
+      code: 'EOSMXN',
+      baseCurrency: currencies.EOS,
+      quoteCurrency: currencies.MXN,
+      step: 0.02,
+      decimals: 2,
     },
     {
       code: 'ETHMXN',
