@@ -49,7 +49,7 @@ const currencies = {
     code: 'MXN',
     name: 'Peso Mexicano',
     prefix: '$',
-    postfix: 'XLM',
+    postfix: 'MXN',
     step: 1,
     decimals: 2,
   },
