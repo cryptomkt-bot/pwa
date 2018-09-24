@@ -93,8 +93,9 @@ export default class Seller extends Vue {
       .then((response) => {
         this.seller = response.data;
         this.remainingAmount = this.seller.remaining_amount;
+        this.isLoading = false;
       })
-      .finally(() => {
+      .catch(() => {
         this.isLoading = false;
       });
   }
@@ -116,16 +117,15 @@ export default class Seller extends Vue {
     this.apiService.patch(this.endpoint, this.seller)
       .then(() => {
         this.isModalVisible = false;
+        this.isLoading = false;
       })
       .catch(() => {
+        this.isLoading = false;
         this.$snackbar.open({
           message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,
         });
-      })
-      .finally(() => {
-        this.isLoading = false;
       });
   }
 }

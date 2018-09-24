@@ -159,6 +159,7 @@ export default class OpenOrder extends Vue {
           price: null,
           amount: null,
         };
+        this.isLoading = false;
       })
       .catch(() => {
         this.$snackbar.open({
@@ -166,8 +167,6 @@ export default class OpenOrder extends Vue {
           type: 'is-danger',
           indefinite: true,
         });
-      })
-      .finally(() => {
         this.isLoading = false;
       });
   }

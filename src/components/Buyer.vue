@@ -98,8 +98,9 @@ export default class Buyer extends Vue {
       .then((response) => {
         this.buyer = response.data;
         this.remainingFiat = this.buyer.remaining_fiat;
+        this.isLoading = false;
       })
-      .finally(() => {
+      .catch(() => {
         this.isLoading = false;
       });
   }
@@ -121,6 +122,7 @@ export default class Buyer extends Vue {
     this.apiService.patch(this.endpoint, this.buyer)
       .then(() => {
         this.isModalVisible = false;
+        this.isLoading = false;
       })
       .catch(() => {
         this.$snackbar.open({
@@ -128,8 +130,6 @@ export default class Buyer extends Vue {
           type: 'is-danger',
           indefinite: true,
         });
-      })
-      .finally(() => {
         this.isLoading = false;
       });
   }
