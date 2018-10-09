@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Modal -->
-    <b-modal :active.sync="isModalVisible">
+    <b-modal :active.sync="isModalVisible" :canCancel="['x']">
       <div id="buyer-card" class="card">
         <!-- Loading spinner -->
         <b-loading :active="isLoading" :is-full-page="false"></b-loading>

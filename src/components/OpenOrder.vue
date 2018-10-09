@@ -1,6 +1,6 @@
 <template>
   <!-- Modal -->
-  <b-modal :active.sync="isModalVisible">
+  <b-modal :active="isModalVisible" :canCancel="['x']" :onCancel="close">
     <div id="open-order-card" class="card" :class="[order.type === 'buy' ? 'green' : 'red']">
       <!-- Loading spinner -->
       <b-loading :active="isLoading" :is-full-page="false"></b-loading>
