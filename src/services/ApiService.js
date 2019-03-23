@@ -7,8 +7,8 @@ import StorageHelper from '../helpers/StorageHelper';
 
 export default class ApiService {
   constructor() {
-    this.axios = axios.create({ headers: {}});
-    this.init()
+    this.axios = axios.create({ headers: {} });
+    this.init();
   }
 
   init() {
@@ -25,7 +25,7 @@ export default class ApiService {
 
   login(apiAddress, username, password) {
     this.axios.defaults.baseURL = `https://${apiAddress}`;
-    return this.post('/auth', { username, password }).then((response) => {
+    return this.post('/auth', { username, password }).then(response => {
       // Set token
       const token = response.data.access_token;
       this.axios.defaults.headers.Authorization = `JWT ${token}`;
@@ -40,7 +40,7 @@ export default class ApiService {
   }
 
   subscribe401() {
-    this.axios.interceptors.response.use(null, (error) => {
+    this.axios.interceptors.response.use(null, error => {
       if (error.response.status === 401 && store.state.isLogged) {
         store.dispatch('logout');
         Toast.open({

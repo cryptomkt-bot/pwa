@@ -1,10 +1,18 @@
 <template>
   <div id="balance" class="has-text-centered">
-    <div class="button is-primary" @click="isBalanceVisible = !isBalanceVisible">
+    <div
+      class="button is-primary"
+      @click="isBalanceVisible = !isBalanceVisible"
+    >
       <span class="icon is-size-7">
-        <i class="fa" :class="[isBalanceVisible ? 'fa-chevron-down' : 'fa-chevron-up']"></i>
+        <i
+          class="fa"
+          :class="[isBalanceVisible ? 'fa-chevron-down' : 'fa-chevron-up']"
+        ></i>
       </span>
-      <span id="balance-label" class="has-text-weight-light">{{ $t('balances') }}</span>
+      <span id="balance-label" class="has-text-weight-light">
+        {{ $t('balances') }}
+      </span>
     </div>
     <div id="balance-content" v-show="isBalanceVisible">
       <table class="table is-fullwidth is-size-7">
@@ -67,7 +75,7 @@ export default class Balance extends Vue {
   }
 
   getBalances() {
-    this.apiService.get('/balance').then((response) => {
+    this.apiService.get('/balance').then(response => {
       this.balances = response.data;
     });
   }
@@ -75,19 +83,21 @@ export default class Balance extends Vue {
 </script>
 
 <style lang="scss">
-  #balance {
-    width: 100%;
-    .button {
-      position: relative;
-      bottom: -4px;
-      box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-      width: 100px;
-      border-radius: 12px 12px 0 0;
-    }
-  }
-  #balance-label { font-size: 0.8rem }
-  #balance-content {
+#balance {
+  width: 100%;
+  .button {
     position: relative;
-    box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    bottom: -4px;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    width: 100px;
+    border-radius: 12px 12px 0 0;
   }
+}
+#balance-label {
+  font-size: 0.8rem;
+}
+#balance-content {
+  position: relative;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+}
 </style>

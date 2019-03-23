@@ -4,7 +4,8 @@ export function toDecimals(number, decimals) {
   /** Truncate a number to a given number of decimals */
   number = number.toString(); // It needs to be a string
   const decimalPointI = number.indexOf('.');
-  if (decimalPointI === -1) { // The number has no decimal part
+  if (decimalPointI === -1) {
+    // The number has no decimal part
     return number;
   }
   if (decimals === 0) {

@@ -6,30 +6,32 @@
 
       <!-- Main app -->
       <div v-else>
-        <OpenOrder :isModalVisible="isOpenOrderModalVisible"
-                   @close="isOpenOrderModalVisible = false"/>
-        <TopPanel @openOrderModalOpened="isOpenOrderModalVisible = true"/>
+        <OpenOrder
+          :isModalVisible="isOpenOrderModalVisible"
+          @close="isOpenOrderModalVisible = false"
+        />
+        <TopPanel @openOrderModalOpened="isOpenOrderModalVisible = true" />
         <!-- Order book -->
-        <OrderBook/>
+        <OrderBook />
         <!-- Trades -->
         <Section :title="$t('latestTransactions')">
           <b-tabs expanded position="is-centered" class="is-marginless">
-            <b-tab-item :label="$t('allOrders')"><Trades/></b-tab-item>
-            <b-tab-item :label="$t('myOrders')"><ExecutedOrders/></b-tab-item>
+            <b-tab-item :label="$t('allOrders')"><Trades /></b-tab-item>
+            <b-tab-item :label="$t('myOrders')"><ExecutedOrders /></b-tab-item>
           </b-tabs>
         </Section>
         <!-- Active orders -->
         <Section :title="$t('activeOrders')">
           <template slot="show">
-            <ActiveOrders/>
+            <ActiveOrders />
           </template>
         </Section>
         <!-- Footer -->
         <div id="footer">
-          <Balance @visibilityChanged="areTradersVisible = !$event"/>
-          <Seller :isButtonVisible="areTradersVisible"/>
-          <Buyer :isButtonVisible="areTradersVisible"/>
-          <Footer/>
+          <Balance @visibilityChanged="areTradersVisible = !$event" />
+          <Seller :isButtonVisible="areTradersVisible" />
+          <Buyer :isButtonVisible="areTradersVisible" />
+          <Footer />
         </div>
       </div>
     </div>
@@ -81,24 +83,34 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-  #wrapper {
-    margin-top: 60px;
-    margin-bottom: 110px;
-    -webkit-tap-highlight-color: transparent;
-    .tab-content { padding: 0 !important }
+#wrapper {
+  margin-top: 60px;
+  margin-bottom: 110px;
+  -webkit-tap-highlight-color: transparent;
+  .tab-content {
+    padding: 0 !important;
   }
-  #footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+}
+#footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.loading-wrapper {
+  position: relative;
+  .loading-overlay {
+    z-index: 0 !important;
   }
-  .loading-wrapper {
-    position: relative;
-    .loading-overlay { z-index: 0 !important }
-  }
-  .scale-enter-active, .scale-leave-active { transition: transform 200ms }
-  .scale-enter, .scale-leave-to { transform: scale(0) }
+}
+.scale-enter-active,
+.scale-leave-active {
+  transition: transform 200ms;
+}
+.scale-enter,
+.scale-leave-to {
+  transform: scale(0);
+}
 
-  @import "~bulma";
-  @import "~buefy/src/scss/buefy";
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
 </style>
