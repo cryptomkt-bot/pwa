@@ -35,6 +35,7 @@
                 step="0.01"
                 v-model.number="minSpread"
                 :disabled="isLoading"
+                lang="en"
                 class="input"
               />
             </div>

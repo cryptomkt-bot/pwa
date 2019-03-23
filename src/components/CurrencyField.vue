@@ -21,6 +21,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         @input="emitValue"
+        lang="en"
         class="input"
       />
     </div>
