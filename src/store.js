@@ -1,42 +1,74 @@
-/* eslint-disable no-param-reassign */
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { markets } from './constants';
+
 import StorageHelper from './helpers/StorageHelper';
+import { markets } from './constants';
+import { localeTime } from './utils';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    ask: 0,
-    bid: 0,
-    currentMarket: StorageHelper.get('currentMarket') || markets.ARS[1],
+    currentMarket: StorageHelper.get('currentMarket') || markets.ARS[0],
+    buyBook: [],
+    sellBook: [],
     activeOrders: [],
-    isLogged: false,
+    updatedAt: null,
+    token: null,
+  },
+  getters: {
+    ask: state => {
+      const { sellBook } = state;
+      return sellBook.length ? Number(sellBook[0].price) : 0;
+    },
+    bid: state => {
+      const { buyBook } = state;
+      return buyBook.length ? Number(buyBook[0].price) : 0;
+    },
+    spread: (_, getters) => {
+      const { ask, bid } = getters;
+      return ask - bid;
+    },
+    spreadPercentage: (_, getters) => {
+      const { spread, ask } = getters;
+      const spreadPercentage = (spread / ask) * 100;
+      return spreadPercentage.toFixed(2);
+    },
+    activeOrdersTimestamp: state => {
+      return state.activeOrders.map(order => order.created_at);
+    },
+    isLogged: state => state.token !== null,
   },
   actions: {
-    logout(context) {
-      StorageHelper.remove('token');
-      context.commit('logout');
+    changeMarket({ commit }, market) {
+      commit('emptyBooks');
+      commit('setActiveOrders', []);
+      commit('setCurrentMarket', market);
+      StorageHelper.set('currentMarket', market);
     },
   },
   mutations: {
-    changeMarket(state, market) {
-      state.currentMarket = market;
-      StorageHelper.set('currentMarket', market);
-    },
-    updatePrices(state, payload) {
-      state.ask = payload.ask;
-      state.bid = payload.bid;
-    },
-    updateActiveOrders(state, orders) {
+    setActiveOrders(state, orders) {
       state.activeOrders = orders;
     },
-    login(state) {
-      state.isLogged = true;
+    setCurrentMarket(state, market) {
+      state.currentMarket = market;
+    },
+    setBooks(state, payload) {
+      const { buyBook, sellBook } = payload;
+      state.buyBook = buyBook;
+      state.sellBook = sellBook;
+      state.updatedAt = localeTime(new Date());
+    },
+    emptyBooks(state) {
+      state.buyBook = [];
+      state.sellBook = [];
+    },
+    setToken(state, token) {
+      state.token = token;
     },
     logout(state) {
-      state.isLogged = false;
+      state.token = null;
     },
   },
 });

@@ -40,6 +40,8 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
+
+import ApiService from './services/ApiService';
 import ActiveOrders from './components/ActiveOrders.vue';
 import Balance from './components/Balance.vue';
 import Buyer from './components/Buyer.vue';
@@ -70,14 +72,11 @@ import Trades from './components/Trades.vue';
   },
 })
 export default class App extends Vue {
-  ask = 0;
-  bid = 0;
-  activeOrders = [];
   isOpenOrderModalVisible = false;
   areTradersVisible = true;
 
   get isLogged() {
-    return this.$store.state.isLogged;
+    return this.$store.getters.isLogged;
   }
 }
 </script>

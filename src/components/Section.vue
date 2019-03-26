@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div @click="isVisible = !isVisible" class="section-name has-text-centered">
+    <div @click="toggleVisibility" class="section-name has-text-centered">
       <span>{{ title }}</span>
       <b-icon
         pack="fa"
@@ -25,6 +25,10 @@ import { Component, Vue } from 'vue-property-decorator';
 })
 export default class Section extends Vue {
   isVisible = false;
+
+  toggleVisibility() {
+    this.isVisible = !this.isVisible;
+  }
 }
 </script>
 

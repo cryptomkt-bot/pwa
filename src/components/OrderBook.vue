@@ -89,26 +89,30 @@
         </tr>
       </tbody>
     </table>
-    <p id="updated-time" v-if="updateTime" class="is-size-7">
-      {{ $t('updatedAt', { updateTime }) }}
+    <p id="updated-time" v-if="updatedAt" class="is-size-7">
+      {{ $t('updatedAt', { updatedAt }) }}
     </p>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import { localeTime, toDecimals } from '../utils';
+
+import { toDecimals } from '../utils';
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 @Component({
   props: ['activeOrders'],
+  dependencies: ['apiService'],
+  computed: {
+    ...mapState(['buyBook', 'sellBook', 'updatedAt']),
+    ...mapGetters(['activeOrdersTimestamp', 'spread', 'spreadPercentage']),
+  },
 })
 export default class OrderBook extends Vue {
   isLoading = true;
-  buyBook = [];
-  sellBook = [];
   intervalId = null;
-  updateTime = null;
 
   created() {
     this.init();
@@ -118,20 +122,9 @@ export default class OrderBook extends Vue {
     clearInterval(this.intervalId);
   }
 
-  get currentMarket() {
-    return this.$store.state.currentMarket;
-  }
-
-  get ask() {
-    return this.sellBook.length ? Number(this.sellBook[0].price) : 0;
-  }
-
-  get bid() {
-    return this.buyBook.length ? Number(this.buyBook[0].price) : 0;
-  }
-
-  get spread() {
-    return this.ask - this.bid;
+  @Watch('currentMarket')
+  onCurrentMarketChanged() {
+    this.init();
   }
 
   get formattedSpread() {
@@ -140,16 +133,6 @@ export default class OrderBook extends Vue {
     return `${currency.prefix}${spread} ${currency.postfix} (${
       this.spreadPercentage
     }%)`;
-  }
-
-  get spreadPercentage() {
-    const spreadPercentage = (this.spread / this.ask) * 100;
-    return spreadPercentage.toFixed(2);
-  }
-
-  get activeOrdersTimestamp() {
-    const { activeOrders } = this.$store.state;
-    return activeOrders.map(order => order.created_at);
   }
 
   init() {
@@ -169,29 +152,9 @@ export default class OrderBook extends Vue {
   }
 
   updateBooks() {
-    return CryptoMktHelper.getBooks(this.currentMarket.code, 50).then(books => {
-      const { buyBook, sellBook } = books;
-      this.updateTime = localeTime(new Date());
-      // Add accumulated amount to the books
-      this.addAccumulated(buyBook);
-      this.addAccumulated(sellBook);
-      // Update the books
-      this.buyBook = buyBook;
-      this.sellBook = sellBook;
-      this.$store.commit('updatePrices', {
-        ask: this.ask,
-        bid: this.bid,
-      });
-    });
-  }
-
-  addAccumulated(book) {
-    /** Add accumulated amount to the book */
-    let accumulated = 0;
-    book.forEach(order => {
-      accumulated += Number(order.amount);
-      order.accumulated = accumulated;
-    });
+    const orderBookPromise = CryptoMktHelper.getBooks(this.currentMarket.code);
+    const activeOrdersPromise = this.apiService.getActiveOrders();
+    return Promise.all([orderBookPromise, activeOrdersPromise]);
   }
 
   centerBook() {
@@ -204,11 +167,6 @@ export default class OrderBook extends Vue {
       target = target.previousElementSibling;
     }
     target.scrollIntoView();
-  }
-
-  @Watch('currentMarket')
-  onCurrentMarketChanged() {
-    this.init();
   }
 }
 </script>

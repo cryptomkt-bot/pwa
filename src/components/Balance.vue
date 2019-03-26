@@ -1,20 +1,17 @@
 <template>
   <div id="balance" class="has-text-centered">
-    <div
-      class="button is-primary"
-      @click="isBalanceVisible = !isBalanceVisible"
-    >
+    <div class="button is-primary" @click="toggleVisibility">
       <span class="icon is-size-7">
         <i
           class="fa"
-          :class="[isBalanceVisible ? 'fa-chevron-down' : 'fa-chevron-up']"
+          :class="[isVisible ? 'fa-chevron-down' : 'fa-chevron-up']"
         ></i>
       </span>
       <span id="balance-label" class="has-text-weight-light">
         {{ $t('balances') }}
       </span>
     </div>
-    <div id="balance-content" v-show="isBalanceVisible">
+    <div id="balance-content" v-show="isVisible">
       <table class="table is-fullwidth is-size-7">
         <thead>
           <tr>
@@ -42,11 +39,19 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
   dependencies: ['apiService'],
 })
 export default class Balance extends Vue {
-  isBalanceVisible = false;
+  isVisible = false;
   balances = [];
 
   created() {
     this.getBalances();
+  }
+
+  toggleVisibility() {
+    this.isVisible = !this.isVisible;
+  }
+
+  getBalances() {
+    this.apiService.getBalance().then(balances => (this.balances = balances));
   }
 
   getFormattedBalanceTotal(balance) {
@@ -66,18 +71,12 @@ export default class Balance extends Vue {
     return this.formatAmount(amount, currency, balance.currency_decimal);
   }
 
-  @Watch('isBalanceVisible')
+  @Watch('isVisible')
   onContentVisibilityChanged(isVisible) {
     this.$emit('visibilityChanged', isVisible);
     if (isVisible === true) {
       this.getBalances();
     }
-  }
-
-  getBalances() {
-    this.apiService.get('/balance').then(response => {
-      this.balances = response.data;
-    });
   }
 }
 </script>

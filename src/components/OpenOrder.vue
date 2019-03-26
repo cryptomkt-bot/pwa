@@ -65,9 +65,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
-import CurrencyField from './CurrencyField.vue';
+
 import { capitalize } from '../utils';
+import CurrencyField from './CurrencyField.vue';
 
 @Component({
   components: { CurrencyField },
@@ -88,10 +90,6 @@ export default class OpenOrder extends Vue {
       price: null,
       amount: null,
     };
-  }
-
-  get currentMarket() {
-    return this.$store.state.currentMarket;
   }
 
   get isOrderValid() {
@@ -119,9 +117,8 @@ export default class OpenOrder extends Vue {
     } else {
       currency = this.currentMarket.quoteCurrency;
     }
-    const endpoint = `/balance/${currency.code}`;
-    this.apiService.get(endpoint).then(response => {
-      let amount = Number(response.data.available);
+    this.apiService.getBalance(currency.code).then(balance => {
+      let amount = Number(balance.available);
       if (this.order.type === 'buy') {
         if (this.order.price > 0) {
           amount /= this.order.price;

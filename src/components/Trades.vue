@@ -38,6 +38,7 @@
 
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
+
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 @Component
@@ -52,10 +53,6 @@ export default class Trades extends Vue {
 
   destroyed() {
     clearInterval(this.intervalId);
-  }
-
-  get currentMarket() {
-    return this.$store.state.currentMarket;
   }
 
   @Watch('currentMarket')

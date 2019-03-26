@@ -7,13 +7,13 @@
       <div class="card">
         <form @submit.prevent="login" class="card-content">
           <div class="field">
-            <label for="apiAddress" class="label">{{ $t('apiUrl') }}</label>
+            <label for="apiUrl" class="label">{{ $t('apiUrl') }}</label>
             <div class="control">
               <input
-                id="apiAddress"
+                id="apiUrl"
                 type="text"
                 required
-                v-model="apiAddress"
+                v-model="apiUrl"
                 @click="hideSignature"
                 @blur="showSignature"
                 :placeholder="$t('enterApiUrl')"
@@ -87,14 +87,14 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
+
 import StorageHelper from '../helpers/StorageHelper';
-import ApiService from '../services/ApiService';
 
 @Component({
   dependencies: ['apiService'],
 })
 export default class Login extends Vue {
-  apiAddress = null;
+  apiUrl = null;
   username = '';
   password = '';
   isSignatureVisible = true;
@@ -106,10 +106,7 @@ export default class Login extends Vue {
 
   login() {
     this.apiService
-      .login(this.apiAddress, this.username, this.password)
-      .then(() => {
-        this.$store.commit('login');
-      })
+      .login(this.apiUrl, this.username, this.password)
       .catch(error => {
         let message = this.$t('errorMsg');
         if (error.response && error.response.status === 401) {
@@ -124,7 +121,7 @@ export default class Login extends Vue {
   }
 
   restoreFromStorage() {
-    this.apiAddress = StorageHelper.get('apiAddress');
+    this.apiUrl = StorageHelper.get('apiUrl');
     this.username = StorageHelper.get('username');
   }
 

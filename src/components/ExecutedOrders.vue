@@ -61,10 +61,6 @@ export default class ExecutedOrders extends Vue {
     clearInterval(this.intervalId);
   }
 
-  get currentMarket() {
-    return this.$store.state.currentMarket;
-  }
-
   @Watch('currentMarket')
   onCurrentMarketChanged() {
     this.init();
@@ -82,10 +78,9 @@ export default class ExecutedOrders extends Vue {
   }
 
   updateOrders() {
-    const url = `/orders/executed/${this.currentMarket.code}`;
-    return this.apiService.get(url, { limit: 100 }).then(response => {
-      this.orders = response.data;
-    });
+    return this.apiService
+      .getExecutedOrders()
+      .then(orders => (this.orders = orders));
   }
 
   orderColor(order) {

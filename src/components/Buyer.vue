@@ -63,6 +63,7 @@
 
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
+
 import CurrencyField from './CurrencyField.vue';
 
 @Component({
@@ -75,14 +76,6 @@ export default class Buyer extends Vue {
   remainingFiat = null;
   isModalVisible = false;
   isLoading = true;
-
-  get currentMarket() {
-    return this.$store.state.currentMarket;
-  }
-
-  get endpoint() {
-    return `buyer/${this.currentMarket.code}`;
-  }
 
   get maxPrice() {
     if (this.buyer === null || this.remainingAmount === 0) {
@@ -113,9 +106,9 @@ export default class Buyer extends Vue {
     this.buyer = null;
     this.remainingFiat = null;
     this.apiService
-      .get(this.endpoint)
-      .then(response => {
-        this.buyer = response.data;
+      .getBuyer()
+      .then(buyer => {
+        this.buyer = buyer;
         this.remainingFiat = this.buyer.remaining_fiat;
         this.isLoading = false;
       })
@@ -125,10 +118,10 @@ export default class Buyer extends Vue {
   }
 
   setMaxFiat() {
-    const url = `/balance/${this.currentMarket.quoteCurrency.code}`;
-    this.apiService.get(url).then(response => {
-      const grossBalance = Number(response.data.balance);
-      const netBalance = Number(response.data.available);
+    const marketCode = this.currentMarket.quoteCurrency.code;
+    this.apiService.getBalance(marketCode).then(balance => {
+      const grossBalance = Number(balance.balance);
+      const netBalance = Number(balance.available);
       const remainingFiat = this.buyer.remaining_fiat + netBalance;
       // Make sure the amount isn't higher than the gross balance
       this.remainingFiat = Math.min(remainingFiat, grossBalance);
@@ -139,7 +132,7 @@ export default class Buyer extends Vue {
     this.isLoading = true;
     this.buyer.remaining_fiat = this.remainingFiat;
     this.apiService
-      .patch(this.endpoint, this.buyer)
+      .patchBuyer(this.buyer)
       .then(() => {
         this.isModalVisible = false;
         this.isLoading = false;

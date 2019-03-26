@@ -27,10 +27,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
+
 import { countries, markets } from '../constants';
 
-@Component
+@Component({
+  methods: mapActions(['changeMarket']),
+  dependencies: ['apiService'],
+})
 export default class TopPanel extends Vue {
   countries = [];
   markets = [];
@@ -45,14 +50,14 @@ export default class TopPanel extends Vue {
   }
 
   set currentMarket(market) {
-    this.$store.commit('changeMarket', market);
+    this.changeMarket(market);
   }
 
   logout() {
     this.confirm({
       message: this.$t('logoutConfirm'),
       onConfirm: () => {
-        this.$store.dispatch('logout');
+        this.apiService.logout();
       },
     });
   }

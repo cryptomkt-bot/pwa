@@ -72,6 +72,7 @@
 
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
+
 import CurrencyField from './CurrencyField.vue';
 
 @Component({
@@ -84,14 +85,6 @@ export default class Seller extends Vue {
   remainingAmount = 0;
   isModalVisible = false;
   isLoading = true;
-
-  get currentMarket() {
-    return this.$store.state.currentMarket;
-  }
-
-  get endpoint() {
-    return `seller/${this.currentMarket.code}`;
-  }
 
   get minSpread() {
     return this.seller ? this.seller.min_spread : null;
@@ -110,9 +103,9 @@ export default class Seller extends Vue {
     this.seller = null;
     this.remainingAmount = 0;
     this.apiService
-      .get(this.endpoint)
-      .then(response => {
-        this.seller = response.data;
+      .getSeller()
+      .then(seller => {
+        this.seller = seller;
         this.remainingAmount = this.seller.remaining_amount;
         this.isLoading = false;
       })
@@ -122,10 +115,10 @@ export default class Seller extends Vue {
   }
 
   setMaxAmount() {
-    const url = `/balance/${this.currentMarket.baseCurrency.code}`;
-    this.apiService.get(url).then(response => {
-      const grossBalance = Number(response.data.balance);
-      const netBalance = Number(response.data.available);
+    const marketCode = this.currentMarket.baseCurrency.code;
+    this.apiService.getBalance(marketCode).then(balance => {
+      const grossBalance = Number(balance.balance);
+      const netBalance = Number(balance.available);
       const remainingAmount = this.seller.remaining_amount + netBalance;
       // Make sure the amount isn't higher than the gross balance
       this.remainingAmount = Math.min(remainingAmount, grossBalance);
@@ -136,7 +129,7 @@ export default class Seller extends Vue {
     this.isLoading = true;
     this.seller.remaining_amount = this.remainingAmount;
     this.apiService
-      .patch(this.endpoint, this.seller)
+      .patchSeller(this.seller)
       .then(() => {
         this.isModalVisible = false;
         this.isLoading = false;
