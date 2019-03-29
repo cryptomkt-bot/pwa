@@ -138,13 +138,17 @@ export default class OrderBook extends Vue {
   init() {
     this.isLoading = true;
     clearInterval(this.intervalId);
-    this.updateBooks().then(() => {
-      // Get the order books
-      setTimeout(() => {
-        this.centerBook();
-        this.isLoading = false;
-      }, 500); // Center books
-    });
+    this.updateBooks()
+      .then(() => {
+        // Get the order books
+        setTimeout(() => {
+          this.centerBook();
+          this.isLoading = false;
+        }, 500); // Center books
+      })
+      .catch(() => {
+        this.isLoading = false; // .finally() not working in Firefox
+      });
     // Update books every 10 seconds
     this.intervalId = setInterval(() => {
       this.updateBooks();
