@@ -1,48 +1,64 @@
 import axios from 'axios';
 import injector from 'vue-inject';
 import { Toast } from 'buefy';
+
 import i18n from '../locale/i18n';
 import store from '../store';
 import StorageHelper from '../helpers/StorageHelper';
 
-export default class ApiService {
+class ApiService {
   constructor() {
-    this.axios = axios.create({ headers: {}});
-    this.init()
+    this.init();
   }
 
   init() {
-    const apiAddress = StorageHelper.get('apiAddress');
-    const token = StorageHelper.get('token', token);
-    if (!apiAddress || !token) {
+    this.axios = axios.create({ headers: {} });
+    const apiUrl = StorageHelper.get('apiUrl');
+    const token = StorageHelper.get('token');
+    if (!apiUrl || !token) {
       return;
     }
-    this.axios.defaults.baseURL = `https://${apiAddress}`;
-    this.axios.defaults.headers.Authorization = `JWT ${token}`;
+    this.baseUrl = apiUrl;
+    this.token = token;
     this.subscribe401();
-    store.commit('login');
+    this.subscribe401();
+    store.commit('setToken', token);
   }
 
-  login(apiAddress, username, password) {
-    this.axios.defaults.baseURL = `https://${apiAddress}`;
-    return this.post('/auth', { username, password }).then((response) => {
+  set baseUrl(url) {
+    this.axios.defaults.baseURL = `https://${url}`;
+  }
+
+  set token(token) {
+    this.axios.defaults.headers.Authorization = `JWT ${token}`;
+  }
+
+  login(apiUrl, username, password) {
+    this.baseUrl = apiUrl;
+    return this.post('/auth', { username, password }).then(response => {
       // Set token
       const token = response.data.access_token;
-      this.axios.defaults.headers.Authorization = `JWT ${token}`;
+      this.token = token;
 
       // Save to storage
-      StorageHelper.set('apiAddress', apiAddress);
+      StorageHelper.set('apiUrl', apiUrl);
       StorageHelper.set('username', username);
       StorageHelper.set('token', token);
+      store.commit('setToken', token);
 
       this.subscribe401();
     });
   }
 
+  logout() {
+    StorageHelper.remove('token');
+    store.commit('logout');
+  }
+
   subscribe401() {
-    this.axios.interceptors.response.use(null, (error) => {
-      if (error.response.status === 401 && store.state.isLogged) {
-        store.dispatch('logout');
+    this.axios.interceptors.response.use(null, error => {
+      if (error.response.status === 401 && store.getters.isLogged) {
+        this.logout();
         Toast.open({
           message: i18n.t('sessionExpired'),
           type: 'is-info',
@@ -58,24 +74,81 @@ export default class ApiService {
     this.axios.interceptors.response(null, null);
   }
 
-  get(endpoint, params = null) {
-    return this.axios.get(endpoint, { params });
+  getActiveOrders() {
+    const { currentMarket } = store.state;
+    const url = `/orders/active/${currentMarket.code}`;
+    return this.get(url)
+      .then(response => {
+        store.commit('setActiveOrders', response.data);
+      })
+      .catch(() => {
+        store.commit('setActiveOrders', []);
+      });
   }
 
-  post(endpoint, data) {
-    return this.axios.post(endpoint, data);
+  getExecutedOrders(limit = 50) {
+    const { currentMarket } = store.state;
+    const url = `/orders/executed/${currentMarket.code}`;
+    return this.get(url, { limit }).then(response => response.data);
   }
 
-  put(endpoint, data) {
-    return this.axios.put(endpoint, data);
+  getBalance(marketCode = null) {
+    let url = '/balance';
+    if (marketCode !== null) {
+      url += `/${marketCode}`;
+    }
+    return this.get(url).then(response => response.data);
   }
 
-  patch(endpoint, data) {
-    return this.axios.patch(endpoint, data);
+  getBuyer() {
+    return this.getTrader('buyer');
   }
 
-  delete(endpoint) {
-    return this.axios.delete(endpoint);
+  getSeller() {
+    return this.getTrader('seller');
+  }
+
+  getTrader(trader) {
+    const url = `/${trader}/${store.state.currentMarket.code}`;
+    return this.get(url).then(response => response.data);
+  }
+
+  patchBuyer(data) {
+    return this.patchTrader('buyer', data);
+  }
+
+  patchSeller(data) {
+    return this.patchTrader('seller', data);
+  }
+
+  patchTrader(trader, data) {
+    const url = `/${trader}/${store.state.currentMarket.code}`;
+    return this.patch(url, data).then(response => response.data);
+  }
+
+  deleteOrder(orderId) {
+    const url = `/orders/${orderId}`;
+    return this.delete(url);
+  }
+
+  get(url, params = null) {
+    return this.axios.get(url, { params });
+  }
+
+  post(url, data) {
+    return this.axios.post(url, data);
+  }
+
+  put(url, data) {
+    return this.axios.put(url, data);
+  }
+
+  patch(url, data) {
+    return this.axios.patch(url, data);
+  }
+
+  delete(url) {
+    return this.axios.delete(url);
   }
 }
 

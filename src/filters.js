@@ -5,7 +5,7 @@ export default {
   capitalize,
   toDecimals,
   localeTime,
-  date: (timestamp) => {
+  date: timestamp => {
     const date = new Date(timestamp);
     return date.toLocaleString(i18n.locale, {
       day: 'numeric',

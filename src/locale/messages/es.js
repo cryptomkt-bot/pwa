@@ -46,7 +46,7 @@ export default {
   spread: 'Spread',
   totalBalance: 'Saldo total',
   update: 'Actualizar',
-  updatedAt: 'Actualizado a las {updateTime}',
+  updatedAt: 'Actualizado a las {updatedAt}',
   username: 'Usuario',
   wrongUsernameOrPassword: 'Usuario o contraseña incorrecta',
   yes: 'Sí',

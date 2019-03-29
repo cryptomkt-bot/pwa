@@ -15,17 +15,29 @@
         <div class="card-content">
           <!-- Amount -->
           <label for="amount" class="label is-small">{{ $t('amount') }}</label>
-          <CurrencyField v-model="remainingAmount" :id="'amount'"
-                         :currency="currentMarket.baseCurrency" :showMaxButton="true"
-                         :step="currentMarket.baseCurrency.step" @maxButtonClicked="setMaxAmount" />
+          <CurrencyField
+            v-model="remainingAmount"
+            :id="'amount'"
+            :currency="currentMarket.baseCurrency"
+            :showMaxButton="true"
+            :step="currentMarket.baseCurrency.step"
+            @maxButtonClicked="setMaxAmount"
+          />
 
           <!-- Spread -->
           <label for="spread" class="label is-small">{{ $t('spread') }}</label>
           <div class="field has-addons">
             <!-- Input -->
             <div class="control">
-              <input id="spread" type="number" step="0.01" v-model.number="minSpread"
-                     :disabled="isLoading" class="input">
+              <input
+                id="spread"
+                type="number"
+                step="0.01"
+                v-model.number="minSpread"
+                :disabled="isLoading"
+                lang="en"
+                class="input"
+              />
             </div>
             <!-- Percent sign -->
             <div class="control">
@@ -37,21 +49,30 @@
 
         <!-- Action buttons -->
         <footer class="card-footer">
-          <a class="card-footer-item" @click="isModalVisible = false">{{ $t('cancel') }}</a>
+          <a class="card-footer-item" @click="isModalVisible = false">
+            {{ $t('cancel') }}
+          </a>
           <a class="card-footer-item" @click="submit">{{ $t('update') }}</a>
         </footer>
       </div>
     </b-modal>
     <!-- Button -->
     <transition name="scale">
-      <div v-show="isButtonVisible" id="seller-button" @click="isModalVisible = true"
-           class="button is-rounded has-text-weight-bold">{{ $t('seller')[0] }}</div>
+      <div
+        v-show="isButtonVisible"
+        id="seller-button"
+        @click="isModalVisible = true"
+        class="button is-rounded has-text-weight-bold"
+      >
+        {{ $t('seller')[0] }}
+      </div>
     </transition>
   </div>
 </template>
 
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
+
 import CurrencyField from './CurrencyField.vue';
 
 @Component({
@@ -64,14 +85,6 @@ export default class Seller extends Vue {
   remainingAmount = 0;
   isModalVisible = false;
   isLoading = true;
-
-  get currentMarket() {
-    return this.$store.state.currentMarket;
-  }
-
-  get endpoint() {
-    return `seller/${this.currentMarket.code}`;
-  }
 
   get minSpread() {
     return this.seller ? this.seller.min_spread : null;
@@ -89,9 +102,10 @@ export default class Seller extends Vue {
     this.isLoading = true;
     this.seller = null;
     this.remainingAmount = 0;
-    this.apiService.get(this.endpoint)
-      .then((response) => {
-        this.seller = response.data;
+    this.apiService
+      .getSeller()
+      .then(seller => {
+        this.seller = seller;
         this.remainingAmount = this.seller.remaining_amount;
         this.isLoading = false;
       })
@@ -101,10 +115,10 @@ export default class Seller extends Vue {
   }
 
   setMaxAmount() {
-    const url = `/balance/${this.currentMarket.baseCurrency.code}`;
-    this.apiService.get(url).then((response) => {
-      const grossBalance = Number(response.data.balance);
-      const netBalance = Number(response.data.available);
+    const marketCode = this.currentMarket.baseCurrency.code;
+    this.apiService.getBalance(marketCode).then(balance => {
+      const grossBalance = Number(balance.balance);
+      const netBalance = Number(balance.available);
       const remainingAmount = this.seller.remaining_amount + netBalance;
       // Make sure the amount isn't higher than the gross balance
       this.remainingAmount = Math.min(remainingAmount, grossBalance);
@@ -114,7 +128,8 @@ export default class Seller extends Vue {
   submit() {
     this.isLoading = true;
     this.seller.remaining_amount = this.remainingAmount;
-    this.apiService.patch(this.endpoint, this.seller)
+    this.apiService
+      .patchSeller(this.seller)
       .then(() => {
         this.isModalVisible = false;
         this.isLoading = false;
@@ -132,21 +147,21 @@ export default class Seller extends Vue {
 </script>
 
 <style lang="scss">
-  $red: #f44336;
-  #seller-card {
-    border-top: 6px solid $red;
-    border-radius: 4px;
-  }
-  #seller-button {
-    background-color: $red;
-    color: #fff;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-    border: none;
-    width: 48px;
-    height: 48px;
-    position: fixed;
-    bottom: 40px;
-    left: 12px;
-    z-index: 1;
-  }
+$red: #f44336;
+#seller-card {
+  border-top: 6px solid $red;
+  border-radius: 4px;
+}
+#seller-button {
+  background-color: $red;
+  color: #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  border: none;
+  width: 48px;
+  height: 48px;
+  position: fixed;
+  bottom: 40px;
+  left: 12px;
+  z-index: 1;
+}
 </style>

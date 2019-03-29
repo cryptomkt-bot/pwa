@@ -1,8 +1,13 @@
 <template>
   <div :class="{ 'loading-wrapper': isLoading }">
     <b-loading :active="isLoading" :is-full-page="false"></b-loading>
-    <span v-if="!isLoading && !orders.length" class="is-size-7">{{ $t('noOrders') }}.</span>
-    <table v-if="!isLoading && orders.length" class="table is-fullwidth is-marginless is-size-7">
+    <span v-if="!isLoading && !orders.length" class="is-size-7"
+      >{{ $t('noOrders') }}.</span
+    >
+    <table
+      v-if="!isLoading && orders.length"
+      class="table is-fullwidth is-marginless is-size-7"
+    >
       <thead>
         <tr>
           <th>{{ $t('date') }}</th>
@@ -12,12 +17,24 @@
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.executed_at">
-          <td>{{ order.executed_at + '-00:00' | date }}</td>
+          <td>{{ (order.executed_at + '-00:00') | date }}</td>
           <td :class="orderColor(order)">
-            {{ formatAmount(order.execution_price, currentMarket.quoteCurrency, currentMarket.decimals) }}
+            {{
+              formatAmount(
+                order.execution_price,
+                currentMarket.quoteCurrency,
+                currentMarket.decimals
+              )
+            }}
           </td>
           <td>
-            {{ formatAmount(order.amount.executed, currentMarket.baseCurrency, currentMarket.baseCurrency.decimals) }}
+            {{
+              formatAmount(
+                order.amount.executed,
+                currentMarket.baseCurrency,
+                currentMarket.baseCurrency.decimals
+              )
+            }}
           </td>
         </tr>
       </tbody>
@@ -44,10 +61,6 @@ export default class ExecutedOrders extends Vue {
     clearInterval(this.intervalId);
   }
 
-  get currentMarket() {
-    return this.$store.state.currentMarket;
-  }
-
   @Watch('currentMarket')
   onCurrentMarketChanged() {
     this.init();
@@ -65,10 +78,9 @@ export default class ExecutedOrders extends Vue {
   }
 
   updateOrders() {
-    const url = `/orders/executed/${this.currentMarket.code}`;
-    return this.apiService.get(url, { limit: 100 }).then((response) => {
-      this.orders = response.data;
-    });
+    return this.apiService
+      .getExecutedOrders()
+      .then(orders => (this.orders = orders));
   }
 
   orderColor(order) {
@@ -79,18 +91,19 @@ export default class ExecutedOrders extends Vue {
 </script>
 
 <style scoped lang="scss">
-  $bodyHeight: 100px;
-  tbody {
-    display: block;
-    height: $bodyHeight;
-    overflow: auto;
-  }
-  thead, tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
-  #loading-message {
-    line-height: $bodyHeight + 30px;
-  }
+$bodyHeight: 100px;
+tbody {
+  display: block;
+  height: $bodyHeight;
+  overflow: auto;
+}
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+#loading-message {
+  line-height: $bodyHeight + 30px;
+}
 </style>

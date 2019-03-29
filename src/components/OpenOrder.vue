@@ -1,7 +1,11 @@
 <template>
   <!-- Modal -->
   <b-modal :active="isModalVisible" :canCancel="['x']" :onCancel="close">
-    <div id="open-order-card" class="card" :class="[order.type === 'buy' ? 'green' : 'red']">
+    <div
+      id="open-order-card"
+      class="card"
+      :class="[order.type === 'buy' ? 'green' : 'red']"
+    >
       <!-- Loading spinner -->
       <b-loading :active="isLoading" :is-full-page="false"></b-loading>
 
@@ -15,7 +19,9 @@
         <!-- Order type -->
         <div class="field">
           <div class="control">
-            <label for="order-type" class="label is-size-7">{{ $t('orderType') }}</label>
+            <label for="order-type" class="label is-size-7">
+              {{ $t('orderType') }}
+            </label>
             <div class="select">
               <select id="order-type" v-model="order.type">
                 <option value="buy">{{ $t('buyOrder') }}</option>
@@ -27,15 +33,23 @@
 
         <!-- Amount -->
         <label for="amount" class="label is-small">{{ $t('amount') }}</label>
-        <CurrencyField v-model="order.amount" :id="'amount'" :showMaxButton="true"
-                       :currency="currentMarket.baseCurrency"
-                       :step="currentMarket.baseCurrency.step"
-                       @maxButtonClicked="setMaxAmount" />
+        <CurrencyField
+          v-model="order.amount"
+          :id="'amount'"
+          :showMaxButton="true"
+          :currency="currentMarket.baseCurrency"
+          :step="currentMarket.baseCurrency.step"
+          @maxButtonClicked="setMaxAmount"
+        />
 
         <!-- Price -->
         <label for="price" class="label is-small">{{ $t('price') }}</label>
-        <CurrencyField v-model="order.price" :id="'price'"
-                       :currency="currentMarket.quoteCurrency" :step="currentMarket.step" />
+        <CurrencyField
+          v-model="order.price"
+          :id="'price'"
+          :currency="currentMarket.quoteCurrency"
+          :step="currentMarket.step"
+        />
 
         <!-- Info message -->
         <p class="is-size-7">{{ infoMessage }}</p>
@@ -51,9 +65,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
-import CurrencyField from './CurrencyField.vue';
+
 import { capitalize } from '../utils';
+import CurrencyField from './CurrencyField.vue';
 
 @Component({
   components: { CurrencyField },
@@ -76,14 +92,10 @@ export default class OpenOrder extends Vue {
     };
   }
 
-  get currentMarket() {
-    return this.$store.state.currentMarket;
-  }
-
   get isOrderValid() {
     return (
-      (this.order.price > 0) &&
-      (this.order.amount >= this.currentMarket.baseCurrency.step) &&
+      this.order.price > 0 &&
+      this.order.amount >= this.currentMarket.baseCurrency.step &&
       (this.order.type === 'buy' || this.order.type === 'sell')
     );
   }
@@ -105,9 +117,8 @@ export default class OpenOrder extends Vue {
     } else {
       currency = this.currentMarket.quoteCurrency;
     }
-    const endpoint = `/balance/${currency.code}`;
-    this.apiService.get(endpoint).then((response) => {
-      let amount = Number(response.data.available);
+    this.apiService.getBalance(currency.code).then(balance => {
+      let amount = Number(balance.available);
       if (this.order.type === 'buy') {
         if (this.order.price > 0) {
           amount /= this.order.price;
@@ -121,11 +132,15 @@ export default class OpenOrder extends Vue {
 
   confirmOrder() {
     const { baseCurrency } = this.currentMarket;
-    const amount = this.formatAmount(this.order.amount, baseCurrency, baseCurrency.decimals);
+    const amount = this.formatAmount(
+      this.order.amount,
+      baseCurrency,
+      baseCurrency.decimals
+    );
     const price = this.formatAmount(
       this.order.price,
       this.currentMarket.quoteCurrency,
-      this.currentMarket.decimals,
+      this.currentMarket.decimals
     );
     const orderTypeCapitalized = capitalize(this.order.type);
     const confirmMsgKey = `confirm${orderTypeCapitalized}Order`;
@@ -147,7 +162,8 @@ export default class OpenOrder extends Vue {
   doSubmit() {
     this.isLoading = true;
     const url = `/orders/${this.currentMarket.code}`;
-    this.apiService.post(url, this.order)
+    this.apiService
+      .post(url, this.order)
       .then(() => {
         this.close();
         this.$toast.open({
@@ -179,10 +195,14 @@ export default class OpenOrder extends Vue {
 </script>
 
 <style lang="scss">
-  #open-order-card {
-    border-top: 6px solid;
-    border-radius: 4px;
-    &.green { border-top-color: #4caf50 !important }
-    &.red { border-top-color: #f44336 !important }
+#open-order-card {
+  border-top: 6px solid;
+  border-radius: 4px;
+  &.green {
+    border-top-color: #4caf50 !important;
   }
+  &.red {
+    border-top-color: #f44336 !important;
+  }
+}
 </style>

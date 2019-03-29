@@ -6,14 +6,29 @@
       </button>
     </div>
     <div v-else-if="currency.prefix" class="control">
-      <span :disabled="disabled" class="button is-static">{{ currency.prefix }}</span>
+      <span :disabled="disabled" class="button is-static">{{
+        currency.prefix
+      }}</span>
     </div>
     <div class="control">
-      <input type="number" :id="id" ref="input" :value="value" min="0" :step="step"
-             :placeholder="placeholder" :disabled="disabled" @input="emitValue" class="input">
+      <input
+        type="number"
+        :id="id"
+        ref="input"
+        :value="value"
+        min="0"
+        :step="step"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        @input="emitValue"
+        lang="en"
+        class="input"
+      />
     </div>
     <div v-if="currency.postfix" class="control">
-      <span :disabled="disabled" class="button is-static">{{ currency.postfix }}</span>
+      <span :disabled="disabled" class="button is-static">{{
+        currency.postfix
+      }}</span>
     </div>
     <div v-else-if="showMaxButton" class="control">
       <button @click="setMaxAmount" :disabled="disabled" class="button is-info">
@@ -27,7 +42,15 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
-  props: ['id', 'currency', 'step', 'value', 'showMaxButton', 'placeholder', 'disabled'],
+  props: [
+    'id',
+    'currency',
+    'step',
+    'value',
+    'showMaxButton',
+    'placeholder',
+    'disabled',
+  ],
 })
 export default class CurrencyField extends Vue {
   emitValue() {

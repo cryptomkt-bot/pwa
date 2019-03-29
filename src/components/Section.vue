@@ -1,12 +1,18 @@
 <template>
   <div>
-    <div @click="isVisible = !isVisible" class="section-name has-text-centered">
+    <div @click="toggleVisibility" class="section-name has-text-centered">
       <span>{{ title }}</span>
-      <b-icon pack="fa" :icon="isVisible ? 'minus' : 'plus'" :size="'is-size-7'"></b-icon>
+      <b-icon
+        pack="fa"
+        :icon="isVisible ? 'minus' : 'plus'"
+        :size="'is-size-7'"
+      ></b-icon>
     </div>
-    <slot v-if="isVisible"></slot> <!-- Default (v-if) -->
+    <!-- Default (v-if) -->
+    <slot v-if="isVisible"></slot>
     <span v-show="isVisible">
-      <slot name="show"></slot> <!-- Alternative (v-show) -->
+      <!-- Alternative (v-show) -->
+      <slot name="show"></slot>
     </span>
   </div>
 </template>
@@ -19,17 +25,21 @@ import { Component, Vue } from 'vue-property-decorator';
 })
 export default class Section extends Vue {
   isVisible = false;
+
+  toggleVisibility() {
+    this.isVisible = !this.isVisible;
+  }
 }
 </script>
 
 <style lang="scss">
-  .section-name {
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #eee;
-    padding: 8px;
-    .icon {
-      position: absolute;
-      right: 16px;
-    }
+.section-name {
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #eee;
+  padding: 8px;
+  .icon {
+    position: absolute;
+    right: 16px;
   }
+}
 </style>

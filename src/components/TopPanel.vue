@@ -3,13 +3,21 @@
     <div id="market-select" class="select">
       <select v-model="currentMarket" title="Select market">
         <optgroup v-for="country in countries" :key="country" :label="country">
-          <option v-for="market in markets[country]" :key="market.code" :value="market"
-                  :selected="market.code === currentMarket.code">{{ market.code }}</option>
+          <option
+            v-for="market in markets[country]"
+            :key="market.code"
+            :value="market"
+            :selected="market.code === currentMarket.code"
+            >{{ market.code }}</option
+          >
         </optgroup>
       </select>
     </div>
-    <button id="open-order" @click="$emit('openOrderModalOpened')"
-            class="button is-success is-size-6">
+    <button
+      id="open-order"
+      @click="$emit('openOrderModalOpened')"
+      class="button is-success is-size-6"
+    >
       <span class="icon">+</span> {{ $t('openOrder') }}
     </button>
     <button id="logout-button" @click="logout" class="button">
@@ -19,10 +27,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
+
 import { countries, markets } from '../constants';
 
-@Component
+@Component({
+  methods: mapActions(['changeMarket']),
+  dependencies: ['apiService'],
+})
 export default class TopPanel extends Vue {
   countries = [];
   markets = [];
@@ -37,14 +50,14 @@ export default class TopPanel extends Vue {
   }
 
   set currentMarket(market) {
-    this.$store.commit('changeMarket', market);
+    this.changeMarket(market);
   }
 
   logout() {
     this.confirm({
       message: this.$t('logoutConfirm'),
       onConfirm: () => {
-        this.$store.dispatch('logout');
+        this.apiService.logout();
       },
     });
   }
@@ -52,44 +65,45 @@ export default class TopPanel extends Vue {
 </script>
 
 <style lang="scss">
-  $cryptoMktColor: #677ae4;
-  $panelHeight: 50px;
+$cryptoMktColor: #677ae4;
+$panelHeight: 50px;
 
-  #top-panel {
-    width: 100%;
-    height: 50px;
-    position: fixed;
-    top: 0;
-    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
-    .button {
-      border-radius: 0;
-      height: $panelHeight;
-      box-shadow: none !important;
-    }
-  }
-  #open-order, #logout-button {
-    float: left;
-    display: inline-block;
-  }
-  #market-select {
-    float: left;
-    width: 35%;
+#top-panel {
+  width: 100%;
+  height: 50px;
+  position: fixed;
+  top: 0;
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
+  .button {
+    border-radius: 0;
     height: $panelHeight;
-    select {
-      border: 0;
-      border-radius: 0;
-      height: $panelHeight;
-      width: 100%;
-      box-shadow: none !important;
-    }
+    box-shadow: none !important;
   }
-  #open-order {
-    font-size: 0.9rem;
-    width: 50%;
-  }
-  #logout-button {
-    width: 15%;
+}
+#open-order,
+#logout-button {
+  float: left;
+  display: inline-block;
+}
+#market-select {
+  float: left;
+  width: 35%;
+  height: $panelHeight;
+  select {
     border: 0;
-    color: #fff;
+    border-radius: 0;
+    height: $panelHeight;
+    width: 100%;
+    box-shadow: none !important;
   }
+}
+#open-order {
+  font-size: 0.9rem;
+  width: 50%;
+}
+#logout-button {
+  width: 15%;
+  border: 0;
+  color: #fff;
+}
 </style>

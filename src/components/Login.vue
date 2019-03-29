@@ -1,52 +1,85 @@
 <template>
   <div>
-    <h1 class="title has-text-weight-light has-text-centered is-marginless">CryptoMKT Bot</h1>
+    <h1 class="title has-text-weight-light has-text-centered is-marginless">
+      CryptoMKT Bot
+    </h1>
     <div class="section">
       <div class="card">
         <form @submit.prevent="login" class="card-content">
           <div class="field">
-            <label for="apiAddress" class="label">{{ $t('apiUrl') }}</label>
+            <label for="apiUrl" class="label">{{ $t('apiUrl') }}</label>
             <div class="control">
-              <input id="apiAddress" type="text" required
-                     v-model="apiAddress" @click="hideSignature" @blur="showSignature"
-                     :placeholder="$t('enterApiUrl')" class="input">
+              <input
+                id="apiUrl"
+                type="text"
+                required
+                v-model="apiUrl"
+                @click="hideSignature"
+                @blur="showSignature"
+                :placeholder="$t('enterApiUrl')"
+                class="input"
+              />
             </div>
           </div>
           <div class="field">
             <label for="username" class="label">{{ $t('username') }}</label>
             <div class="control">
-              <input id="username" type="text" autocapitalize="off" required
-                     v-model="username" @click="hideSignature" @blur="showSignature"
-                     :placeholder="$t('enterUsername')" class="input">
+              <input
+                id="username"
+                type="text"
+                autocapitalize="off"
+                required
+                v-model="username"
+                @click="hideSignature"
+                @blur="showSignature"
+                :placeholder="$t('enterUsername')"
+                class="input"
+              />
             </div>
           </div>
           <div class="field">
             <label for="password" class="label">{{ $t('password') }}</label>
             <div class="control">
-              <input id="password" type="password" required
-                     v-model="password" @click="hideSignature" @blur="showSignature"
-                     :placeholder="$t('enterPassword')" class="input">
+              <input
+                id="password"
+                type="password"
+                required
+                v-model="password"
+                @click="hideSignature"
+                @blur="showSignature"
+                :placeholder="$t('enterPassword')"
+                class="input"
+              />
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button :disabled="!this.username || !this.password"
-                      class="button is-primary is-fullwidth">{{ $t('login') }}</button>
+              <button
+                :disabled="!this.username || !this.password"
+                class="button is-primary is-fullwidth"
+              >
+                {{ $t('login') }}
+              </button>
             </div>
           </div>
         </form>
       </div>
       <div id="lang-select" class="select is-pulled-right">
         <select @change="changeLang($event.target.value)">
-          <option v-for="(lang, i) in langs" :key="i" :value="lang"
-                  :selected="lang === $i18n.locale">
+          <option
+            v-for="(lang, i) in langs"
+            :key="i"
+            :value="lang"
+            :selected="lang === $i18n.locale"
+          >
             {{ langName(lang) }}
           </option>
         </select>
       </div>
     </div>
     <span v-show="isSignatureVisible" class="copyright is-size-7">
-      {{ $t('builtWithLoveBy[0]') }} <i class="fa fa-heart"></i> {{ $t('builtWithLoveBy[1]') }}
+      {{ $t('builtWithLoveBy[0]') }} <i class="fa fa-heart"></i>
+      {{ $t('builtWithLoveBy[1]') }}
       <a target="_blank" href="https://github.com/tanoabeleyra">tanoabeleyra</a>
     </span>
   </div>
@@ -54,14 +87,14 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
+
 import StorageHelper from '../helpers/StorageHelper';
-import ApiService from '../services/ApiService';
 
 @Component({
   dependencies: ['apiService'],
 })
 export default class Login extends Vue {
-  apiAddress = null;
+  apiUrl = null;
   username = '';
   password = '';
   isSignatureVisible = true;
@@ -72,11 +105,9 @@ export default class Login extends Vue {
   }
 
   login() {
-    this.apiService.login(this.apiAddress, this.username, this.password)
-      .then(() => {
-        this.$store.commit('login');
-      })
-      .catch((error) => {
+    this.apiService
+      .login(this.apiUrl, this.username, this.password)
+      .catch(error => {
         let message = this.$t('errorMsg');
         if (error.response && error.response.status === 401) {
           message = this.$t('wrongUsernameOrPassword');
@@ -90,7 +121,7 @@ export default class Login extends Vue {
   }
 
   restoreFromStorage() {
-    this.apiAddress = StorageHelper.get('apiAddress');
+    this.apiUrl = StorageHelper.get('apiUrl');
     this.username = StorageHelper.get('username');
   }
 
@@ -115,12 +146,18 @@ export default class Login extends Vue {
 </script>
 
 <style scoped>
-  #lang-select { margin-top: 16px }
-  .card { background-color: #fbfbfb }
-  .copyright {
-    position: absolute;
-    bottom: 12px;
-    right: 12px;
-  }
-  .fa-heart { color: #ee0000 }
+#lang-select {
+  margin-top: 16px;
+}
+.card {
+  background-color: #fbfbfb;
+}
+.copyright {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+}
+.fa-heart {
+  color: #ee0000;
+}
 </style>

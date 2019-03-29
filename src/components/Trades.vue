@@ -11,12 +11,24 @@
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.timestamp">
-          <td>{{ order.timestamp + '-00:00' | date }}</td>
+          <td>{{ (order.timestamp + '-00:00') | date }}</td>
           <td :class="orderColor(order)">
-            {{ formatAmount(order.price, currentMarket.quoteCurrency, currentMarket.decimals) }}
+            {{
+              formatAmount(
+                order.price,
+                currentMarket.quoteCurrency,
+                currentMarket.decimals
+              )
+            }}
           </td>
           <td>
-            {{ formatAmount(order.amount, currentMarket.baseCurrency, currentMarket.baseCurrency.decimals) }}
+            {{
+              formatAmount(
+                order.amount,
+                currentMarket.baseCurrency,
+                currentMarket.baseCurrency.decimals
+              )
+            }}
           </td>
         </tr>
       </tbody>
@@ -26,6 +38,7 @@
 
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
+
 import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 @Component
@@ -40,10 +53,6 @@ export default class Trades extends Vue {
 
   destroyed() {
     clearInterval(this.intervalId);
-  }
-
-  get currentMarket() {
-    return this.$store.state.currentMarket;
   }
 
   @Watch('currentMarket')
@@ -64,7 +73,7 @@ export default class Trades extends Vue {
   }
 
   updateOrders() {
-    return CryptoMktHelper.getTrades(this.currentMarket.code).then((orders) => {
+    return CryptoMktHelper.getTrades(this.currentMarket.code).then(orders => {
       this.orders = orders;
     });
   }
@@ -77,15 +86,16 @@ export default class Trades extends Vue {
 </script>
 
 <style scoped lang="scss">
-  $bodyHeight: 100px;
-  tbody {
-    display: block;
-    height: $bodyHeight;
-    overflow: auto;
-  }
-  thead, tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
+$bodyHeight: 100px;
+tbody {
+  display: block;
+  height: $bodyHeight;
+  overflow: auto;
+}
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
 </style>
