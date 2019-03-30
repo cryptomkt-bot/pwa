@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
 
 import { capitalize } from '../utils';

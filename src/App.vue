@@ -41,7 +41,6 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 
-import ApiService from './services/ApiService';
 import ActiveOrders from './components/ActiveOrders.vue';
 import Balance from './components/Balance.vue';
 import Buyer from './components/Buyer.vue';

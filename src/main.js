@@ -10,6 +10,8 @@ import i18n from './locale/i18n';
 import filters from './filters';
 import { formatAmount } from './utils';
 
+require('./services/ApiService');
+
 Vue.use(injector);
 Vue.use(Buefy);
 Vue.use(Vuex);
