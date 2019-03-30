@@ -34,7 +34,6 @@ import { countries, markets } from '../constants';
 
 @Component({
   methods: mapActions(['changeMarket']),
-  dependencies: ['apiService'],
 })
 export default class TopPanel extends Vue {
   countries = [];
@@ -50,7 +49,9 @@ export default class TopPanel extends Vue {
   }
 
   set currentMarket(market) {
+    this.apiService.stopBookFetch();
     this.changeMarket(market);
+    this.apiService.startBookFetch();
   }
 
   logout() {

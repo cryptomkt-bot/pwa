@@ -15,6 +15,7 @@ export default new Vuex.Store({
     activeOrders: [],
     updatedAt: null,
     token: null,
+    isLoadingBooks: true,
   },
   getters: {
     ask: state => {
@@ -40,7 +41,8 @@ export default new Vuex.Store({
     isLogged: state => state.token !== null,
   },
   actions: {
-    changeMarket({ commit }, market) {
+    changeMarket({ commit, state }, market) {
+      state.isLoadingBooks = true;
       commit('emptyBooks');
       commit('setActiveOrders', []);
       commit('setCurrentMarket', market);
@@ -59,6 +61,7 @@ export default new Vuex.Store({
       state.buyBook = buyBook;
       state.sellBook = sellBook;
       state.updatedAt = localeTime(new Date());
+      state.isLoadingBooks = false;
     },
     emptyBooks(state) {
       state.buyBook = [];

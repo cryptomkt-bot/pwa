@@ -73,7 +73,6 @@ import CurrencyField from './CurrencyField.vue';
 @Component({
   components: { CurrencyField },
   props: ['isModalVisible'],
-  dependencies: ['apiService'],
 })
 export default class OpenOrder extends Vue {
   order = null;

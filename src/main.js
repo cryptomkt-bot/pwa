@@ -21,6 +21,7 @@ Object.entries(filters).forEach(([key, filter]) => {
 });
 
 Vue.mixin({
+  dependencies: ['apiService'],
   computed: mapState(['currentMarket']),
   methods: {
     formatAmount(amount, currency, decimals) {

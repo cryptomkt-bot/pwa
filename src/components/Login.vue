@@ -90,9 +90,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import StorageHelper from '../helpers/StorageHelper';
 
-@Component({
-  dependencies: ['apiService'],
-})
+@Component()
 export default class Login extends Vue {
   apiUrl = null;
   username = '';

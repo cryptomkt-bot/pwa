@@ -74,6 +74,12 @@ export default class App extends Vue {
   isOpenOrderModalVisible = false;
   areTradersVisible = true;
 
+  created() {
+    if (this.isLogged) {
+      this.apiService.startBookFetch();
+    }
+  }
+
   get isLogged() {
     return this.$store.getters.isLogged;
   }

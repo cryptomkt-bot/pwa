@@ -7,6 +7,8 @@ import store from '../store';
 import StorageHelper from '../helpers/StorageHelper';
 
 class ApiService {
+  cryptoMktApiUrl = 'https://api.cryptomkt.com/v1';
+
   constructor() {
     this.init();
   }
@@ -74,22 +76,36 @@ class ApiService {
     this.axios.interceptors.response(null, null);
   }
 
+  startBookFetch() {
+    /** Periodic fetch books **/
+    this.fetchBooksAndActive();
+    this.bookInterval = setInterval(() => {
+      this.fetchBooksAndActive();
+    }, 5000); // Every 5 seconds
+  }
+
+  stopBookFetch() {
+    clearInterval(this.bookInterval);
+  }
+
+  fetchBooksAndActive() {
+    const { currentMarket } = store.state;
+    const activeOrdersPromise = this.getActiveOrders();
+    const orderBookPromise = this.getBooks(currentMarket.code);
+    Promise.all([activeOrdersPromise, orderBookPromise]).then(response => {
+      const activeOrders = response[0];
+      store.commit('setActiveOrders', activeOrders);
+      const { buyBook, sellBook } = response[1];
+      store.commit('setBooks', { buyBook, sellBook });
+    });
+  }
+
   getActiveOrders() {
     const { currentMarket } = store.state;
     const url = `/orders/active/${currentMarket.code}`;
     return this.get(url)
-      .then(response => {
-        store.commit('setActiveOrders', response.data);
-      })
-      .catch(() => {
-        store.commit('setActiveOrders', []);
-      });
-  }
-
-  getExecutedOrders(limit = 50) {
-    const { currentMarket } = store.state;
-    const url = `/orders/executed/${currentMarket.code}`;
-    return this.get(url, { limit }).then(response => response.data);
+      .then(response => response.data)
+      .catch(() => []);
   }
 
   getBalance(marketCode = null) {
@@ -98,6 +114,44 @@ class ApiService {
       url += `/${marketCode}`;
     }
     return this.get(url).then(response => response.data);
+  }
+
+  getBook(market, type, limit = 100) {
+    const url = `${this.cryptoMktApiUrl}/book`;
+    return axios.get(url, {
+      params: { market, type, limit },
+    });
+  }
+
+  getBooks(market, limit = 50) {
+    const sellBookRequest = this.getBook(market, 'sell', limit);
+    const buyBookRequest = this.getBook(market, 'buy', limit);
+    return axios.all([buyBookRequest, sellBookRequest]).then(
+      axios.spread((buyBookResponse, sellBookResponse) => {
+        const buyBook = buyBookResponse.data.data;
+        const sellBook = sellBookResponse.data.data;
+        this._enrichOrders(buyBook, true, false);
+        this._enrichOrders(sellBook, false, true);
+        return new Promise(resolve => resolve({ buyBook, sellBook }));
+      })
+    );
+  }
+
+  _enrichOrders(book, isBuy, isSell) {
+    /** Add order type and accumulated amount */
+    let accumulated = 0;
+    return book.forEach(order => {
+      accumulated += Number(order.amount);
+      order.accumulated = accumulated;
+      order.isBuy = isBuy;
+      order.isSell = isSell;
+    });
+  }
+
+  getExecutedOrders(limit = 50) {
+    const { currentMarket } = store.state;
+    const url = `/orders/executed/${currentMarket.code}`;
+    return this.get(url, { limit }).then(response => response.data);
   }
 
   getBuyer() {
@@ -111,6 +165,14 @@ class ApiService {
   getTrader(trader) {
     const url = `/${trader}/${store.state.currentMarket.code}`;
     return this.get(url).then(response => response.data);
+  }
+
+  getTrades(market, limit = 50) {
+    const url = `${this.cryptoMktApiUrl}/trades`;
+    const params = { market, limit };
+    return axios
+      .get(url, { params })
+      .then(response => new Promise(resolve => resolve(response.data.data)));
   }
 
   patchBuyer(data) {

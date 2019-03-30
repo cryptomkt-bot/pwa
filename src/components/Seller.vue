@@ -78,7 +78,6 @@ import CurrencyField from './CurrencyField.vue';
 @Component({
   components: { CurrencyField },
   props: ['isButtonVisible'],
-  dependencies: ['apiService'],
 })
 export default class Seller extends Vue {
   seller = null;

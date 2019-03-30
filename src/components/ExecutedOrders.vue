@@ -45,9 +45,7 @@
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
-@Component({
-  dependencies: ['apiService'],
-})
+@Component()
 export default class ExecutedOrders extends Vue {
   isLoading = true;
   orders = [];

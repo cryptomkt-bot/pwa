@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'loading-wrapper': isLoading }">
-    <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+  <div :class="{ 'loading-wrapper': isLoadingBooks }">
+    <b-loading :active="isLoadingBooks" :is-full-page="false"></b-loading>
     <table
       id="order-book-table"
       class="table is-fullwidth is-size-7 is-marginless"
@@ -100,33 +100,14 @@ import { mapGetters, mapState } from 'vuex';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
 import { toDecimals } from '../utils';
-import CryptoMktHelper from '../helpers/CryptoMktHelper';
 
 @Component({
-  props: ['activeOrders'],
-  dependencies: ['apiService'],
   computed: {
-    ...mapState(['buyBook', 'sellBook', 'updatedAt']),
+    ...mapState(['buyBook', 'sellBook', 'isLoadingBooks', 'updatedAt']),
     ...mapGetters(['activeOrdersTimestamp', 'spread', 'spreadPercentage']),
   },
 })
 export default class OrderBook extends Vue {
-  isLoading = true;
-  intervalId = null;
-
-  created() {
-    this.init();
-  }
-
-  destroyed() {
-    clearInterval(this.intervalId);
-  }
-
-  @Watch('currentMarket')
-  onCurrentMarketChanged() {
-    this.init();
-  }
-
   get formattedSpread() {
     const currency = this.currentMarket.quoteCurrency;
     const spread = toDecimals(this.spread, this.currentMarket.decimals);
@@ -135,30 +116,16 @@ export default class OrderBook extends Vue {
     }%)`;
   }
 
-  init() {
-    this.isLoading = true;
-    clearInterval(this.intervalId);
-    this.updateBooks()
-      .then(() => {
-        // Get the order books
-        setTimeout(() => {
-          this.centerBook();
-          this.isLoading = false;
-        }, 500); // Center books
-      })
-      .catch(() => {
-        this.isLoading = false; // .finally() not working in Firefox
-      });
-    // Update books every 10 seconds
-    this.intervalId = setInterval(() => {
-      this.updateBooks();
-    }, 10000);
-  }
-
-  updateBooks() {
-    const orderBookPromise = CryptoMktHelper.getBooks(this.currentMarket.code);
-    const activeOrdersPromise = this.apiService.getActiveOrders();
-    return Promise.all([orderBookPromise, activeOrdersPromise]);
+  @Watch('isLoadingBooks')
+  onLoadingFinished() {
+    if (this.isLoadingBooks) {
+      // Still loading, do nothing.
+      return;
+    }
+    setTimeout(() => {
+      // Workaround to make centering work
+      this.centerBook();
+    }, 0);
   }
 
   centerBook() {

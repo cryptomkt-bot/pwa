@@ -50,9 +50,7 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 
-@Component({
-  dependencies: ['apiService'],
-})
+@Component()
 export default class ActiveOrders extends Vue {
   get orders() {
     return this.$store.state.activeOrders;

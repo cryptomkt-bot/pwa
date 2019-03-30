@@ -39,8 +39,6 @@
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
-import CryptoMktHelper from '../helpers/CryptoMktHelper';
-
 @Component
 export default class Trades extends Vue {
   isLoading = true;
@@ -73,7 +71,7 @@ export default class Trades extends Vue {
   }
 
   updateOrders() {
-    return CryptoMktHelper.getTrades(this.currentMarket.code).then(orders => {
+    return this.apiService.getTrades(this.currentMarket.code).then(orders => {
       this.orders = orders;
     });
   }
