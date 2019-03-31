@@ -29,7 +29,7 @@
           <label for="spread" class="label is-small">{{ $t('spread') }}</label>
           <div class="field has-addons">
             <!-- Input -->
-            <div class="control">
+            <div id="spread-control" class="control">
               <input
                 id="spread"
                 type="number"
@@ -154,6 +154,9 @@ $red: #f44336;
 #seller-card {
   border-top: 6px solid $red;
   border-radius: 4px;
+}
+#spread-control {
+  width: 100px;
 }
 #seller-button {
   background-color: $red;
