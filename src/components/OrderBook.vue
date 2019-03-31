@@ -108,6 +108,10 @@ import { toDecimals } from '../utils';
   },
 })
 export default class OrderBook extends Vue {
+  mounted() {
+    this.centerBook();
+  }
+
   get formattedSpread() {
     const currency = this.currentMarket.quoteCurrency;
     const spread = toDecimals(this.spread, this.currentMarket.decimals);
