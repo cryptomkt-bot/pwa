@@ -1,3 +1,3 @@
 module.exports = {
-  baseUrl: '/cryptomkt-bot-webapp/',
-}
+  publicPath: '/cryptomkt-bot-webapp/',
+};
