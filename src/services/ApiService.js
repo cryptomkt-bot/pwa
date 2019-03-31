@@ -49,12 +49,14 @@ class ApiService {
       store.commit('setToken', token);
 
       this.subscribe401();
+      this.startBookFetch();
     });
   }
 
   logout() {
     StorageHelper.remove('token');
     store.commit('logout');
+    this.stopBookFetch();
   }
 
   subscribe401() {
