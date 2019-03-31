@@ -36,7 +36,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component()
-export default class Balance extends Vue {
+class Balance extends Vue {
   isVisible = false;
   balances = [];
 
@@ -77,6 +77,8 @@ export default class Balance extends Vue {
     }
   }
 }
+
+export default Balance;
 </script>
 
 <style lang="scss">

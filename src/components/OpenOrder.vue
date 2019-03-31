@@ -75,7 +75,7 @@ import CurrencyField from './CurrencyField.vue';
   components: { CurrencyField },
   props: ['isModalVisible'],
 })
-export default class OpenOrder extends Vue {
+class OpenOrder extends Vue {
   order = null;
   isLoading = false;
   isMaxLoading = false;
@@ -194,6 +194,8 @@ export default class OpenOrder extends Vue {
     this.init();
   }
 }
+
+export default OpenOrder;
 </script>
 
 <style lang="scss">

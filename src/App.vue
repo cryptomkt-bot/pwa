@@ -70,7 +70,7 @@ import Trades from './components/Trades.vue';
     Trades,
   },
 })
-export default class App extends Vue {
+class App extends Vue {
   isOpenOrderModalVisible = false;
   areTradersVisible = true;
 
@@ -84,6 +84,8 @@ export default class App extends Vue {
     return this.$store.getters.isLogged;
   }
 }
+
+export default App;
 </script>
 
 <style lang="scss">

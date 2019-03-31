@@ -19,7 +19,7 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   computed: mapGetters(['ask', 'bid']),
 })
-export default class Footer extends Vue {
+class Footer extends Vue {
   formatPrice(price) {
     return this.formatAmount(
       price,
@@ -28,6 +28,8 @@ export default class Footer extends Vue {
     );
   }
 }
+
+export default Footer;
 </script>
 
 <style scoped lang="scss">

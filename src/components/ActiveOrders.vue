@@ -52,7 +52,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component()
-export default class ActiveOrders extends Vue {
+class ActiveOrders extends Vue {
   isLoading = false;
 
   get orders() {
@@ -96,4 +96,6 @@ export default class ActiveOrders extends Vue {
     return `has-text-${type}`;
   }
 }
+
+export default ActiveOrders;
 </script>

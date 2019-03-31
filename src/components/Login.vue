@@ -91,7 +91,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import StorageHelper from '../helpers/StorageHelper';
 
 @Component()
-export default class Login extends Vue {
+class Login extends Vue {
   apiUrl = null;
   username = '';
   password = '';
@@ -141,6 +141,8 @@ export default class Login extends Vue {
     StorageHelper.set('lang', lang);
   }
 }
+
+export default Login;
 </script>
 
 <style scoped>

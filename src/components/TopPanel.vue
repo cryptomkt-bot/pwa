@@ -36,7 +36,7 @@ import { countries, markets } from '../constants';
 @Component({
   methods: mapActions(['changeMarket']),
 })
-export default class TopPanel extends Vue {
+class TopPanel extends Vue {
   countries = [];
   markets = [];
 
@@ -64,6 +64,8 @@ export default class TopPanel extends Vue {
     });
   }
 }
+
+export default TopPanel;
 </script>
 
 <style lang="scss">

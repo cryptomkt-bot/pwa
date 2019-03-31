@@ -46,7 +46,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component()
-export default class ExecutedOrders extends Vue {
+class ExecutedOrders extends Vue {
   isLoading = true;
   orders = [];
   intervalId = null;
@@ -86,6 +86,8 @@ export default class ExecutedOrders extends Vue {
     return `has-text-${type}`;
   }
 }
+
+export default ExecutedOrders;
 </script>
 
 <style scoped lang="scss">

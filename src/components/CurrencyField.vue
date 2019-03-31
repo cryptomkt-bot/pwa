@@ -63,7 +63,7 @@ import { Component, Vue } from 'vue-property-decorator';
     'isMaxLoading',
   ],
 })
-export default class CurrencyField extends Vue {
+class CurrencyField extends Vue {
   emitValue() {
     const value = Number(this.$refs.input.value);
     this.$emit('input', value);
@@ -73,4 +73,6 @@ export default class CurrencyField extends Vue {
     this.$emit('maxButtonClicked');
   }
 }
+
+export default CurrencyField;
 </script>

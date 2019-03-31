@@ -107,7 +107,7 @@ import { toDecimals } from '../utils';
     ...mapGetters(['activeOrdersTimestamp', 'spread', 'spreadPercentage']),
   },
 })
-export default class OrderBook extends Vue {
+class OrderBook extends Vue {
   mounted() {
     this.centerBook();
   }
@@ -144,6 +144,8 @@ export default class OrderBook extends Vue {
     target.scrollIntoView();
   }
 }
+
+export default OrderBook;
 </script>
 
 <style scoped lang="scss">

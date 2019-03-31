@@ -23,13 +23,15 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   props: ['title'],
 })
-export default class Section extends Vue {
+class Section extends Vue {
   isVisible = false;
 
   toggleVisibility() {
     this.isVisible = !this.isVisible;
   }
 }
+
+export default Section;
 </script>
 
 <style lang="scss">

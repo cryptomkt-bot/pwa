@@ -71,7 +71,7 @@ import CurrencyField from './CurrencyField.vue';
   components: { CurrencyField },
   props: ['isButtonVisible'],
 })
-export default class Buyer extends Vue {
+class Buyer extends Vue {
   buyer = null;
   remainingFiat = null;
   isModalVisible = false;
@@ -150,6 +150,8 @@ export default class Buyer extends Vue {
       });
   }
 }
+
+export default Buyer;
 </script>
 
 <style lang="scss">
