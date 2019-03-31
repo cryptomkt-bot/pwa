@@ -94,6 +94,14 @@ export default class App extends Vue {
   .tab-content {
     padding: 0 !important;
   }
+  // Remove dotted outline in Firefox
+  button::-moz-focus-inner {
+    border: 0;
+  }
+  select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+  }
 }
 #footer {
   position: fixed;
