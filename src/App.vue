@@ -109,12 +109,13 @@ export default App;
   position: fixed;
   bottom: 0;
   width: 100%;
+  z-index: 30;
 }
 .position-relative {
   position: relative;
 }
 .loading-overlay {
-  z-index: 30 !important;
+  z-index: 20;
 }
 .scale-enter-active,
 .scale-leave-active {
