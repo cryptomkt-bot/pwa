@@ -23,14 +23,15 @@
           />
 
           <!-- Fiat -->
-          <label for="fiat" class="label is-small">{{
-            $t('remainingFiat')
-          }}</label>
+          <label for="fiat" class="label is-small">
+            {{ $t('remainingFiat') }}
+          </label>
           <CurrencyField
             v-model="remainingFiat"
             :id="'amount'"
             :showMaxButton="true"
             :currency="currentMarket.quoteCurrency"
+            :isMaxLoading="isMaxLoading"
             @maxButtonClicked="setMaxFiat"
           />
 
@@ -75,6 +76,7 @@ export default class Buyer extends Vue {
   remainingFiat = null;
   isModalVisible = false;
   isLoading = true;
+  isMaxLoading = false;
 
   get maxPrice() {
     if (this.buyer === null || this.remainingAmount === 0) {
@@ -117,6 +119,7 @@ export default class Buyer extends Vue {
   }
 
   setMaxFiat() {
+    this.isMaxLoading = true;
     const marketCode = this.currentMarket.quoteCurrency.code;
     this.apiService.getBalance(marketCode).then(balance => {
       const grossBalance = Number(balance.balance);
@@ -124,6 +127,7 @@ export default class Buyer extends Vue {
       const remainingFiat = this.buyer.remaining_fiat + netBalance;
       // Make sure the amount isn't higher than the gross balance
       this.remainingFiat = Math.min(remainingFiat, grossBalance);
+      this.isMaxLoading = false;
     });
   }
 

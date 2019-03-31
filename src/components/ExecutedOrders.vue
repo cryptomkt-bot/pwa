@@ -1,11 +1,11 @@
 <template>
-  <div :class="{ 'loading-wrapper': isLoading }">
+  <div class="position-relative">
     <b-loading :active="isLoading" :is-full-page="false"></b-loading>
-    <span v-if="!isLoading && !orders.length" class="is-size-7"
-      >{{ $t('noOrders') }}.</span
-    >
+    <span v-if="!isLoading && !orders.length" class="is-size-7">
+      {{ $t('noOrders') }}.
+    </span>
     <table
-      v-if="!isLoading && orders.length"
+      v-if="isLoading || orders.length"
       class="table is-fullwidth is-marginless is-size-7"
     >
       <thead>

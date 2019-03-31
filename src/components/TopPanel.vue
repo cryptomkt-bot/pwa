@@ -8,8 +8,9 @@
             :key="market.code"
             :value="market"
             :selected="market.code === currentMarket.code"
-            >{{ market.code }}</option
           >
+            {{ market.code }}
+          </option>
         </optgroup>
       </select>
     </div>

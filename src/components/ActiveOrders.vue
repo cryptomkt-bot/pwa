@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <span v-if="!orders.length" class="is-size-7">
+  <div class="position-relative">
+    <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+    <span v-if="!isLoading && !orders.length" class="is-size-7">
       {{ $t('noOpenOrders') }}
     </span>
     <table
@@ -52,6 +53,8 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component()
 export default class ActiveOrders extends Vue {
+  isLoading = false;
+
   get orders() {
     return this.$store.state.activeOrders;
   }
@@ -66,15 +69,20 @@ export default class ActiveOrders extends Vue {
   }
 
   doCancelOrder(order) {
+    this.isLoading = true;
     this.apiService
       .deleteOrder(order.id)
       .then(() => {
+        const filteredOrders = this.orders.filter(o => o.id !== order.id);
+        this.$store.commit('setActiveOrders', filteredOrders);
+        this.isLoading = false;
         this.$toast.open({
           message: this.$t('orderCancelled'),
           type: 'is-info',
         });
       })
       .catch(() => {
+        this.isLoading = false;
         this.$snackbar.open({
           message: this.$t('errorMsg'),
           type: 'is-danger',

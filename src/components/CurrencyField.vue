@@ -1,14 +1,19 @@
 <template>
   <div class="field has-addons">
     <div v-if="showMaxButton && !currency.prefix" class="control">
-      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">
+      <button
+        @click="setMaxAmount"
+        :disabled="disabled || isMaxLoading"
+        :class="{ 'is-loading': isMaxLoading }"
+        class="button is-info"
+      >
         {{ $t('max') }}
       </button>
     </div>
     <div v-else-if="currency.prefix" class="control">
-      <span :disabled="disabled" class="button is-static">{{
-        currency.prefix
-      }}</span>
+      <span :disabled="disabled" class="button is-static">
+        {{ currency.prefix }}
+      </span>
     </div>
     <div class="control">
       <input
@@ -26,12 +31,17 @@
       />
     </div>
     <div v-if="currency.postfix" class="control">
-      <span :disabled="disabled" class="button is-static">{{
-        currency.postfix
-      }}</span>
+      <span :disabled="disabled" class="button is-static">
+        {{ currency.postfix }}
+      </span>
     </div>
     <div v-else-if="showMaxButton" class="control">
-      <button @click="setMaxAmount" :disabled="disabled" class="button is-info">
+      <button
+        @click="setMaxAmount"
+        :disabled="disabled || isMaxLoading"
+        :class="{ 'is-loading': isMaxLoading }"
+        class="button is-info"
+      >
         {{ $t('max') }}
       </button>
     </div>
@@ -50,6 +60,7 @@ import { Component, Vue } from 'vue-property-decorator';
     'showMaxButton',
     'placeholder',
     'disabled',
+    'isMaxLoading',
   ],
 })
 export default class CurrencyField extends Vue {

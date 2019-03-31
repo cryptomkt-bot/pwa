@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'loading-wrapper': isLoadingBooks }">
-    <b-loading :active="isLoadingBooks" :is-full-page="false"></b-loading>
+  <div class="position-relative">
+    <b-loading :active="isLoading" :is-full-page="false"></b-loading>
     <table
       id="order-book-table"
       class="table is-fullwidth is-size-7 is-marginless"
@@ -103,7 +103,7 @@ import { toDecimals } from '../utils';
 
 @Component({
   computed: {
-    ...mapState(['buyBook', 'sellBook', 'isLoadingBooks', 'updatedAt']),
+    ...mapState(['buyBook', 'sellBook', 'isLoading', 'updatedAt']),
     ...mapGetters(['activeOrdersTimestamp', 'spread', 'spreadPercentage']),
   },
 })
@@ -116,9 +116,9 @@ export default class OrderBook extends Vue {
     }%)`;
   }
 
-  @Watch('isLoadingBooks')
+  @Watch('isLoading')
   onLoadingFinished() {
-    if (this.isLoadingBooks) {
+    if (this.isLoading) {
       // Still loading, do nothing.
       return;
     }

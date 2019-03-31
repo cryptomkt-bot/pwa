@@ -100,11 +100,11 @@ export default class App extends Vue {
   bottom: 0;
   width: 100%;
 }
-.loading-wrapper {
+.position-relative {
   position: relative;
-  .loading-overlay {
-    z-index: 0 !important;
-  }
+}
+.loading-overlay {
+  z-index: 9999 !important;
 }
 .scale-enter-active,
 .scale-leave-active {

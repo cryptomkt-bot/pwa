@@ -21,6 +21,7 @@
             :currency="currentMarket.baseCurrency"
             :showMaxButton="true"
             :step="currentMarket.baseCurrency.step"
+            :isMaxLoading="isMaxLoading"
             @maxButtonClicked="setMaxAmount"
           />
 
@@ -84,6 +85,7 @@ export default class Seller extends Vue {
   remainingAmount = 0;
   isModalVisible = false;
   isLoading = true;
+  isMaxLoading = false;
 
   get minSpread() {
     return this.seller ? this.seller.min_spread : null;
@@ -114,6 +116,7 @@ export default class Seller extends Vue {
   }
 
   setMaxAmount() {
+    this.isMaxLoading = true;
     const marketCode = this.currentMarket.baseCurrency.code;
     this.apiService.getBalance(marketCode).then(balance => {
       const grossBalance = Number(balance.balance);
@@ -121,6 +124,7 @@ export default class Seller extends Vue {
       const remainingAmount = this.seller.remaining_amount + netBalance;
       // Make sure the amount isn't higher than the gross balance
       this.remainingAmount = Math.min(remainingAmount, grossBalance);
+      this.isMaxLoading = false;
     });
   }
 

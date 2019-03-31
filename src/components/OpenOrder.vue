@@ -39,6 +39,7 @@
           :showMaxButton="true"
           :currency="currentMarket.baseCurrency"
           :step="currentMarket.baseCurrency.step"
+          :isMaxLoading="isMaxLoading"
           @maxButtonClicked="setMaxAmount"
         />
 
@@ -77,6 +78,7 @@ import CurrencyField from './CurrencyField.vue';
 export default class OpenOrder extends Vue {
   order = null;
   isLoading = false;
+  isMaxLoading = false;
 
   created() {
     this.init();
@@ -109,6 +111,7 @@ export default class OpenOrder extends Vue {
   }
 
   setMaxAmount() {
+    this.isMaxLoading = true;
     let currency;
     if (this.order.type === 'sell') {
       currency = this.currentMarket.baseCurrency;
@@ -125,6 +128,7 @@ export default class OpenOrder extends Vue {
         }
       }
       this.order.amount = amount;
+      this.isMaxLoading = false;
     });
   }
 
