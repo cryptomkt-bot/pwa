@@ -3,9 +3,9 @@
     <div @click="toggleVisibility" class="section-name has-text-centered">
       <span>{{ title }}</span>
       <b-icon
-        pack="fa"
         :icon="isVisible ? 'minus' : 'plus'"
         :size="'is-size-7'"
+        :custom-size="'mdi-18px'"
       ></b-icon>
     </div>
     <!-- Default (v-if) -->

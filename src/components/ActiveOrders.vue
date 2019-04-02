@@ -39,7 +39,7 @@
           </td>
           <td>
             <span @click="cancelOrder(order)" class="icon is-small">
-              <i class="fa fa-times"></i>
+              <i class="mdi mdi-close-circle"></i>
             </span>
           </td>
         </tr>

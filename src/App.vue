@@ -128,4 +128,5 @@ export default App;
 
 @import '~bulma';
 @import '~buefy/src/scss/buefy';
+@import '~@mdi/font/css/materialdesignicons.css';
 </style>

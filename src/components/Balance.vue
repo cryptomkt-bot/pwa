@@ -3,8 +3,8 @@
     <div class="button is-primary" @click="toggleVisibility">
       <span class="icon is-size-7">
         <i
-          class="fa"
-          :class="[isVisible ? 'fa-chevron-down' : 'fa-chevron-up']"
+          class="mdi mdi-18px"
+          :class="[isVisible ? 'mdi-chevron-down' : 'mdi-chevron-up']"
         ></i>
       </span>
       <span id="balance-label" class="has-text-weight-light">

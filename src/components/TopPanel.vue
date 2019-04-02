@@ -22,7 +22,7 @@
       <span class="icon">+</span> {{ $t('openOrder') }}
     </button>
     <button id="logout-button" @click="logout" class="button">
-      <span class="icon has-text-danger"><i class="fa fa-power-off"></i></span>
+      <span class="icon has-text-danger"><i class="mdi mdi-power"></i></span>
     </button>
   </div>
 </template>
