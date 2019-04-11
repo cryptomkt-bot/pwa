@@ -54,7 +54,7 @@
         v-show="isButtonVisible"
         id="buyer-button"
         @click="isModalVisible = true"
-        class="button is-rounded has-text-weight-bold"
+        class="button is-rounded has-text-weight-bold z-depth-2"
       >
         {{ $t('buyer')[0] }}
       </div>
@@ -163,13 +163,12 @@ $green: #4caf50;
 #buyer-button {
   background-color: $green;
   color: #fff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   border: none;
   width: 48px;
   height: 48px;
   position: fixed;
-  bottom: 40px;
-  right: 12px;
+  bottom: 20px;
+  right: 15px;
   z-index: 1;
 }
 </style>

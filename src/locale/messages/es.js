@@ -13,6 +13,7 @@ export default {
   buyOrder: 'Orden de compra',
   cancel: 'Cancelar',
   cancelOrderConfirm: '¿Desea cancelar la orden {id}?',
+  changeLanguage: 'Cambiar idioma',
   confirmBuyOrder: '¿Desea comprar {amount} a {price}?',
   confirmSellOrder: '¿Desea vender {amount} a {price}?',
   date: 'Fecha',
@@ -24,6 +25,7 @@ export default {
   id: 'ID',
   latestTransactions: 'Últimas transacciones',
   login: 'Iniciar sesión',
+  logout: 'Cerrar sesión',
   logoutConfirm: '¿Desea salir?',
   max: 'Max',
   maxPrice: 'Precio máximo',
@@ -42,6 +44,7 @@ export default {
   seller: 'Vendedor',
   sellOrder: 'Orden de venta',
   sessionExpired: 'Sesión expirada',
+  showBalance: 'Ver balance',
   spending: 'Gastando {amount}',
   spread: 'Spread',
   totalBalance: 'Saldo total',
@@ -50,7 +53,7 @@ export default {
   username: 'Usuario',
   wrongUsernameOrPassword: 'Usuario o contraseña incorrecta',
   yes: 'Sí',
-  language: {
+  languages: {
     en: 'Inglés',
     es: 'Español',
   },

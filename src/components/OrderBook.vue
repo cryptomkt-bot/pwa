@@ -1,5 +1,5 @@
 <template>
-  <div class="position-relative">
+  <div :class="{ 'position-relative': isLoading }">
     <b-loading :active="isLoading" :is-full-page="false"></b-loading>
     <table
       id="order-book-table"
@@ -133,12 +133,13 @@ class OrderBook extends Vue {
   }
 
   centerBook() {
-    if (this.sellBook.length < 4) {
+    const visibleOrders = 5;
+    if (this.sellBook.length < visibleOrders) {
       // Not enough rows
       return;
     }
     let target = document.getElementById('spread-row');
-    for (let i = 0; i < 4; i += 1) {
+    for (let i = 0; i < visibleOrders; i += 1) {
       target = target.previousElementSibling;
     }
     target.scrollIntoView();
@@ -155,7 +156,7 @@ export default OrderBook;
   }
   tbody {
     display: block;
-    height: 270px;
+    height: 330px;
     overflow: auto;
   }
   thead,

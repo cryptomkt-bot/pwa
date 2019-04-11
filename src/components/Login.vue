@@ -132,7 +132,7 @@ class Login extends Vue {
   }
 
   langName(lang) {
-    const langKey = `language.${lang}`;
+    const langKey = `languages.${lang}`;
     return this.$t(langKey);
   }
 
