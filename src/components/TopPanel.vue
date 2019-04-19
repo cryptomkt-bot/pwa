@@ -1,11 +1,7 @@
 <template>
   <div id="top-panel">
     <div id="market-select" class="select">
-      <select
-        v-model="currentMarket"
-        title="Select market"
-        class="has-text-white-ter"
-      >
+      <select v-model="currentMarket" title="Select market">
         <optgroup v-for="country in countries" :key="country" :label="country">
           <option
             v-for="market in markets[country]"
@@ -96,6 +92,9 @@ export default TopPanel;
     height: $panelHeight;
     width: 100%;
     box-shadow: none !important;
+    // Workaround to remove outline in Firefox
+    color: transparent;
+    text-shadow: 0 0 0 #fff;
   }
 }
 .price {
