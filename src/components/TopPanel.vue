@@ -14,27 +14,29 @@
         </optgroup>
       </select>
     </div>
-    <button
-      id="open-order"
-      @click="$emit('openOrderModalOpened')"
-      class="button is-success is-size-6"
-    >
-      <span class="icon">+</span> {{ $t('openOrder') }}
-    </button>
-    <button id="logout-button" @click="logout" class="button">
-      <span class="icon has-text-danger"><i class="fa fa-power-off"></i></span>
-    </button>
+    <div class="price has-text-centered">
+      <div class="price-label has-text-weight-light">{{ $t('bidPrice') }}</div>
+      <div>{{ formatPrice(bid) }}</div>
+    </div>
+    <div class="price has-text-centered">
+      <div class="price-label has-text-weight-light">{{ $t('askPrice') }}</div>
+      <div>{{ formatPrice(ask) }}</div>
+    </div>
+    <MenuDropdown />
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
+import { mapActions, mapGetters } from 'vuex';
 
+import MenuDropdown from './MenuDropdown';
 import { countries, markets } from '../constants';
 
 @Component({
   methods: mapActions(['changeMarket']),
+  computed: mapGetters(['ask', 'bid']),
+  components: { MenuDropdown },
 })
 class TopPanel extends Vue {
   countries = [];
@@ -55,59 +57,54 @@ class TopPanel extends Vue {
     this.apiService.startBookFetch();
   }
 
-  logout() {
-    this.confirm({
-      message: this.$t('logoutConfirm'),
-      onConfirm: () => {
-        this.apiService.logout();
-      },
-    });
+  formatPrice(price) {
+    return this.formatAmount(
+      price,
+      this.currentMarket.quoteCurrency,
+      this.currentMarket.decimals
+    );
   }
 }
 
 export default TopPanel;
 </script>
 
-<style lang="scss">
-$cryptoMktColor: #677ae4;
-$panelHeight: 50px;
+<style scoped lang="scss">
+@import '../constants';
 
 #top-panel {
   width: 100%;
-  height: 50px;
+  height: $panelHeight;
   position: fixed;
   top: 0;
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
-  .button {
-    border-radius: 0;
-    height: $panelHeight;
-    box-shadow: none !important;
-  }
-}
-#open-order,
-#logout-button {
-  float: left;
-  display: inline-block;
+  background-color: $cryptoMktColor;
+  color: #fff;
 }
 #market-select {
   float: left;
   width: 35%;
   height: $panelHeight;
   select {
+    font-size: 1.1rem;
+    background-color: $cryptoMktColor;
     border: 0;
     border-radius: 0;
     height: $panelHeight;
     width: 100%;
     box-shadow: none !important;
+    // Workaround to remove outline in Firefox
+    color: transparent;
+    text-shadow: 0 0 0 #fff;
   }
 }
-#open-order {
-  font-size: 0.9rem;
-  width: 50%;
+.price {
+  display: inline-block;
+  margin-top: 16px;
+  margin-left: 16px;
+  font-size: 1.2rem;
 }
-#logout-button {
-  width: 15%;
-  border: 0;
-  color: #fff;
+.price-label {
+  font-size: 0.7rem;
+  line-height: 0.2rem;
 }
 </style>

@@ -16,6 +16,9 @@ export default new Vuex.Store({
     updatedAt: null,
     token: null,
     isLoading: true,
+    isBalanceModalVisible: false,
+    isLanguageModalVisible: false,
+    isOpenOrderModalVisible: false,
   },
   getters: {
     ask: state => {

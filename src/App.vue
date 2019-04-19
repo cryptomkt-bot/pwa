@@ -6,11 +6,10 @@
 
       <!-- Main app -->
       <div v-else>
-        <OpenOrder
-          :isModalVisible="isOpenOrderModalVisible"
-          @close="isOpenOrderModalVisible = false"
-        />
-        <TopPanel @openOrderModalOpened="isOpenOrderModalVisible = true" />
+        <BalanceModal />
+        <LanguageSelectorModal />
+        <OpenOrderModal />
+        <TopPanel />
         <!-- Order book -->
         <OrderBook />
         <!-- Trades -->
@@ -20,19 +19,17 @@
             <b-tab-item :label="$t('myOrders')"><ExecutedOrders /></b-tab-item>
           </b-tabs>
         </Section>
+
         <!-- Active orders -->
         <Section :title="$t('activeOrders')">
           <template slot="show">
             <ActiveOrders />
           </template>
         </Section>
+
         <!-- Footer -->
-        <div id="footer">
-          <Balance @visibilityChanged="areTradersVisible = !$event" />
-          <Seller :isButtonVisible="areTradersVisible" />
-          <Buyer :isButtonVisible="areTradersVisible" />
-          <Footer />
-        </div>
+        <Seller :isButtonVisible="areTradersVisible" />
+        <Buyer :isButtonVisible="areTradersVisible" />
       </div>
     </div>
   </div>
@@ -41,28 +38,30 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 
-import ActiveOrders from './components/ActiveOrders.vue';
-import Balance from './components/Balance.vue';
-import Buyer from './components/Buyer.vue';
-import ExecutedOrders from './components/ExecutedOrders.vue';
-import Footer from './components/Footer.vue';
-import Login from './components/Login.vue';
-import OpenOrder from './components/OpenOrder.vue';
-import OrderBook from './components/OrderBook.vue';
-import Section from './components/Section.vue';
-import Seller from './components/Seller.vue';
-import TopPanel from './components/TopPanel.vue';
-import Trades from './components/Trades.vue';
+import ActiveOrders from './components/ActiveOrders';
+import BalanceModal from './components/BalanceModal';
+import Buyer from './components/Buyer';
+import ExecutedOrders from './components/ExecutedOrders';
+import Footer from './components/Footer';
+import LanguageSelectorModal from './components/LanguageSelectorModal';
+import Login from './components/Login';
+import OpenOrderModal from './components/OpenOrderModal';
+import OrderBook from './components/OrderBook';
+import Section from './components/Section';
+import Seller from './components/Seller';
+import TopPanel from './components/TopPanel';
+import Trades from './components/Trades';
 
 @Component({
   components: {
     ActiveOrders,
-    Balance,
+    BalanceModal,
     Buyer,
     ExecutedOrders,
     Footer,
+    LanguageSelectorModal,
     Login,
-    OpenOrder,
+    OpenOrderModal,
     OrderBook,
     Section,
     Seller,
@@ -89,27 +88,17 @@ export default App;
 </script>
 
 <style lang="scss">
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
+@import '~@mdi/font/css/materialdesignicons.css';
+
 #wrapper {
-  margin-top: 60px;
-  margin-bottom: 110px;
+  margin-top: 75px;
+  margin-bottom: 75px;
   -webkit-tap-highlight-color: transparent;
   .tab-content {
     padding: 0 !important;
   }
-  // Remove dotted outline in Firefox
-  button::-moz-focus-inner {
-    border: 0;
-  }
-  select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #000;
-  }
-}
-#footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 30;
 }
 .position-relative {
   position: relative;
@@ -126,6 +115,37 @@ export default App;
   transform: scale(0);
 }
 
-@import '~bulma';
-@import '~buefy/src/scss/buefy';
+.select::after {
+  border-color: rgba(255, 255, 255, 0.8) !important;
+}
+// Remove dotted outline in Firefox
+button::-moz-focus-inner {
+  border: 0;
+}
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+/* Shadows */
+.z-depth-1 {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.z-depth-2 {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12),
+    0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+.z-depth-3 {
+  box-shadow: 0 8px 17px 2px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+}
+.z-depth-4 {
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14),
+    0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -7px rgba(0, 0, 0, 0.2);
+}
+.z-depth-5 {
+  box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14),
+    0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2);
+}
 </style>

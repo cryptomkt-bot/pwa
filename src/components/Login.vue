@@ -78,7 +78,7 @@
       </div>
     </div>
     <span v-show="isSignatureVisible" class="copyright is-size-7">
-      {{ $t('builtWithLoveBy[0]') }} <i class="fa fa-heart"></i>
+      {{ $t('builtWithLoveBy[0]') }} <i class="mdi mdi-heart"></i>
       {{ $t('builtWithLoveBy[1]') }}
       <a target="_blank" href="https://github.com/tanoabeleyra">tanoabeleyra</a>
     </span>
@@ -132,7 +132,7 @@ class Login extends Vue {
   }
 
   langName(lang) {
-    const langKey = `language.${lang}`;
+    const langKey = `languages.${lang}`;
     return this.$t(langKey);
   }
 
@@ -157,7 +157,7 @@ export default Login;
   bottom: 12px;
   right: 12px;
 }
-.fa-heart {
+.mdi-heart {
   color: #ee0000;
 }
 </style>

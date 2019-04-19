@@ -1,6 +1,6 @@
 <template>
   <!-- Modal -->
-  <b-modal :active="isModalVisible" :canCancel="['x']" :onCancel="close">
+  <b-modal :active="isVisible" :canCancel="['x']" :onCancel="close">
     <div
       id="open-order-card"
       class="card"
@@ -69,13 +69,12 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { capitalize } from '../utils';
-import CurrencyField from './CurrencyField.vue';
+import CurrencyField from './CurrencyField';
 
 @Component({
   components: { CurrencyField },
-  props: ['isModalVisible'],
 })
-class OpenOrder extends Vue {
+class OpenOrderModal extends Vue {
   order = null;
   isLoading = false;
   isMaxLoading = false;
@@ -90,6 +89,14 @@ class OpenOrder extends Vue {
       price: null,
       amount: null,
     };
+  }
+
+  get isVisible() {
+    return this.$store.state.isOpenOrderModalVisible;
+  }
+
+  set isVisible(value) {
+    this.$store.state.isOpenOrderModalVisible = value;
   }
 
   get isOrderValid() {
@@ -190,15 +197,15 @@ class OpenOrder extends Vue {
   }
 
   close() {
-    this.$emit('close');
+    this.isVisible = false;
     this.init();
   }
 }
 
-export default OpenOrder;
+export default OpenOrderModal;
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 #open-order-card {
   border-top: 6px solid;
   border-radius: 4px;

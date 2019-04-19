@@ -54,7 +54,7 @@
         v-show="isButtonVisible"
         id="buyer-button"
         @click="isModalVisible = true"
-        class="button is-rounded has-text-weight-bold"
+        class="button is-rounded has-text-weight-bold z-depth-2"
       >
         {{ $t('buyer')[0] }}
       </div>
@@ -65,7 +65,7 @@
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
-import CurrencyField from './CurrencyField.vue';
+import CurrencyField from './CurrencyField';
 
 @Component({
   components: { CurrencyField },
@@ -154,8 +154,9 @@ class Buyer extends Vue {
 export default Buyer;
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 $green: #4caf50;
+
 #buyer-card {
   border-top: 6px solid $green;
   border-radius: 4px;
@@ -163,13 +164,12 @@ $green: #4caf50;
 #buyer-button {
   background-color: $green;
   color: #fff;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   border: none;
   width: 48px;
   height: 48px;
   position: fixed;
-  bottom: 40px;
-  right: 12px;
+  bottom: 20px;
+  right: 15px;
   z-index: 1;
 }
 </style>

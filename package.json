@@ -1,6 +1,6 @@
 {
   "name": "cryptomkt-bot-webapp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A web app for a trading bot running on CryptoMarket",
   "author": "Tano Abeleyra",
   "private": true,
@@ -16,8 +16,10 @@
     }
   },
   "dependencies": {
+    "@mdi/font": "^3.5.95",
     "axios": "^0.18.0",
     "buefy": "^0.6.7",
+    "v-click-outside": "^2.1.1",
     "vue": "^2.6.10",
     "vue-i18n": "^8.10.0",
     "vue-inject": "^2.1.1",
