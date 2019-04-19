@@ -38,19 +38,19 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 
-import ActiveOrders from './components/ActiveOrders.vue';
-import BalanceModal from './components/BalanceModal.vue';
-import Buyer from './components/Buyer.vue';
-import ExecutedOrders from './components/ExecutedOrders.vue';
-import Footer from './components/Footer.vue';
+import ActiveOrders from './components/ActiveOrders';
+import BalanceModal from './components/BalanceModal';
+import Buyer from './components/Buyer';
+import ExecutedOrders from './components/ExecutedOrders';
+import Footer from './components/Footer';
 import LanguageSelectorModal from './components/LanguageSelectorModal';
-import Login from './components/Login.vue';
-import OpenOrderModal from './components/OpenOrderModal.vue';
-import OrderBook from './components/OrderBook.vue';
-import Section from './components/Section.vue';
-import Seller from './components/Seller.vue';
-import TopPanel from './components/TopPanel.vue';
-import Trades from './components/Trades.vue';
+import Login from './components/Login';
+import OpenOrderModal from './components/OpenOrderModal';
+import OrderBook from './components/OrderBook';
+import Section from './components/Section';
+import Seller from './components/Seller';
+import TopPanel from './components/TopPanel';
+import Trades from './components/Trades';
 
 @Component({
   components: {

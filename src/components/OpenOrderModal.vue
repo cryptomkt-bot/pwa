@@ -69,7 +69,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { capitalize } from '../utils';
-import CurrencyField from './CurrencyField.vue';
+import CurrencyField from './CurrencyField';
 
 @Component({
   components: { CurrencyField },

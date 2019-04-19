@@ -74,7 +74,7 @@
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
-import CurrencyField from './CurrencyField.vue';
+import CurrencyField from './CurrencyField';
 
 @Component({
   components: { CurrencyField },
