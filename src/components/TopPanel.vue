@@ -73,9 +73,8 @@ class TopPanel extends Vue {
 export default TopPanel;
 </script>
 
-<style lang="scss">
-$cryptoMktColor: #677ae4;
-$panelHeight: 60px;
+<style scoped lang="scss">
+@import '../constants';
 
 #top-panel {
   width: 100%;
@@ -84,11 +83,6 @@ $panelHeight: 60px;
   top: 0;
   background-color: $cryptoMktColor;
   color: #fff;
-  .button {
-    border-radius: 0;
-    height: $panelHeight;
-    box-shadow: none !important;
-  }
 }
 #market-select {
   float: left;

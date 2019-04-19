@@ -205,7 +205,7 @@ class OpenOrderModal extends Vue {
 export default OpenOrderModal;
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 #open-order-card {
   border-top: 6px solid;
   border-radius: 4px;

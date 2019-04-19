@@ -78,13 +78,16 @@ class MenuDropdown extends Vue {
 export default MenuDropdown;
 </script>
 
-<style lang="scss" scoped>
-$cryptoMktColor: #677ae4;
+<style scoped lang="scss">
+@import '../constants';
 
 .dropdown {
   margin-right: 4px;
   .button {
     background-color: $cryptoMktColor;
+    border-radius: 0;
+    height: $panelHeight;
+    box-shadow: none !important;
   }
 }
 .dots-button {

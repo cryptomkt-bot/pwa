@@ -151,8 +151,9 @@ class Seller extends Vue {
 export default Seller;
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 $red: #f44336;
+
 #seller-card {
   border-top: 6px solid $red;
   border-radius: 4px;

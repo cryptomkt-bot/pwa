@@ -99,14 +99,6 @@ export default App;
   .tab-content {
     padding: 0 !important;
   }
-  // Remove dotted outline in Firefox
-  button::-moz-focus-inner {
-    border: 0;
-  }
-  select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #000;
-  }
 }
 .position-relative {
   position: relative;
@@ -125,6 +117,14 @@ export default App;
 
 .select::after {
   border-color: rgba(255, 255, 255, 0.8) !important;
+}
+// Remove dotted outline in Firefox
+button::-moz-focus-inner {
+  border: 0;
+}
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
 }
 
 /* Shadows */

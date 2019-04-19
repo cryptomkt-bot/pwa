@@ -154,8 +154,9 @@ class Buyer extends Vue {
 export default Buyer;
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 $green: #4caf50;
+
 #buyer-card {
   border-top: 6px solid $green;
   border-radius: 4px;
