@@ -5,6 +5,7 @@
         <button
           v-for="lang in langs"
           @click="onLanguageSelected(lang)"
+          :key="lang"
           :class="{ 'is-primary': lang === currentLang }"
           class="language button is-outlined"
         >
