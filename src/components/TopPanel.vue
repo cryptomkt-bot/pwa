@@ -84,6 +84,9 @@ export default TopPanel;
   float: left;
   width: 35%;
   height: $panelHeight;
+  &::after {
+    border-color: rgba(255, 255, 255, 0.8) !important;
+  }
   select {
     font-size: 1.1rem;
     background-color: $cryptoMktColor;
