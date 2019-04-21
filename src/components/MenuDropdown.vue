@@ -11,18 +11,23 @@
     </button>
     <div class="dropdown-menu">
       <div class="dropdown-content z-depth-3">
-        <a @click="showOpenOrderModal" class="dropdown-item">
-          {{ $t('openOrder') }}
-        </a>
-        <a @click="showBalanceModal" class="dropdown-item">
-          {{ $t('showBalance') }}
-        </a>
-        <hr class="dropdown-divider" />
+        <div v-if="isAuthenticated">
+          <a @click="showOpenOrderModal" class="dropdown-item">
+            {{ $t('openOrder') }}
+          </a>
+          <a @click="showBalanceModal" class="dropdown-item">
+            {{ $t('showBalance') }}
+          </a>
+          <hr class="dropdown-divider" />
+        </div>
         <a @click="showLanguageModal" class="dropdown-item">
           {{ $t('changeLanguage') }}
         </a>
-        <a @click="logout" class="dropdown-item">
+        <a v-if="isAuthenticated" @click="logout" class="dropdown-item">
           {{ $t('logout') }}
+        </a>
+        <a v-else @click="showLoginModal" class="dropdown-item">
+          {{ $t('login') }}
         </a>
       </div>
     </div>
@@ -31,15 +36,17 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import vClickOutside from 'v-click-outside';
 
 @Component({
   methods: mapMutations([
     'setBalanceModalVisibility',
     'setLanguageModalVisibility',
+    'setLoginModalVisibility',
     'setOpenOrderModalVisibility',
   ]),
+  computed: mapGetters(['isAuthenticated']),
   directives: {
     clickOutside: vClickOutside.directive,
   },
@@ -64,6 +71,11 @@ class MenuDropdown extends Vue {
   showOpenOrderModal() {
     this.hide();
     this.setOpenOrderModalVisibility(true);
+  }
+
+  showLoginModal() {
+    this.hide();
+    this.setLoginModalVisibility(true);
   }
 
   hide() {

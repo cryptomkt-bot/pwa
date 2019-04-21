@@ -1,33 +1,41 @@
 <template>
   <div id="app" class="is-unselectable">
-    <div id="wrapper">
-      <!-- Login page -->
-      <Login v-if="!isLogged" />
+    <div id="wrapper" :class="{ 'remove-margin-bottom': !isAuthenticated }">
+      <!-- Modals -->
+      <BalanceModal v-if="isAuthenticated" />
+      <LanguageSelectorModal />
+      <LoginModal v-if="!isAuthenticated" />
+      <OpenOrderModal v-if="isAuthenticated" />
 
-      <!-- Main app -->
-      <div v-else>
-        <BalanceModal />
-        <LanguageSelectorModal />
-        <OpenOrderModal />
-        <TopPanel />
-        <!-- Order book -->
-        <OrderBook />
-        <!-- Trades -->
-        <Section :title="$t('latestTransactions')">
-          <b-tabs expanded position="is-centered" class="is-marginless">
-            <b-tab-item :label="$t('allOrders')"><Trades /></b-tab-item>
-            <b-tab-item :label="$t('myOrders')"><ExecutedOrders /></b-tab-item>
-          </b-tabs>
-        </Section>
+      <!-- Top panel -->
+      <TopPanel />
 
-        <!-- Active orders -->
-        <Section :title="$t('activeOrders')">
-          <template slot="show">
-            <ActiveOrders />
-          </template>
-        </Section>
+      <!-- Order book -->
+      <OrderBook />
 
-        <!-- Footer -->
+      <!-- Trades -->
+      <Section :title="$t('latestTransactions')">
+        <b-tabs
+          v-if="isAuthenticated"
+          expanded
+          position="is-centered"
+          class="is-marginless"
+        >
+          <b-tab-item :label="$t('allOrders')"><Trades /></b-tab-item>
+          <b-tab-item :label="$t('myOrders')"><ExecutedOrders /></b-tab-item>
+        </b-tabs>
+        <Trades v-else />
+      </Section>
+
+      <!-- Active orders -->
+      <Section v-if="isAuthenticated" :title="$t('activeOrders')">
+        <template slot="show">
+          <ActiveOrders />
+        </template>
+      </Section>
+
+      <!-- Footer -->
+      <div v-if="isAuthenticated">
         <Seller :isButtonVisible="areTradersVisible" />
         <Buyer :isButtonVisible="areTradersVisible" />
       </div>
@@ -44,7 +52,7 @@ import Buyer from './components/Buyer';
 import ExecutedOrders from './components/ExecutedOrders';
 import Footer from './components/Footer';
 import LanguageSelectorModal from './components/LanguageSelectorModal';
-import Login from './components/Login';
+import LoginModal from './components/LoginModal';
 import OpenOrderModal from './components/OpenOrderModal';
 import OrderBook from './components/OrderBook';
 import Section from './components/Section';
@@ -60,7 +68,7 @@ import Trades from './components/Trades';
     ExecutedOrders,
     Footer,
     LanguageSelectorModal,
-    Login,
+    LoginModal,
     OpenOrderModal,
     OrderBook,
     Section,
@@ -73,14 +81,8 @@ class App extends Vue {
   isOpenOrderModalVisible = false;
   areTradersVisible = true;
 
-  created() {
-    if (this.isLogged) {
-      this.apiService.startBookFetch();
-    }
-  }
-
-  get isLogged() {
-    return this.$store.getters.isLogged;
+  get isAuthenticated() {
+    return this.$store.getters.isAuthenticated;
   }
 }
 
@@ -98,6 +100,9 @@ export default App;
   -webkit-tap-highlight-color: transparent;
   .tab-content {
     padding: 0 !important;
+  }
+  &.remove-margin-bottom {
+    margin-bottom: 0 !important;
   }
 }
 .position-relative {

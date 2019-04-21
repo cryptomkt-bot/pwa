@@ -18,6 +18,7 @@ export default new Vuex.Store({
     isLoading: true,
     isBalanceModalVisible: false,
     isLanguageModalVisible: false,
+    isLoginModalVisible: false,
     isOpenOrderModalVisible: false,
   },
   getters: {
@@ -41,9 +42,18 @@ export default new Vuex.Store({
     activeOrdersTimestamp: state => {
       return state.activeOrders.map(order => order.created_at);
     },
-    isLogged: state => state.token !== null,
+    isAuthenticated: state => state.token !== null,
   },
   actions: {
+    login({ commit, state }, token) {
+      state.isLoading = true;
+      commit('setToken', token);
+    },
+    logout({ commit, state }) {
+      state.isLoading = true;
+      commit('setToken', null);
+      commit('setActiveOrders', []);
+    },
     changeMarket({ commit, state }, market) {
       state.isLoading = true;
       commit('emptyBooks');
@@ -76,14 +86,14 @@ export default new Vuex.Store({
     setLanguageModalVisibility(state, isVisible) {
       state.isLanguageModalVisible = isVisible;
     },
+    setLoginModalVisibility(state, isVisible) {
+      state.isLoginModalVisible = isVisible;
+    },
     setOpenOrderModalVisibility(state, isVisible) {
       state.isOpenOrderModalVisible = isVisible;
     },
     setToken(state, token) {
       state.token = token;
-    },
-    logout(state) {
-      state.token = null;
     },
   },
 });

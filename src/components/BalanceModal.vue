@@ -71,7 +71,7 @@ class BalanceModal extends Vue {
   }
 
   @Watch('isVisible')
-  onContentVisibilityChanged(isVisible) {
+  onVisibilityChanged(isVisible) {
     if (isVisible === true) {
       this.getBalances();
     }
