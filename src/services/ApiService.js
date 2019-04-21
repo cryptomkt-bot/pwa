@@ -22,8 +22,6 @@ class ApiService {
     }
     this.baseUrl = apiUrl;
     this.token = token;
-    this.subscribe401();
-    this.subscribe401();
     store.commit('setToken', token);
   }
 
@@ -57,6 +55,7 @@ class ApiService {
     StorageHelper.remove('token');
     store.commit('logout');
     this.stopBookFetch();
+    this.unsubscribe401();
   }
 
   subscribe401() {
@@ -68,7 +67,6 @@ class ApiService {
           type: 'is-info',
           duration: 5000,
         });
-        this.unsubscribe401();
       }
       return Promise.reject(error);
     });
