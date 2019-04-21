@@ -70,6 +70,15 @@ export default new Vuex.Store({
       state.buyBook = [];
       state.sellBook = [];
     },
+    setBalanceModalVisibility(state, isVisible) {
+      state.isBalanceModalVisible = isVisible;
+    },
+    setLanguageModalVisibility(state, isVisible) {
+      state.isLanguageModalVisible = isVisible;
+    },
+    setOpenOrderModalVisibility(state, isVisible) {
+      state.isOpenOrderModalVisible = isVisible;
+    },
     setToken(state, token) {
       state.token = token;
     },

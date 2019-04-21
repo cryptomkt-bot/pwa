@@ -46,7 +46,7 @@ class BalanceModal extends Vue {
   }
 
   set isVisible(value) {
-    this.$store.state.isBalanceModalVisible = value;
+    this.$store.commit('setBalanceModalVisibility', value);
   }
 
   getBalances() {

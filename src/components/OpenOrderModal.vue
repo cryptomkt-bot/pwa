@@ -96,7 +96,7 @@ class OpenOrderModal extends Vue {
   }
 
   set isVisible(value) {
-    this.$store.state.isOpenOrderModalVisible = value;
+    this.$store.commit('setOpenOrderModalVisibility', value);
   }
 
   get isOrderValid() {

@@ -31,9 +31,15 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
+import { mapMutations } from 'vuex';
 import vClickOutside from 'v-click-outside';
 
 @Component({
+  methods: mapMutations([
+    'setBalanceModalVisibility',
+    'setLanguageModalVisibility',
+    'setOpenOrderModalVisibility',
+  ]),
   directives: {
     clickOutside: vClickOutside.directive,
   },
@@ -47,17 +53,17 @@ class MenuDropdown extends Vue {
 
   showBalanceModal() {
     this.hide();
-    this.$store.state.isBalanceModalVisible = true;
+    this.setBalanceModalVisibility(true);
   }
 
   showLanguageModal() {
     this.hide();
-    this.$store.state.isLanguageModalVisible = true;
+    this.setLanguageModalVisibility(true);
   }
 
   showOpenOrderModal() {
     this.hide();
-    this.$store.state.isOpenOrderModalVisible = true;
+    this.setOpenOrderModalVisibility(true);
   }
 
   hide() {
