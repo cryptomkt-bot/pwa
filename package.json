@@ -1,6 +1,6 @@
 {
   "name": "cryptomkt-bot-webapp",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A web app for a trading bot running on CryptoMarket",
   "author": "Tano Abeleyra",
   "private": true,
