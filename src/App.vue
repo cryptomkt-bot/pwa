@@ -115,9 +115,6 @@ export default App;
   transform: scale(0);
 }
 
-.select::after {
-  border-color: rgba(255, 255, 255, 0.8) !important;
-}
 // Remove dotted outline in Firefox
 button::-moz-focus-inner {
   border: 0;

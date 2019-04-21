@@ -170,6 +170,6 @@ $green: #4caf50;
   position: fixed;
   bottom: 20px;
   right: 15px;
-  z-index: 1;
+  z-index: 30;
 }
 </style>

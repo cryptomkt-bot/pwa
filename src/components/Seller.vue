@@ -170,6 +170,6 @@ $red: #f44336;
   position: fixed;
   bottom: 20px;
   left: 15px;
-  z-index: 1;
+  z-index: 30;
 }
 </style>
