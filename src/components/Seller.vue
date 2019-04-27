@@ -179,8 +179,8 @@ $red: #f44336;
   width: 48px;
   height: 48px;
   position: fixed;
-  bottom: 20px;
-  left: 15px;
+  bottom: 3%;
+  left: 4%;
   z-index: 30;
 }
 .card-footer-item {

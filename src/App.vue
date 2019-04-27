@@ -94,6 +94,10 @@ export default App;
 @import '~buefy/src/scss/buefy';
 @import '~@mdi/font/css/materialdesignicons.css';
 
+.modal-content {
+  max-width: 480px !important;
+}
+
 #wrapper {
   margin-top: 75px;
   margin-bottom: 75px;

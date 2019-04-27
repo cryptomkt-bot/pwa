@@ -179,8 +179,8 @@ $green: #4caf50;
   width: 48px;
   height: 48px;
   position: fixed;
-  bottom: 20px;
-  right: 15px;
+  bottom: 3%;
+  right: 4%;
   z-index: 30;
 }
 .card-footer-item {
