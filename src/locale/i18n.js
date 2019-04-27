@@ -7,6 +7,6 @@ import es from './messages/es';
 Vue.use(VueI18n);
 
 export default new VueI18n({
-  locale: StorageHelper.get('lang') || 'en',
+  locale: StorageHelper.get('lang') || 'es',
   messages: { en, es },
 });
