@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "xyz.appmaker.dawghl",
+      "package_name": "com.abeleyra.cryptobot",
       "sha256_cert_fingerprints": [
-        "C1:35:04:6C:F7:FC:B8:FA:9A:23:20:C8:D4:9E:22:2B:2D:46:67:DB:37:33:39:38:2C:95:9E:1C:1C:4C:17:A9"
+        "7D:DE:F5:76:2A:3D:09:3A:69:23:AB:49:2A:24:55:AE:AA:23:52:10:1E:21:BA:A7:E5:DE:40:2E:5F:95:48:14"
       ]
     }
   }
