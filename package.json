@@ -1,7 +1,7 @@
 {
-  "name": "cryptomkt-bot-webapp",
+  "name": "cryptomkt-bot-pwa",
   "version": "1.1.2",
-  "description": "A web app for a trading bot running on CryptoMarket",
+  "description": "A PWA for a trading bot running on CryptoMarket",
   "author": "Tano Abeleyra",
   "private": true,
   "scripts": {
