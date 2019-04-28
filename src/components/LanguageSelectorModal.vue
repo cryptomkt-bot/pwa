@@ -30,7 +30,7 @@ class LanguageSelectorModal extends Vue {
   }
 
   set isVisible(value) {
-    this.$store.state.isLanguageModalVisible = value;
+    this.$store.commit('setLanguageModalVisibility', value);
   }
 
   get currentLang() {

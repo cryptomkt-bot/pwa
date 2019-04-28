@@ -8,7 +8,10 @@
       </header>
 
       <!-- Body -->
-      <div class="card-content">
+      <div class="card-content position-relative">
+        <!-- Loading spinner -->
+        <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+
         <table class="table is-fullwidth is-size-7">
           <thead>
             <tr>
@@ -36,6 +39,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 @Component()
 class BalanceModal extends Vue {
   balances = [];
+  isLoading = false;
 
   created() {
     this.getBalances();
@@ -46,11 +50,15 @@ class BalanceModal extends Vue {
   }
 
   set isVisible(value) {
-    this.$store.state.isBalanceModalVisible = value;
+    this.$store.commit('setBalanceModalVisibility', value);
   }
 
   getBalances() {
-    this.apiService.getBalance().then(balances => (this.balances = balances));
+    this.isLoading = true;
+    this.apiService.getBalance().then(balances => {
+      this.balances = balances;
+      this.isLoading = false;
+    });
   }
 
   getFormattedBalanceTotal(balance) {
@@ -71,7 +79,7 @@ class BalanceModal extends Vue {
   }
 
   @Watch('isVisible')
-  onContentVisibilityChanged(isVisible) {
+  onVisibilityChanged(isVisible) {
     if (isVisible === true) {
       this.getBalances();
     }

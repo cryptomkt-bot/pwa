@@ -10,6 +10,7 @@ import i18n from './locale/i18n';
 import filters from './filters';
 import { formatAmount } from './utils';
 
+import './registerServiceWorker';
 require('./services/ApiService');
 
 Vue.use(injector);

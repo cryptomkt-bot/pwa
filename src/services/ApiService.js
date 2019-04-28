@@ -11,6 +11,7 @@ class ApiService {
 
   constructor() {
     this.init();
+    this.startBookFetch();
   }
 
   init() {
@@ -36,6 +37,8 @@ class ApiService {
   login(apiUrl, username, password) {
     this.baseUrl = apiUrl;
     return this.post('/auth', { username, password }).then(response => {
+      this.stopBookFetch(); // Stop fetching in anonymous mode
+
       // Set token
       const token = response.data.access_token;
       this.token = token;
@@ -44,23 +47,24 @@ class ApiService {
       StorageHelper.set('apiUrl', apiUrl);
       StorageHelper.set('username', username);
       StorageHelper.set('token', token);
-      store.commit('setToken', token);
-
-      this.subscribe401();
-      this.startBookFetch();
+      store.dispatch('login', token).then(() => {
+        this.subscribe401();
+        this.startBookFetch(); // Start fetching in authenticated mode
+      });
     });
   }
 
   logout() {
     StorageHelper.remove('token');
-    store.commit('logout');
-    this.stopBookFetch();
-    this.unsubscribe401();
+    store.dispatch('logout').then(() => {
+      this.unsubscribe401();
+      this.restartBookFetch(); // Start fetching again in anonymous mode
+    });
   }
 
   subscribe401() {
     this.axios.interceptors.response.use(null, error => {
-      if (error.response.status === 401 && store.getters.isLogged) {
+      if (error.response.status === 401 && store.getters.isAuthenticated) {
         this.logout();
         Toast.open({
           message: i18n.t('sessionExpired'),
@@ -73,19 +77,33 @@ class ApiService {
   }
 
   unsubscribe401() {
-    this.axios.interceptors.response(null, null);
+    this.axios.interceptors.response.use(null, null);
   }
 
   startBookFetch() {
     /** Periodic fetch books **/
-    this.fetchBooksAndActive();
-    this.bookInterval = setInterval(() => {
-      this.fetchBooksAndActive();
-    }, 5000); // Every 5 seconds
+    const { isAuthenticated } = store.getters;
+    const fetchMethod = isAuthenticated
+      ? () => this.fetchBooksAndActive()
+      : () => this.fetchBooks();
+    fetchMethod();
+    this.bookInterval = setInterval(fetchMethod, 5000); // Every 5 seconds
   }
 
   stopBookFetch() {
     clearInterval(this.bookInterval);
+  }
+
+  restartBookFetch() {
+    this.stopBookFetch();
+    this.startBookFetch();
+  }
+
+  fetchBooks() {
+    const { currentMarket } = store.state;
+    this.getBooks(currentMarket.code).then(({ buyBook, sellBook }) => {
+      store.commit('setBooks', { buyBook, sellBook });
+    });
   }
 
   fetchBooksAndActive() {

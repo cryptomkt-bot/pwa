@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.abeleyra.cryptobot",
+      "sha256_cert_fingerprints": [
+        "7D:DE:F5:76:2A:3D:09:3A:69:23:AB:49:2A:24:55:AE:AA:23:52:10:1E:21:BA:A7:E5:DE:40:2E:5F:95:48:14"
+      ]
+    }
+  }
+]

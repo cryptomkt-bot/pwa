@@ -3,16 +3,16 @@
     <!-- Modal -->
     <b-modal :active.sync="isModalVisible" :canCancel="['x']">
       <div id="seller-card" class="card">
-        <!-- Loading spinner -->
-        <b-loading :active="isLoading" :is-full-page="false"></b-loading>
-
         <!-- Title -->
         <header class="card-header">
           <p class="card-header-title">{{ $t('seller') }}</p>
         </header>
 
         <!-- Body -->
-        <div class="card-content">
+        <div class="card-content position-relative">
+          <!-- Loading spinner -->
+          <b-loading :active="isLoading" :is-full-page="false"></b-loading>
+
           <!-- Amount -->
           <label for="amount" class="label is-small">{{ $t('amount') }}</label>
           <CurrencyField
@@ -50,10 +50,21 @@
 
         <!-- Action buttons -->
         <footer class="card-footer">
-          <a class="card-footer-item" @click="isModalVisible = false">
+          <button
+            id="cancel-button"
+            class="card-footer-item button"
+            @click="isModalVisible = false"
+            :disabled="isLoading"
+          >
             {{ $t('cancel') }}
-          </a>
-          <a class="card-footer-item" @click="submit">{{ $t('update') }}</a>
+          </button>
+          <button
+            class="card-footer-item button has-text-link"
+            @click="submit"
+            :disabled="isLoading"
+          >
+            {{ $t('update') }}
+          </button>
         </footer>
       </div>
     </b-modal>
@@ -168,8 +179,17 @@ $red: #f44336;
   width: 48px;
   height: 48px;
   position: fixed;
-  bottom: 20px;
-  left: 15px;
+  bottom: 3%;
+  left: 4%;
   z-index: 30;
+}
+.card-footer-item {
+  height: 100%;
+  border: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+#cancel-button {
+  border-bottom-right-radius: 0;
 }
 </style>

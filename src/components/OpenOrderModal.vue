@@ -58,8 +58,21 @@
 
       <!-- Action buttons -->
       <footer class="card-footer">
-        <a class="card-footer-item" @click="close">{{ $t('cancel') }}</a>
-        <a class="card-footer-item" @click="submit">{{ $t('openOrder') }}</a>
+        <button
+          id="cancel-button"
+          class="card-footer-item button"
+          @click="close"
+          :disabled="isLoading"
+        >
+          {{ $t('cancel') }}
+        </button>
+        <button
+          class="card-footer-item button has-text-link"
+          @click="submit"
+          :disabled="isLoading"
+        >
+          {{ $t('openOrder') }}
+        </button>
       </footer>
     </div>
   </b-modal>
@@ -96,7 +109,7 @@ class OpenOrderModal extends Vue {
   }
 
   set isVisible(value) {
-    this.$store.state.isOpenOrderModalVisible = value;
+    this.$store.commit('setOpenOrderModalVisibility', value);
   }
 
   get isOrderValid() {
@@ -215,5 +228,14 @@ export default OpenOrderModal;
   &.red {
     border-top-color: #f44336 !important;
   }
+}
+.card-footer-item {
+  height: 100%;
+  border: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+#cancel-button {
+  border-bottom-right-radius: 0;
 }
 </style>
