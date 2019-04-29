@@ -1,6 +1,6 @@
 {
   "name": "cryptomkt-bot-pwa",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A PWA for a trading bot running on CryptoMarket",
   "author": "Tano Abeleyra",
   "private": true,
