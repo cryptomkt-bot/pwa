@@ -46,6 +46,7 @@
 <script>
 import { Component, Vue } from 'vue-property-decorator';
 
+import { startPushNotifications } from './push-notification';
 import ActiveOrders from './components/ActiveOrders';
 import BalanceModal from './components/BalanceModal';
 import Buyer from './components/Buyer';
@@ -80,6 +81,12 @@ import Trades from './components/Trades';
 class App extends Vue {
   isOpenOrderModalVisible = false;
   areTradersVisible = true;
+
+  mounted() {
+    if (this.isAuthenticated) {
+      startPushNotifications();
+    }
+  }
 
   get isAuthenticated() {
     return this.$store.getters.isAuthenticated;
@@ -122,6 +129,15 @@ export default App;
 .scale-enter,
 .scale-leave-to {
   transform: scale(0);
+}
+
+/* Toast */
+.notices .toast {
+  border-radius: 0;
+  opacity: 1;
+  margin: 0.5em;
+  box-shadow: 0 8px 17px 2px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
 }
 
 // Remove dotted outline in Firefox

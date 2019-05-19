@@ -11,7 +11,7 @@
     </button>
     <div class="dropdown-menu">
       <div class="dropdown-content z-depth-3">
-        <div v-if="isAuthenticated">
+        <template v-if="isAuthenticated">
           <a @click="showOpenOrderModal" class="dropdown-item">
             {{ $t('openOrder') }}
           </a>
@@ -19,7 +19,7 @@
             {{ $t('showBalance') }}
           </a>
           <hr class="dropdown-divider" />
-        </div>
+        </template>
         <a @click="showLanguageModal" class="dropdown-item">
           {{ $t('changeLanguage') }}
         </a>
