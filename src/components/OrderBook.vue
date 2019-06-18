@@ -115,9 +115,7 @@ class OrderBook extends Vue {
   get formattedSpread() {
     const currency = this.currentMarket.quoteCurrency;
     const spread = toDecimals(this.spread, this.currentMarket.decimals);
-    return `${currency.prefix}${spread} ${currency.postfix} (${
-      this.spreadPercentage
-    }%)`;
+    return `${currency.prefix}${spread} ${currency.postfix} (${this.spreadPercentage}%)`;
   }
 
   @Watch('isLoading')

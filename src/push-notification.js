@@ -60,7 +60,7 @@ export const enableNotifications = () => {
       unsuscribeToNotifications = messaging.onMessage(handleNotification);
     })
     .catch(() => {
-      console.log('Failed to enable notifications');
+      // Failed to enable notifications
     });
 };
 
