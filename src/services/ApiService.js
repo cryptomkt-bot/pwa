@@ -5,6 +5,10 @@ import { Toast } from 'buefy';
 import i18n from '../locale/i18n';
 import store from '../store';
 import StorageHelper from '../helpers/StorageHelper';
+import {
+  startPushNotifications,
+  stopPushNotifications,
+} from '../push-notification';
 
 class ApiService {
   cryptoMktApiUrl = 'https://api.cryptomkt.com/v1';
@@ -50,6 +54,7 @@ class ApiService {
       store.dispatch('login', token).then(() => {
         this.subscribe401();
         this.startBookFetch(); // Start fetching in authenticated mode
+        startPushNotifications();
       });
     });
   }
@@ -59,6 +64,7 @@ class ApiService {
     store.dispatch('logout').then(() => {
       this.unsubscribe401();
       this.restartBookFetch(); // Start fetching again in anonymous mode
+      stopPushNotifications();
     });
   }
 
@@ -97,6 +103,15 @@ class ApiService {
   restartBookFetch() {
     this.stopBookFetch();
     this.startBookFetch();
+  }
+
+  addFcmToken(token) {
+    return this.post('/fcm-tokens', { token });
+  }
+
+  removeFcmToken(token) {
+    const url = `/fcm-tokens/${token}`;
+    return this.delete(url);
   }
 
   fetchBooks() {
