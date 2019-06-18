@@ -20,6 +20,7 @@ class ApiService {
 
   init() {
     this.axios = axios.create({ headers: {} });
+    this.subscribe401();
     const apiUrl = StorageHelper.get('apiUrl');
     const token = StorageHelper.get('token');
     if (!apiUrl || !token) {
@@ -52,7 +53,6 @@ class ApiService {
       StorageHelper.set('username', username);
       StorageHelper.set('token', token);
       store.dispatch('login', token).then(() => {
-        this.subscribe401();
         this.startBookFetch(); // Start fetching in authenticated mode
         startPushNotifications();
       });
