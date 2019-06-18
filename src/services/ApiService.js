@@ -62,7 +62,6 @@ class ApiService {
   logout() {
     StorageHelper.remove('token');
     store.dispatch('logout').then(() => {
-      this.unsubscribe401();
       this.restartBookFetch(); // Start fetching again in anonymous mode
       stopPushNotifications();
     });
@@ -80,10 +79,6 @@ class ApiService {
       }
       return Promise.reject(error);
     });
-  }
-
-  unsubscribe401() {
-    this.axios.interceptors.response.use(null, null);
   }
 
   startBookFetch() {
