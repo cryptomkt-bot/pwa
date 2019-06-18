@@ -8,3 +8,7 @@ workbox.core.setCacheNameDetails({ prefix: 'cryptomkt-bot-pwa' });
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
+
+addEventListener('message', messageEvent => {
+  if (messageEvent.data === 'skipWaiting') return self.skipWaiting();
+});

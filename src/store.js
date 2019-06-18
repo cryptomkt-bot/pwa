@@ -20,6 +20,7 @@ export default new Vuex.Store({
     isLanguageModalVisible: false,
     isLoginModalVisible: false,
     isOpenOrderModalVisible: false,
+    isUpdating: false,
   },
   getters: {
     ask: state => {
@@ -94,6 +95,9 @@ export default new Vuex.Store({
     },
     setToken(state, token) {
       state.token = token;
+    },
+    setIsUpdating(state, isUpdating) {
+      state.isUpdating = isUpdating;
     },
   },
 });

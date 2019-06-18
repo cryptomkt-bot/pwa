@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="is-unselectable">
     <div id="wrapper" :class="{ 'remove-margin-bottom': !isAuthenticated }">
+      <b-loading :active="isUpdating"></b-loading>
       <!-- Modals -->
       <BalanceModal v-if="isAuthenticated" />
       <LanguageSelectorModal />
@@ -44,6 +45,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { Component, Vue } from 'vue-property-decorator';
 
 import { startPushNotifications } from './push-notification';
@@ -77,6 +79,7 @@ import Trades from './components/Trades';
     TopPanel,
     Trades,
   },
+  computed: mapState(['isUpdating']),
 })
 class App extends Vue {
   isOpenOrderModalVisible = false;
