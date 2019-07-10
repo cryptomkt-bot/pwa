@@ -24,6 +24,11 @@ import StorageHelper from '../helpers/StorageHelper';
 @Component()
 class LanguageSelectorModal extends Vue {
   langs = ['en', 'es'];
+  currentLang;
+
+  created() {
+    this.currentLang = StorageHelper.get('lang') || 'es';
+  }
 
   get isVisible() {
     return this.$store.state.isLanguageModalVisible;
@@ -33,14 +38,11 @@ class LanguageSelectorModal extends Vue {
     this.$store.commit('setLanguageModalVisibility', value);
   }
 
-  get currentLang() {
-    return StorageHelper.get('lang');
-  }
-
   onLanguageSelected(lang) {
     this.$i18n.locale = lang;
     StorageHelper.set('lang', lang);
     this.isVisible = false;
+    this.currentLang = lang;
   }
 }
 
