@@ -21,13 +21,9 @@ const initFirebase = () => {
 const getAndSaveToken = async messaging => {
   const apiService = injector.get('apiService');
   const newToken = await messaging.getToken();
-  const currentToken = StorageHelper.get(FCM_TOKEN_KEY);
-  if (newToken === currentToken) {
-    // The token isn't new, do nothing.
-    return;
-  }
   apiService.addFcmToken(newToken).then(() => {
     StorageHelper.set(FCM_TOKEN_KEY, newToken);
+    const currentToken = StorageHelper.get(FCM_TOKEN_KEY);
     if (currentToken !== null) {
       // The token has changed, remove the old one.
       apiService.removeFcmToken(currentToken);
