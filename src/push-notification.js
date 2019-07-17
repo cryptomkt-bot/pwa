@@ -10,24 +10,26 @@ const FCM_TOKEN_KEY = 'fcmToken';
 let stopTokenRefresh = null;
 let unsuscribeToNotifications = null;
 let messaging = null;
+let initialized = false;
 
 const initFirebase = () => {
+  if (initialized) {
+    // Already initialized
+    return;
+  }
+
   firebase.initializeApp({
     messagingSenderId: '123906343916',
   });
   messaging = firebase.messaging();
+  initialized = true;
 };
 
 const getAndSaveToken = async messaging => {
   const apiService = injector.get('apiService');
-  const newToken = await messaging.getToken();
-  apiService.addFcmToken(newToken).then(() => {
-    StorageHelper.set(FCM_TOKEN_KEY, newToken);
-    const currentToken = StorageHelper.get(FCM_TOKEN_KEY);
-    if (currentToken !== null) {
-      // The token has changed, remove the old one.
-      apiService.removeFcmToken(currentToken);
-    }
+  const token = await messaging.getToken();
+  apiService.addFcmToken(token).then(() => {
+    StorageHelper.set(FCM_TOKEN_KEY, token);
   });
 };
 
