@@ -71,7 +71,7 @@ class Trades extends Vue {
   }
 
   updateOrders() {
-    return this.apiService.getTrades(this.currentMarket.code).then(orders => {
+    return this.apiService.getTrades(this.currentMarket.code).then((orders) => {
       this.orders = orders;
     });
   }

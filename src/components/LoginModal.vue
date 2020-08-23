@@ -91,7 +91,7 @@ class LoginModal extends Vue {
         this.isLoading = false;
         this.isVisible = false;
       })
-      .catch(error => {
+      .catch((error) => {
         this.isLoading = false;
         let message = this.$t('errorMsg');
         if (error.response && error.response.status === 401) {

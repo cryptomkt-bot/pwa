@@ -119,7 +119,7 @@ class Buyer extends Vue {
     this.remainingFiat = null;
     this.apiService
       .getBuyer()
-      .then(buyer => {
+      .then((buyer) => {
         this.buyer = buyer;
         this.remainingFiat = this.buyer.remaining_fiat;
         this.isLoading = false;
@@ -132,7 +132,7 @@ class Buyer extends Vue {
   setMaxFiat() {
     this.isMaxLoading = true;
     const marketCode = this.currentMarket.quoteCurrency.code;
-    this.apiService.getBalance(marketCode).then(balance => {
+    this.apiService.getBalance(marketCode).then((balance) => {
       const grossBalance = Number(balance.balance);
       const netBalance = Number(balance.available);
       const remainingFiat = this.buyer.remaining_fiat + netBalance;

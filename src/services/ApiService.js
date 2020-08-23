@@ -41,7 +41,7 @@ class ApiService {
 
   login(apiUrl, username, password) {
     this.baseUrl = apiUrl;
-    return this.post('/auth', { username, password }).then(response => {
+    return this.post('/auth', { username, password }).then((response) => {
       this.stopBookFetch(); // Stop fetching in anonymous mode
 
       // Set token
@@ -68,7 +68,7 @@ class ApiService {
   }
 
   subscribe401() {
-    this.axios.interceptors.response.use(null, error => {
+    this.axios.interceptors.response.use(null, (error) => {
       if (error.response.status === 401 && store.getters.isAuthenticated) {
         this.logout();
         Toast.open({
@@ -120,7 +120,7 @@ class ApiService {
     const { currentMarket } = store.state;
     const activeOrdersPromise = this.getActiveOrders();
     const orderBookPromise = this.getBooks(currentMarket.code);
-    Promise.all([activeOrdersPromise, orderBookPromise]).then(response => {
+    Promise.all([activeOrdersPromise, orderBookPromise]).then((response) => {
       const activeOrders = response[0];
       store.commit('setActiveOrders', activeOrders);
       const { buyBook, sellBook } = response[1];
@@ -132,7 +132,7 @@ class ApiService {
     const { currentMarket } = store.state;
     const url = `/orders/active/${currentMarket.code}`;
     return this.get(url)
-      .then(response => response.data)
+      .then((response) => response.data)
       .catch(() => []);
   }
 
@@ -141,7 +141,7 @@ class ApiService {
     if (marketCode !== null) {
       url += `/${marketCode}`;
     }
-    return this.get(url).then(response => response.data);
+    return this.get(url).then((response) => response.data);
   }
 
   getBook(market, type, limit = 100) {
@@ -160,7 +160,7 @@ class ApiService {
         const sellBook = sellBookResponse.data.data;
         this._enrichOrders(buyBook, true, false);
         this._enrichOrders(sellBook, false, true);
-        return new Promise(resolve => resolve({ buyBook, sellBook }));
+        return new Promise((resolve) => resolve({ buyBook, sellBook }));
       })
     );
   }
@@ -168,7 +168,7 @@ class ApiService {
   _enrichOrders(book, isBuy, isSell) {
     /** Add order type and accumulated amount */
     let accumulated = 0;
-    return book.forEach(order => {
+    return book.forEach((order) => {
       accumulated += Number(order.amount);
       order.accumulated = accumulated;
       order.isBuy = isBuy;
@@ -179,7 +179,7 @@ class ApiService {
   getExecutedOrders(limit = 50) {
     const { currentMarket } = store.state;
     const url = `/orders/executed/${currentMarket.code}`;
-    return this.get(url, { limit }).then(response => response.data);
+    return this.get(url, { limit }).then((response) => response.data);
   }
 
   getBuyer() {
@@ -192,7 +192,7 @@ class ApiService {
 
   getTrader(trader) {
     const url = `/${trader}/${store.state.currentMarket.code}`;
-    return this.get(url).then(response => response.data);
+    return this.get(url).then((response) => response.data);
   }
 
   getTrades(market, limit = 50) {
@@ -200,7 +200,9 @@ class ApiService {
     const params = { market, limit };
     return axios
       .get(url, { params })
-      .then(response => new Promise(resolve => resolve(response.data.data)));
+      .then(
+        (response) => new Promise((resolve) => resolve(response.data.data))
+      );
   }
 
   patchBuyer(data) {
@@ -213,7 +215,7 @@ class ApiService {
 
   patchTrader(trader, data) {
     const url = `/${trader}/${store.state.currentMarket.code}`;
-    return this.patch(url, data).then(response => response.data);
+    return this.patch(url, data).then((response) => response.data);
   }
 
   deleteOrder(orderId) {

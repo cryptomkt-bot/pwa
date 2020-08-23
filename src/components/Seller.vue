@@ -116,7 +116,7 @@ class Seller extends Vue {
     this.remainingAmount = 0;
     this.apiService
       .getSeller()
-      .then(seller => {
+      .then((seller) => {
         this.seller = seller;
         this.remainingAmount = this.seller.remaining_amount;
         this.isLoading = false;
@@ -129,7 +129,7 @@ class Seller extends Vue {
   setMaxAmount() {
     this.isMaxLoading = true;
     const marketCode = this.currentMarket.baseCurrency.code;
-    this.apiService.getBalance(marketCode).then(balance => {
+    this.apiService.getBalance(marketCode).then((balance) => {
       const grossBalance = Number(balance.balance);
       const netBalance = Number(balance.available);
       const remainingAmount = this.seller.remaining_amount + netBalance;

@@ -138,7 +138,7 @@ class OpenOrderModal extends Vue {
     } else {
       currency = this.currentMarket.quoteCurrency;
     }
-    this.apiService.getBalance(currency.code).then(balance => {
+    this.apiService.getBalance(currency.code).then((balance) => {
       let amount = Number(balance.available);
       if (this.order.type === 'buy') {
         if (this.order.price > 0) {

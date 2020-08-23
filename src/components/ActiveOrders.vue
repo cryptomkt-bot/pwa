@@ -73,7 +73,7 @@ class ActiveOrders extends Vue {
     this.apiService
       .deleteOrder(order.id)
       .then(() => {
-        const filteredOrders = this.orders.filter(o => o.id !== order.id);
+        const filteredOrders = this.orders.filter((o) => o.id !== order.id);
         this.$store.commit('setActiveOrders', filteredOrders);
         this.isLoading = false;
         this.$toast.open({

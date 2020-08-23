@@ -55,7 +55,7 @@ class BalanceModal extends Vue {
 
   getBalances() {
     this.isLoading = true;
-    this.apiService.getBalance().then(balances => {
+    this.apiService.getBalance().then((balances) => {
       this.balances = balances;
       this.isLoading = false;
     });

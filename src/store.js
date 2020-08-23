@@ -23,11 +23,11 @@ export default new Vuex.Store({
     isUpdating: false,
   },
   getters: {
-    ask: state => {
+    ask: (state) => {
       const { sellBook } = state;
       return sellBook.length ? Number(sellBook[0].price) : 0;
     },
-    bid: state => {
+    bid: (state) => {
       const { buyBook } = state;
       return buyBook.length ? Number(buyBook[0].price) : 0;
     },
@@ -40,12 +40,12 @@ export default new Vuex.Store({
       const spreadPercentage = (spread / ask) * 100;
       return spreadPercentage.toFixed(2);
     },
-    activeOrdersTimestamp: state => {
-      return state.activeOrders.map(order =>
+    activeOrdersTimestamp: (state) => {
+      return state.activeOrders.map((order) =>
         new Date(order.created_at).getTime()
       );
     },
-    isAuthenticated: state => state.token !== null,
+    isAuthenticated: (state) => state.token !== null,
   },
   actions: {
     login({ commit, state }, token) {

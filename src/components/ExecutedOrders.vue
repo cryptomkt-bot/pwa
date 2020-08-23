@@ -78,7 +78,7 @@ class ExecutedOrders extends Vue {
   updateOrders() {
     return this.apiService
       .getExecutedOrders()
-      .then(orders => (this.orders = orders));
+      .then((orders) => (this.orders = orders));
   }
 
   orderColor(order) {
