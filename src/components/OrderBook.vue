@@ -17,7 +17,11 @@
         <tr
           v-for="order in [...sellBook].reverse()"
           :key="order.timestamp"
-          :class="{ selected: activeOrdersTimestamp.includes(order.timestamp) }"
+          :class="{
+            selected: activeOrdersTimestamp.includes(
+              new Date(order.timestamp).getTime()
+            ),
+          }"
         >
           <td class="has-text-danger">
             {{
@@ -57,7 +61,11 @@
         <tr
           v-for="order in buyBook"
           :key="order.timestamp"
-          :class="{ selected: activeOrdersTimestamp.includes(order.timestamp) }"
+          :class="{
+            selected: activeOrdersTimestamp.includes(
+              new Date(order.timestamp).getTime()
+            ),
+          }"
         >
           <td class="has-text-success">
             {{

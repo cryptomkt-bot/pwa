@@ -41,7 +41,9 @@ export default new Vuex.Store({
       return spreadPercentage.toFixed(2);
     },
     activeOrdersTimestamp: state => {
-      return state.activeOrders.map(order => order.created_at);
+      return state.activeOrders.map(order =>
+        new Date(order.created_at).getTime()
+      );
     },
     isAuthenticated: state => state.token !== null,
   },
