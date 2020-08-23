@@ -104,7 +104,8 @@ export default App;
 @import '~buefy/src/scss/buefy';
 @import '~@mdi/font/css/materialdesignicons.css';
 
-.modal-content {
+.modal-content,
+.modal-card {
   width: 90% !important;
   max-width: 480px !important;
 }

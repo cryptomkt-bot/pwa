@@ -29,7 +29,7 @@ Vue.mixin({
       return formatAmount(amount, currency, decimals);
     },
     confirm(config) {
-      this.$dialog.confirm({
+      this.$buefy.dialog.confirm({
         ...config,
         confirmText: this.$i18n.t('yes'),
         cancelText: this.$i18n.t('no'),
