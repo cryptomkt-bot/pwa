@@ -19,13 +19,19 @@ const initFirebase = () => {
   }
 
   firebase.initializeApp({
+    apiKey: 'AIzaSyC_kCwexrh2qMjiZVPbNiATy-MrkXOBdHk',
+    authDomain: 'cryptomkt-bot.firebaseapp.com',
+    databaseURL: 'https://cryptomkt-bot.firebaseio.com',
+    projectId: 'cryptomkt-bot',
+    storageBucket: 'cryptomkt-bot.appspot.com',
     messagingSenderId: '123906343916',
+    appId: '1:123906343916:web:7ea15d7f67c729bd',
   });
   messaging = firebase.messaging();
   initialized = true;
 };
 
-const getAndSaveToken = async messaging => {
+const getAndSaveToken = async (messaging) => {
   const apiService = injector.get('apiService');
   const token = await messaging.getToken();
   apiService.addFcmToken(token).then(() => {
@@ -35,7 +41,7 @@ const getAndSaveToken = async messaging => {
 
 const requestNotificationPermission = () => {
   return new Promise((resolve, reject) => {
-    Notification.requestPermission().then(result => {
+    Notification.requestPermission().then((result) => {
       if (result === 'granted') {
         resolve();
       } else {
@@ -45,7 +51,7 @@ const requestNotificationPermission = () => {
   });
 };
 
-const handleNotification = payload => {
+const handleNotification = (payload) => {
   const { body } = payload.notification;
   Toast.open({ message: body, type: 'is-info', duration: 5000 });
 };

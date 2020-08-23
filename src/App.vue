@@ -105,6 +105,7 @@ export default App;
 @import '~@mdi/font/css/materialdesignicons.css';
 
 .modal-content {
+  width: 90% !important;
   max-width: 480px !important;
 }
 

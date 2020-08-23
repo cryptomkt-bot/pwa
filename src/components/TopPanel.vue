@@ -82,13 +82,12 @@ export default TopPanel;
 }
 #market-select {
   float: left;
-  width: 35%;
+  width: 110px;
   height: $panelHeight;
   &::after {
     border-color: rgba(255, 255, 255, 0.8) !important;
   }
   select {
-    font-size: 1.1rem;
     background-color: $cryptoMktColor;
     border: 0;
     border-radius: 0;
@@ -103,8 +102,10 @@ export default TopPanel;
 .price {
   display: inline-block;
   margin-top: 16px;
-  margin-left: 16px;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
+  &:nth-child(3) {
+    margin-left: 16px;
+  }
 }
 .price-label {
   font-size: 0.7rem;
