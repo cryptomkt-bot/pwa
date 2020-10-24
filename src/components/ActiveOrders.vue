@@ -31,7 +31,7 @@
           <td>
             {{
               formatAmount(
-                order.amount.remaining,
+                Number(order.amount.original) - Number(order.amount.executed),
                 currentMarket.baseCurrency,
                 currentMarket.baseCurrency.decimals
               )

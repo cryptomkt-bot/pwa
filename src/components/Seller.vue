@@ -99,11 +99,11 @@ class Seller extends Vue {
   isMaxLoading = false;
 
   get minSpread() {
-    return this.seller ? this.seller.min_spread : null;
+    return this.seller ? Number(this.seller.spread) : null;
   }
 
   set minSpread(spread) {
-    this.seller.min_spread = spread;
+    this.seller.spread = spread.toString();
   }
 
   @Watch('isModalVisible')
@@ -118,7 +118,7 @@ class Seller extends Vue {
       .getSeller()
       .then((seller) => {
         this.seller = seller;
-        this.remainingAmount = this.seller.remaining_amount;
+        this.remainingAmount = Number(this.seller.amount);
         this.isLoading = false;
       })
       .catch(() => {
@@ -132,7 +132,7 @@ class Seller extends Vue {
     this.apiService.getBalance(marketCode).then((balance) => {
       const grossBalance = Number(balance.balance);
       const netBalance = Number(balance.available);
-      const remainingAmount = this.seller.remaining_amount + netBalance;
+      const remainingAmount = Number(this.seller.amount) + netBalance;
       // Make sure the amount isn't higher than the gross balance
       this.remainingAmount = Math.min(remainingAmount, grossBalance);
       this.isMaxLoading = false;
@@ -141,7 +141,7 @@ class Seller extends Vue {
 
   submit() {
     this.isLoading = true;
-    this.seller.remaining_amount = this.remainingAmount;
+    this.seller.amount = this.remainingAmount.toString();
     this.apiService
       .patchSeller(this.seller)
       .then(() => {

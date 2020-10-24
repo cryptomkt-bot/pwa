@@ -106,8 +106,8 @@ class LoginModal extends Vue {
   }
 
   restoreFromStorage() {
-    this.apiUrl = StorageHelper.get('apiUrl');
-    this.username = StorageHelper.get('username');
+    this.apiUrl = this.apiService.apiUrl;
+    this.username = this.apiService.username;
     this.password = '';
   }
 

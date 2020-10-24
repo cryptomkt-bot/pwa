@@ -37,7 +37,7 @@ export default {
   openMarketOrder: 'Abrir orden de mercado',
   orderCancelled: 'Orden cancelada satisfactoriamente',
   orderOpened: 'Orden de mercado abierta',
-  orderType: 'Tipo de orden',
+  orderSide: 'Tipo de orden',
   password: 'Contraseña',
   price: 'Precio',
   remainingFiat: 'Fiat restante',

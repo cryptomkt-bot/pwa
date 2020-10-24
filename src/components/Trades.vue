@@ -65,7 +65,7 @@ class Trades extends Vue {
       this.isLoading = false;
     });
     // Update orders every 10 seconds
-    this.intervalId = window.setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.updateOrders();
     }, 10000);
   }

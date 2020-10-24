@@ -102,11 +102,11 @@ class Buyer extends Vue {
   }
 
   get remainingAmount() {
-    return this.buyer ? this.buyer.remaining_amount : null;
+    return this.buyer ? Number(this.buyer.amount) : null;
   }
 
   set remainingAmount(value) {
-    this.buyer.remaining_amount = value;
+    this.buyer.amount = value.toString();
   }
 
   @Watch('isModalVisible')
@@ -121,7 +121,7 @@ class Buyer extends Vue {
       .getBuyer()
       .then((buyer) => {
         this.buyer = buyer;
-        this.remainingFiat = this.buyer.remaining_fiat;
+        this.remainingFiat = this.buyer.fiat;
         this.isLoading = false;
       })
       .catch(() => {
@@ -135,7 +135,7 @@ class Buyer extends Vue {
     this.apiService.getBalance(marketCode).then((balance) => {
       const grossBalance = Number(balance.balance);
       const netBalance = Number(balance.available);
-      const remainingFiat = this.buyer.remaining_fiat + netBalance;
+      const remainingFiat = Number(this.buyer.fiat) + netBalance;
       // Make sure the amount isn't higher than the gross balance
       this.remainingFiat = Math.min(remainingFiat, grossBalance);
       this.isMaxLoading = false;
@@ -144,7 +144,7 @@ class Buyer extends Vue {
 
   submit() {
     this.isLoading = true;
-    this.buyer.remaining_fiat = this.remainingFiat;
+    this.buyer.fiat = this.remainingFiat.toString();
     this.apiService
       .patchBuyer(this.buyer)
       .then(() => {

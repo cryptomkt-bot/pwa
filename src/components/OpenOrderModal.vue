@@ -4,7 +4,7 @@
     <div
       id="open-order-card"
       class="card"
-      :class="[order.type === 'buy' ? 'green' : 'red']"
+      :class="[order.side === 'buy' ? 'green' : 'red']"
     >
       <!-- Loading spinner -->
       <b-loading :active="isLoading" :is-full-page="false"></b-loading>
@@ -16,14 +16,14 @@
 
       <!-- Body -->
       <div class="card-content">
-        <!-- Order type -->
+        <!-- Order side -->
         <div class="field">
           <div class="control">
-            <label for="order-type" class="label is-size-7">
-              {{ $t('orderType') }}
+            <label for="order-side" class="label is-size-7">
+              {{ $t('orderSide') }}
             </label>
             <div class="select">
-              <select id="order-type" v-model="order.type">
+              <select id="order-side" v-model="order.side">
                 <option value="buy">{{ $t('buyOrder') }}</option>
                 <option value="sell">{{ $t('sellOrder') }}</option>
               </select>
@@ -97,11 +97,7 @@ class OpenOrderModal extends Vue {
   }
 
   init() {
-    this.order = {
-      type: 'buy',
-      price: null,
-      amount: null,
-    };
+    this.order = this.getNewOrder();
   }
 
   get isVisible() {
@@ -116,7 +112,7 @@ class OpenOrderModal extends Vue {
     return (
       this.order.price > 0 &&
       this.order.amount >= this.currentMarket.baseCurrency.step &&
-      (this.order.type === 'buy' || this.order.type === 'sell')
+      (this.order.side === 'buy' || this.order.side === 'sell')
     );
   }
 
@@ -124,23 +120,33 @@ class OpenOrderModal extends Vue {
     let amount = this.order.amount * this.order.price;
     const currency = this.currentMarket.quoteCurrency;
     amount = this.formatAmount(amount, currency, currency.decimals);
-    if (this.order.type === 'buy') {
+    if (this.order.side === 'buy') {
       return this.$t('spending', { amount });
     }
     return this.$t('earningLessFee', { amount });
   }
 
+  getNewOrder() {
+    return {
+      side: 'buy',
+      price: null,
+      amount: null,
+      market: this.currentMarket.code,
+      type: 'limit',
+    };
+  }
+
   setMaxAmount() {
     this.isMaxLoading = true;
     let currency;
-    if (this.order.type === 'sell') {
+    if (this.order.side === 'sell') {
       currency = this.currentMarket.baseCurrency;
     } else {
       currency = this.currentMarket.quoteCurrency;
     }
     this.apiService.getBalance(currency.code).then((balance) => {
       let amount = Number(balance.available);
-      if (this.order.type === 'buy') {
+      if (this.order.side === 'buy') {
         if (this.order.price > 0) {
           amount /= this.order.price;
         } else {
@@ -164,8 +170,8 @@ class OpenOrderModal extends Vue {
       this.currentMarket.quoteCurrency,
       this.currentMarket.decimals
     );
-    const orderTypeCapitalized = capitalize(this.order.type);
-    const confirmMsgKey = `confirm${orderTypeCapitalized}Order`;
+    const orderSideCapitalized = capitalize(this.order.side);
+    const confirmMsgKey = `confirm${orderSideCapitalized}Order`;
     this.confirm({
       message: this.$t(confirmMsgKey, { amount, price }),
       onConfirm: () => {
@@ -183,20 +189,16 @@ class OpenOrderModal extends Vue {
 
   doSubmit() {
     this.isLoading = true;
-    const url = `/orders/${this.currentMarket.code}`;
+    const url = `cryptomkt/orders/${this.currentMarket.code}`;
     this.apiService
-      .post(url, this.order)
+      .openOrder(this.order)
       .then(() => {
         this.close();
         this.$toast.open({
           message: this.$t('orderOpened'),
           type: 'is-info',
         });
-        this.order = {
-          type: 'buy',
-          price: null,
-          amount: null,
-        };
+        this.order = this.getNewOrder();
         this.isLoading = false;
       })
       .catch(() => {

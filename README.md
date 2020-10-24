@@ -16,21 +16,20 @@
 
 ```bash
 # install dependencies
-npm install
+yarn install
 
 # serve with hot reload at localhost:8080
-npm run dev
+yarn run serve
 
 # build for production with minification
-npm run build
+yarn run build
 ```
 
 ## About the API
 
 The API must run on SSL (port 443) and allow [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing).
 
-You can protect the API with [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token).  
-An `Authorization` header with the following format is sent with every request: `JWT <token>`
+An `Authorization` header with the token is sent with every request
 
 ### Endpoints
 
@@ -45,130 +44,105 @@ An `Authorization` header with the following format is sent with every request: 
     "password": [string]
   }
   ```
-- Response
-  ```
-  {
-    "access_token": [string]
-  }
-  ```
+- Response: The authentication token
 
 ---
 
-`GET /buyer/<market>`
+`GET /<market>/buy`
 
 > Get the buyer trading on market `<market>`
 
 - Response
   ```
   {
-    "remaining_amount": [number],
-    "remaining_fiat": [number]
+    "amount": [string],
+    "fiat": [string]
+    "price": [string]
   }
   ```
 
 ---
 
-`PATCH /buyer/<market>`
+`PUT /<market>/buy`
 
 > Update the buyer trading on market `<market>`
 
 - Payload
   ```
   {
-    "remaining_amount": [number],
-    "remianing_fiat": [number]
+    "amount": [string],
+    "fiat": [string]
   }
   ```
-- Response: Same as `GET /buyer/<market_code>`
 
 ---
 
-`GET /seller/<market_code>`
+`GET /<market_code>/sell`
 
 > Get the seller trading on market `<market>`
 
 - Response:
   ```
   {
-    "remaining_fiat": [number],
-    "min_spread": [number]
+    "amount": [string],
+    "price": [string],
+    "spread": [string]
   }
   ```
 
 ---
 
-`PATCH /seller/<market_code>`
+`PUT /<market_code>/sell`
 
 > Update the seller trading on market `<market>`
 
 - Payload
   ```
   {
-    "remaining_fiat": [number],
-    "min_spread": [number]
-  }
-  ```
-- Response: Same as `GET /seller/<market_code>`
-
----
-
-`GET /orders/<id>`
-
-> Get the order with id `<id>`
-
-- Response: data from `GET api.cryptomkt.com/v1/orders/status?id=<id>`
-
----
-
-`POST /orders/<market>`
-
-> Open an order on market `<market>`
-
-- Payload
-
-  ```
-  {
-    "amount": [number],
-    "price: [number],
-    "type": [string]
+    "amount": [string],
+    "spread": [string]
   }
   ```
 
-  `type` is either _buy_ or _sell_.
+---
 
-- Response: data from `POST api.cryptomkt.com/v1/orders/create`
+`POST /cryptomkt/orders/create`
+
+> Open an order
+
+- Proxy to `api.cryptomkt.com/v2/orders/create`
 
 ---
 
-`DELETE /orders/<id>`
+`POST /cryptomkt/orders/cancel`
 
-> Cancel the order with id `<id>`
+> Cancel an order
 
-- Response: data from `POST api.cryptomkt.com/v1/orders/cancel?id=<id>`
-
----
-
-`GET /orders/active/<market>`
-
-> Get the active orders for market `<market>`
-
-- Response: data from `GET api.cryptomkt.com/v1/orders/active?market=<market>`
+- Proxy to `api.cryptomkt.com/v2/orders/cancel`
 
 ---
 
-`GET /orders/executed/<market>`
+`GET /cryptomkt/orders/active`
 
-> Get the executed orders for market `<market>`
+> Get the active orders
 
-- Response: data from `GET api.cryptomkt.com/v1/orders/executed?market=<market>`
+- Proxy to `api.cryptomkt.com/v2/orders/active`
 
 ---
 
-`GET /balance`
+`GET /cryptomkt/orders/executed`
+
+> Get the executed orders
+
+- Proxy to `api.cryptomkt.com/v2/orders/executed`
+
+---
+
+`GET /cryptomkt/balance`
 
 > Get your CryptoMarket balance
 
-- Response: data from `GET api.cryptomkt.com/v1/balance`
+- Proxy to `api.cryptomkt.com/v2/balance`
 
 ---
 
