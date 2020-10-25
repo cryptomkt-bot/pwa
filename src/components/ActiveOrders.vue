@@ -76,14 +76,14 @@ class ActiveOrders extends Vue {
         const filteredOrders = this.orders.filter((o) => o.id !== order.id);
         this.$store.commit('setActiveOrders', filteredOrders);
         this.isLoading = false;
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('orderCancelled'),
           type: 'is-info',
         });
       })
       .catch(() => {
         this.isLoading = false;
-        this.$snackbar.open({
+        this.$buefy.snackbar.open({
           message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,

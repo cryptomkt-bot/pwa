@@ -97,7 +97,7 @@ class LoginModal extends Vue {
         if (error.response && error.response.status === 401) {
           message = this.$t('wrongUsernameOrPassword');
         }
-        this.$toast.open({
+        this.$buefy.toast.open({
           message,
           type: 'is-danger',
           duration: 3000,

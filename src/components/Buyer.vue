@@ -152,7 +152,7 @@ class Buyer extends Vue {
         this.isLoading = false;
       })
       .catch(() => {
-        this.$snackbar.open({
+        this.$buefy.snackbar.open({
           message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,

@@ -194,7 +194,7 @@ class OpenOrderModal extends Vue {
       .openOrder(this.order)
       .then(() => {
         this.close();
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: this.$t('orderOpened'),
           type: 'is-info',
         });
@@ -202,7 +202,7 @@ class OpenOrderModal extends Vue {
         this.isLoading = false;
       })
       .catch(() => {
-        this.$snackbar.open({
+        this.$buefy.snackbar.open({
           message: this.$t('errorMsg'),
           type: 'is-danger',
           indefinite: true,
