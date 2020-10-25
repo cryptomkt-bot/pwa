@@ -68,6 +68,7 @@ class ApiService {
 
   login(apiUrl, username, password) {
     this.apiUrl = apiUrl;
+    this.apiClient.defaults.baseURL = apiUrl;
 
     return this.apiClient
       .post('/auth', { username, password })
@@ -77,7 +78,6 @@ class ApiService {
         // Set state
         this.token = response.data;
         this.username = username;
-        this.apiClient.defaults.baseURL = apiUrl;
         this.apiClient.defaults.headers.Authorization = token;
         store.dispatch('login', this.token).then(() => {
           this.startBookFetch(); // Start fetching in authenticated mode
