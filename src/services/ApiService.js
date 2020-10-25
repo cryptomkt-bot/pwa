@@ -68,7 +68,7 @@ class ApiService {
 
   login(apiUrl, username, password) {
     this.apiUrl = apiUrl;
-    this.apiClient.defaults.baseURL = apiUrl;
+    this.apiClient.defaults.baseURL = this.apiUrl;
 
     return this.apiClient
       .post('/auth', { username, password })
@@ -76,7 +76,8 @@ class ApiService {
         this.stopBookFetch(); // Stop fetching in anonymous mode
 
         // Set state
-        this.token = response.data;
+        const token = response.data;
+        this.token = token;
         this.username = username;
         this.apiClient.defaults.headers.Authorization = token;
         store.dispatch('login', this.token).then(() => {
