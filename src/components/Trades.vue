@@ -10,7 +10,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="order in orders" :key="order.timestamp">
+        <tr
+          v-for="order in orders"
+          :key="order.timestamp + order.price + order.amount"
+        >
           <td>{{ (order.timestamp + '-00:00') | date }}</td>
           <td :class="orderColor(order)">
             {{
