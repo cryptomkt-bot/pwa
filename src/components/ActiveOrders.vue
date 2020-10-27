@@ -92,7 +92,7 @@ class ActiveOrders extends Vue {
   }
 
   orderColor(order) {
-    const type = order.type === 'sell' ? 'danger' : 'success';
+    const type = order.side === 'sell' ? 'danger' : 'success';
     return `has-text-${type}`;
   }
 }
