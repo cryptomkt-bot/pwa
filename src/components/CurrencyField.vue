@@ -15,7 +15,7 @@
         {{ currency.prefix }}
       </span>
     </div>
-    <div class="control" style="width: 100%;">
+    <div class="control" style="width: 100%">
       <input
         type="number"
         :id="id"
