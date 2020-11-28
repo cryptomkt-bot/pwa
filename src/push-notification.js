@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/messaging';
 import injector from 'vue-inject';
-import { Toast } from 'buefy/dist/components/toast';
+import { ToastProgrammatic as Toast } from 'buefy';
 
 import StorageHelper from './helpers/StorageHelper';
 
