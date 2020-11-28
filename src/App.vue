@@ -111,7 +111,7 @@ export default App;
 }
 
 #wrapper {
-  margin-top: 75px;
+  margin-top: 60px;
   margin-bottom: 75px;
   -webkit-tap-highlight-color: transparent;
   .tab-content {
@@ -174,5 +174,12 @@ select:-moz-focusring {
 .z-depth-5 {
   box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.14),
     0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2);
+}
+
+// Dark mode
+@media (prefers-color-scheme: dark) {
+  .modal-card-body {
+    background-color: #000 !important;
+  }
 }
 </style>

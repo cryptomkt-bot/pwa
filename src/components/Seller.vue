@@ -192,4 +192,11 @@ $red: #f44336;
 #cancel-button {
   border-bottom-right-radius: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  .control .button {
+    background-color: #000;
+    color: #eee;
+  }
+}
 </style>

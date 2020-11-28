@@ -36,8 +36,14 @@ export default Section;
 
 <style scoped lang="scss">
 .section-name {
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #eee;
+  @media (prefers-color-scheme: light) {
+    background-color: #eee;
+    border: 1px solid #e0e0e0 !important;
+  }
+  @media (prefers-color-scheme: dark) {
+    border: 1px solid #222;
+    background-color: #000;
+  }
   padding: 8px;
   .icon {
     position: absolute;
