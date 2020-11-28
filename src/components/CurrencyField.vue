@@ -76,3 +76,12 @@ class CurrencyField extends Vue {
 
 export default CurrencyField;
 </script>
+
+<style scoped lang="scss">
+@media (prefers-color-scheme: dark) {
+  .control span.button {
+    background-color: #000;
+    color: #eee;
+  }
+}
+</style>

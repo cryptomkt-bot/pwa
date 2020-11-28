@@ -157,8 +157,19 @@ export default OrderBook;
 
 <style scoped lang="scss">
 #order-book-table {
-  tr.selected {
-    background-color: #fffde7;
+  @media (prefers-color-scheme: light) {
+    #spread-row {
+      background-color: #eceff1;
+    }
+    tr.selected {
+      background-color: #fffde7;
+    }
+  }
+  @media (prefers-color-scheme: dark) {
+    #spread-row,
+    tr.selected {
+      background-color: #222;
+    }
   }
   tbody {
     display: block;
@@ -172,14 +183,13 @@ export default OrderBook;
     table-layout: fixed;
   }
 }
-#spread-row {
-  background-color: #eceff1;
-}
 #spread {
   white-space: nowrap;
 }
 #updated-time {
   padding: 2px 4px;
-  background-color: #fafafa;
+  @media (prefers-color-scheme: light) {
+    background-color: #fafafa;
+  }
 }
 </style>

@@ -240,4 +240,12 @@ export default OpenOrderModal;
 #cancel-button {
   border-bottom-right-radius: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  #order-side {
+    background-color: #000;
+    border-color: #363636;
+    color: #eee;
+  }
+}
 </style>
