@@ -13,6 +13,7 @@ import {
 
 class ApiService {
   pollActiveInterval = null;
+  previousVisibility = 'visible';
 
   constructor() {
     this.init();
@@ -34,6 +35,7 @@ class ApiService {
     store.commit('setToken', token);
     this.subscribe401(this.apiClient);
     this.pollActiveOrders();
+    this.subscribeToVisibility();
   }
 
   get username() {
@@ -65,6 +67,28 @@ class ApiService {
     StorageHelper.set('apiUrl', url);
   }
 
+  subscribeToVisibility() {
+    document.addEventListener('visibilitychange', () => {
+      const { visibilityState } = document;
+      if (visibilityState === this.previousVisibility) {
+        // Visibility didn't change, abort.
+        return;
+      }
+
+      if (visibilityState === 'hidden') {
+        // Stop socket and polling
+        this.disconnectFromSocket();
+        clearInterval(this.pollActiveInterval);
+      } else {
+        // Restart socket and polling
+        this.connectToSocket();
+        this.pollActiveOrders();
+      }
+
+      this.previousVisibility = visibilityState;
+    });
+  }
+
   connectToSocket() {
     // Use dummy key, not needed for public endpoints
     const client = new Client({ apiKey: 'dummy', apiSecret: 'dummy' });
@@ -76,6 +100,14 @@ class ApiService {
       this.listenToHistoricalBook();
       this.subscribeToMarket(store.state.currentMarket);
     });
+  }
+
+  disconnectFromSocket() {
+    if (!this.socket) {
+      return;
+    }
+
+    this.socket.socketClient.close();
   }
 
   subscribeToMarket(market) {
