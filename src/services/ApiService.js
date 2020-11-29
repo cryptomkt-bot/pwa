@@ -31,6 +31,7 @@ class ApiService {
 
     this.apiClient.defaults.baseURL = apiUrl;
     this.token = token;
+    store.commit('setToken', token);
     this.subscribe401(this.apiClient);
     this.pollActiveOrders();
   }
