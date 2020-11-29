@@ -16,11 +16,9 @@
         <!-- Sell book -->
         <tr
           v-for="order in [...sellBook].reverse()"
-          :key="order.timestamp"
+          :key="order.tradeId"
           :class="{
-            selected: activeOrdersTimestamp.includes(
-              new Date(order.timestamp).getTime()
-            ),
+            selected: activeOrdersIds[order.tradeId],
           }"
         >
           <td class="has-text-danger">
@@ -60,11 +58,9 @@
         <!-- Buy book -->
         <tr
           v-for="order in buyBook"
-          :key="order.timestamp"
+          :key="order.tradeId"
           :class="{
-            selected: activeOrdersTimestamp.includes(
-              new Date(order.timestamp).getTime()
-            ),
+            selected: activeOrdersIds[order.tradeId],
           }"
         >
           <td class="has-text-success">
@@ -111,8 +107,8 @@ import { toDecimals } from '../utils';
 
 @Component({
   computed: {
-    ...mapState(['buyBook', 'sellBook', 'isLoading', 'updatedAt']),
-    ...mapGetters(['activeOrdersTimestamp', 'spread', 'spreadPercentage']),
+    ...mapState(['buyBook', 'sellBook', 'isLoading', 'updatedAt', 'token']),
+    ...mapGetters(['activeOrdersIds', 'spread', 'spreadPercentage']),
   },
 })
 class OrderBook extends Vue {
@@ -127,6 +123,7 @@ class OrderBook extends Vue {
   }
 
   @Watch('isLoading')
+  @Watch('token')
   onLoadingFinished() {
     if (this.isLoading) {
       // Still loading, do nothing.

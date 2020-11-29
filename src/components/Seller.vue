@@ -115,7 +115,7 @@ class Seller extends Vue {
     this.seller = null;
     this.remainingAmount = 0;
     this.apiService
-      .getSeller()
+      .getSeller(this.currentMarket.code)
       .then((seller) => {
         this.seller = seller;
         this.remainingAmount = Number(this.seller.amount);
@@ -143,7 +143,7 @@ class Seller extends Vue {
     this.isLoading = true;
     this.seller.amount = this.remainingAmount.toString();
     this.apiService
-      .patchSeller(this.seller)
+      .patchSeller(this.currentMarket.code, this.seller)
       .then(() => {
         this.isModalVisible = false;
         this.isLoading = false;

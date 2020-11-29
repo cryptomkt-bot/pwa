@@ -10,15 +10,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="order in orders"
-          :key="order.timestamp + order.price + order.amount"
-        >
-          <td>{{ (order.timestamp + '-00:00') | date }}</td>
+        <tr v-for="order in historicalBook" :key="order.executed_date">
+          <td>{{ Number(order.executed_date) | date }}</td>
           <td :class="orderColor(order)">
             {{
               formatAmount(
-                order.price,
+                order.executed_price,
                 currentMarket.quoteCurrency,
                 currentMarket.decimals
               )
@@ -27,7 +24,7 @@
           <td>
             {{
               formatAmount(
-                order.amount,
+                order.executed_amount,
                 currentMarket.baseCurrency,
                 currentMarket.baseCurrency.decimals
               )
@@ -40,52 +37,22 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { Component, Vue, Watch } from 'vue-property-decorator';
 
-@Component
-class Trades extends Vue {
-  isLoading = true;
-  orders = [];
-  intervalId = null;
-
-  created() {
-    this.init();
-  }
-
-  destroyed() {
-    clearInterval(this.intervalId);
-  }
-
-  @Watch('currentMarket')
-  onCurrentMarketChanged() {
-    this.init();
-  }
-
-  init() {
-    this.isLoading = true;
-    clearInterval(this.intervalId);
-    this.updateOrders().then(() => {
-      this.isLoading = false;
-    });
-    // Update orders every 10 seconds
-    this.intervalId = setInterval(() => {
-      this.updateOrders();
-    }, 10000);
-  }
-
-  updateOrders() {
-    return this.apiService.getTrades(this.currentMarket.code).then((orders) => {
-      this.orders = orders;
-    });
-  }
-
+@Component({
+  computed: {
+    ...mapState(['historicalBook', 'isLoading']),
+  },
+})
+class HistoricalBook extends Vue {
   orderColor(order) {
-    const type = order.market_taker === 'sell' ? 'danger' : 'success';
+    const type = order.side === 1 ? 'success' : 'danger';
     return `has-text-${type}`;
   }
 }
 
-export default Trades;
+export default HistoricalBook;
 </script>
 
 <style scoped lang="scss">

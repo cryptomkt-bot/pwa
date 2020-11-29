@@ -22,10 +22,10 @@
           position="is-centered"
           class="is-marginless"
         >
-          <b-tab-item :label="$t('allOrders')"><Trades /></b-tab-item>
+          <b-tab-item :label="$t('allOrders')"><HistoricalBook /></b-tab-item>
           <b-tab-item :label="$t('myOrders')"><ExecutedOrders /></b-tab-item>
         </b-tabs>
-        <Trades v-else />
+        <HistoricalBook v-else />
       </Section>
 
       <!-- Active orders -->
@@ -61,7 +61,7 @@ import OrderBook from './components/OrderBook';
 import Section from './components/Section';
 import Seller from './components/Seller';
 import TopPanel from './components/TopPanel';
-import Trades from './components/Trades';
+import HistoricalBook from './components/HistoricalBook';
 
 @Component({
   components: {
@@ -77,7 +77,7 @@ import Trades from './components/Trades';
     Section,
     Seller,
     TopPanel,
-    Trades,
+    HistoricalBook,
   },
   computed: mapState(['isUpdating']),
 })

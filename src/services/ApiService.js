@@ -1,3 +1,4 @@
+import { Client } from 'cryptomarket';
 import axios from 'axios';
 import injector from 'vue-inject';
 import { Toast } from 'buefy';
@@ -10,20 +11,16 @@ import {
   stopPushNotifications,
 } from '../push-notification';
 
-const cryptoMktApiVersion = 'v2';
-const cryptoMktApiUrl = `https://api.cryptomkt.com/${cryptoMktApiVersion}/`;
-
 class ApiService {
+  pollActiveInterval = null;
+
   constructor() {
     this.init();
-    this.startBookFetch();
   }
 
   init() {
+    this.connectToSocket();
     this.apiClient = axios.create();
-    this.cryptoMktClient = axios.create({
-      baseURL: cryptoMktApiUrl,
-    });
 
     const token = this.token;
     const apiUrl = this.apiUrl;
@@ -33,9 +30,9 @@ class ApiService {
     }
 
     this.apiClient.defaults.baseURL = apiUrl;
-    this.apiClient.defaults.headers.Authorization = token;
+    this.token = token;
     this.subscribe401(this.apiClient);
-    store.commit('setToken', token);
+    this.pollActiveOrders();
   }
 
   get username() {
@@ -51,7 +48,8 @@ class ApiService {
   }
 
   set token(token) {
-    this.setOrRemoveStorage('token', token);
+    this.apiClient.defaults.headers.Authorization = token;
+    StorageHelper.set('token', token);
   }
 
   get apiUrl() {
@@ -66,6 +64,27 @@ class ApiService {
     StorageHelper.set('apiUrl', url);
   }
 
+  connectToSocket() {
+    // Use dummy key, not needed for public endpoints
+    const client = new Client({ apiKey: 'dummy', apiSecret: 'dummy' });
+    this.socket = client.socket;
+    // Mock socket auth to avoid CORS error
+    this.socket._authSocket = () => {};
+    this.socket.connect().then(() => {
+      this.listenToOpenBook();
+      this.listenToHistoricalBook();
+      this.subscribeToMarket(store.state.currentMarket);
+    });
+  }
+
+  subscribeToMarket(market) {
+    this.socket.subscribe(market.code);
+  }
+
+  unsubscribeFromMarket(market) {
+    this.socket.unsubscribe(market.code);
+  }
+
   login(apiUrl, username, password) {
     this.apiUrl = apiUrl;
     this.apiClient.defaults.baseURL = this.apiUrl;
@@ -73,27 +92,23 @@ class ApiService {
     return this.apiClient
       .post('/auth', { username, password })
       .then((response) => {
-        this.stopBookFetch(); // Stop fetching in anonymous mode
-
         // Set state
         const token = response.data;
         this.token = token;
         this.username = username;
-        this.apiClient.defaults.headers.Authorization = token;
         store.dispatch('login', this.token).then(() => {
-          this.startBookFetch(); // Start fetching in authenticated mode
+          this.pollActiveOrders();
           startPushNotifications();
         });
       });
   }
 
   logout() {
-    this.token = undefined;
+    clearInterval(this.pollActiveInterval);
+    stopPushNotifications();
+    this.token = null;
 
-    store.dispatch('logout').then(() => {
-      this.restartBookFetch(); // Start fetching again in anonymous mode
-      stopPushNotifications();
-    });
+    store.dispatch('logout');
   }
 
   subscribe401(client) {
@@ -110,25 +125,6 @@ class ApiService {
     });
   }
 
-  startBookFetch() {
-    /** Periodic fetch books **/
-    const { isAuthenticated } = store.getters;
-    const fetchMethod = isAuthenticated
-      ? () => this.fetchBooksAndActive()
-      : () => this.fetchBooks();
-    fetchMethod();
-    this.bookInterval = setInterval(fetchMethod, 5000); // Every 5 seconds
-  }
-
-  stopBookFetch() {
-    clearInterval(this.bookInterval);
-  }
-
-  restartBookFetch() {
-    this.stopBookFetch();
-    this.startBookFetch();
-  }
-
   addFcmToken(token) {
     return this.apiClient.post('/fcm-tokens', { token });
   }
@@ -138,28 +134,17 @@ class ApiService {
     return this.apiClient.delete(url);
   }
 
-  fetchBooks() {
-    const { currentMarket } = store.state;
-    this.getBooks(currentMarket.code).then(({ buyBook, sellBook }) => {
-      store.commit('setBooks', { buyBook, sellBook });
-    });
+  pollActiveOrders(ms = 5000) {
+    this.pollActiveInterval = setInterval(() => {
+      const { code } = store.state.currentMarket;
+      this.getActiveOrders(code).then((orders) => {
+        store.commit('setActiveOrders', orders);
+      });
+    }, ms);
   }
 
-  fetchBooksAndActive() {
-    const { currentMarket } = store.state;
-    const activeOrdersPromise = this.getActiveOrders();
-    const orderBookPromise = this.getBooks(currentMarket.code);
-    Promise.all([activeOrdersPromise, orderBookPromise]).then((response) => {
-      const activeOrders = response[0];
-      store.commit('setActiveOrders', activeOrders);
-      const { buyBook, sellBook } = response[1];
-      store.commit('setBooks', { buyBook, sellBook });
-    });
-  }
-
-  getActiveOrders(limit = 100) {
-    const { currentMarket } = store.state;
-    const params = { market: currentMarket.code, limit };
+  getActiveOrders(market, limit = 100) {
+    const params = { market, limit };
 
     return this.apiClient
       .get('cryptomkt/orders/active', { params })
@@ -187,59 +172,59 @@ class ApiService {
       .then((response) => response.data.data);
   }
 
-  getBooks(market, limit = 50) {
-    const sellBookRequest = this.getBook(market, 'sell', limit);
-    const buyBookRequest = this.getBook(market, 'buy', limit);
-
-    return Promise.all([buyBookRequest, sellBookRequest]).then(
-      ([buyBook, sellBook]) => {
-        this._enrichOrders(buyBook, true, false);
-        this._enrichOrders(sellBook, false, true);
-        return new Promise((resolve) => resolve({ buyBook, sellBook }));
-      }
-    );
-  }
-
-  getExecutedOrders(limit = 50) {
-    const { currentMarket } = store.state;
-    const params = { market: currentMarket.code, limit };
+  getExecutedOrders(market, limit = 100) {
+    const params = { market, limit };
 
     return this.apiClient
       .get('cryptomkt/orders/executed', { params })
       .then((response) => response.data.data);
   }
 
-  getBuyer() {
-    return this.getTrader('buy');
+  listenToOpenBook() {
+    this.socket.on('open-book', (data) => {
+      const { code } = store.state.currentMarket;
+      if (!data[code]) {
+        return;
+      }
+
+      const { buy, sell } = data[code];
+      this._addAccumulated(buy);
+      this._addAccumulated(sell);
+      store.commit('setBooks', { buy, sell });
+    });
   }
 
-  getSeller() {
-    return this.getTrader('sell');
+  listenToHistoricalBook() {
+    this.socket.on('historical-book', (data) => {
+      const { code } = store.state.currentMarket;
+      const book = data[code];
+      store.commit('setHistoricalBook', { book });
+    });
   }
 
-  getTrader(trader) {
-    const url = `/${store.state.currentMarket.code}/${trader}`;
+  getBuyer(market) {
+    return this.getTrader(market, 'buy');
+  }
+
+  getSeller(market) {
+    return this.getTrader(market, 'sell');
+  }
+
+  getTrader(market, trader) {
+    const url = `/${market}/${trader}`;
     return this.apiClient.get(url).then((response) => response.data);
   }
 
-  getTrades(market, limit = 50) {
-    const params = { market, limit };
-
-    return this.cryptoMktClient
-      .get('/trades', { params })
-      .then((response) => response.data.data);
+  patchBuyer(market, data) {
+    return this.patchTrader(market, 'buy', data);
   }
 
-  patchBuyer(data) {
-    return this.patchTrader('buy', data);
+  patchSeller(market, data) {
+    return this.patchTrader(market, 'sell', data);
   }
 
-  patchSeller(data) {
-    return this.patchTrader('sell', data);
-  }
-
-  patchTrader(side, data) {
-    const url = `/${store.state.currentMarket.code}/${side}`;
+  patchTrader(market, side, data) {
+    const url = `/${market}/${side}`;
     return this.apiClient.put(url, data);
   }
 
@@ -251,22 +236,12 @@ class ApiService {
     return this.apiClient.post('cryptomkt/orders/cancel', { id });
   }
 
-  setOrRemoveStorage(key, value) {
-    if (value) {
-      StorageHelper.set(key, value);
-    } else {
-      StorageHelper.remove(key);
-    }
-  }
-
-  _enrichOrders(book, isBuy, isSell) {
-    /** Add order type and accumulated amount */
+  _addAccumulated(book) {
+    /** Add accumulated amount */
     let accumulated = 0;
-    return book.forEach((order) => {
+    book.forEach((order) => {
       accumulated += Number(order.amount);
       order.accumulated = accumulated;
-      order.isBuy = isBuy;
-      order.isSell = isSell;
     });
   }
 }
