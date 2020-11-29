@@ -8,7 +8,7 @@ import StorageHelper from './helpers/StorageHelper';
 const FCM_TOKEN_KEY = 'fcmToken';
 
 let stopTokenRefresh = null;
-let unsuscribeToNotifications = null;
+let unsubscribeFromNotifications = null;
 let messaging = null;
 let initialized = false;
 
@@ -61,7 +61,7 @@ export const enableNotifications = () => {
     .then(async () => {
       await getAndSaveToken(messaging);
       stopTokenRefresh = messaging.onTokenRefresh(getAndSaveToken);
-      unsuscribeToNotifications = messaging.onMessage(handleNotification);
+      unsubscribeFromNotifications = messaging.onMessage(handleNotification);
     })
     .catch(() => {
       // Failed to enable notifications
@@ -77,6 +77,6 @@ export const stopPushNotifications = () => {
   const apiService = injector.get('apiService');
   const currentToken = StorageHelper.get(FCM_TOKEN_KEY);
   apiService.removeFcmToken(currentToken);
-  stopTokenRefresh();
-  unsuscribeToNotifications();
+  stopTokenRefresh && stopTokenRefresh();
+  unsubscribeFromNotifications && unsubscribeFromNotifications();
 };

@@ -66,18 +66,22 @@ class ExecutedOrders extends Vue {
 
   init() {
     clearInterval(this.intervalId);
+    this.isLoading = true;
+
     this.updateOrders().then(() => {
       this.isLoading = false;
     });
-    // Update orders every 10 seconds
+
+    // Periodic update
     this.intervalId = setInterval(() => {
       this.updateOrders();
-    }, 10000);
+    }, 10000); // 10 seconds
   }
 
   updateOrders() {
+    const { code } = this.currentMarket;
     return this.apiService
-      .getExecutedOrders()
+      .getExecutedOrders(code, 100)
       .then((orders) => (this.orders = orders));
   }
 

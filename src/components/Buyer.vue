@@ -118,7 +118,7 @@ class Buyer extends Vue {
     this.buyer = null;
     this.remainingFiat = null;
     this.apiService
-      .getBuyer()
+      .getBuyer(this.currentMarket.code)
       .then((buyer) => {
         this.buyer = buyer;
         this.remainingFiat = this.buyer.fiat;
@@ -146,7 +146,7 @@ class Buyer extends Vue {
     this.isLoading = true;
     this.buyer.fiat = this.remainingFiat.toString();
     this.apiService
-      .patchBuyer(this.buyer)
+      .patchBuyer(this.currentMarket.code, this.buyer)
       .then(() => {
         this.isModalVisible = false;
         this.isLoading = false;

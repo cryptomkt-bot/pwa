@@ -13,6 +13,7 @@ export default new Vuex.Store({
     buyBook: [],
     sellBook: [],
     activeOrders: [],
+    historicalBook: [],
     updatedAt: null,
     token: null,
     isLoading: true,
@@ -40,20 +41,20 @@ export default new Vuex.Store({
       const spreadPercentage = (spread / ask) * 100;
       return spreadPercentage.toFixed(2);
     },
-    activeOrdersTimestamp: (state) => {
-      return state.activeOrders.map((order) =>
-        new Date(order.created_at).getTime()
-      );
+    activeOrdersIds: (state) => {
+      return state.activeOrders.reduce((order, result) => {
+        result[order.id] = true;
+
+        return result;
+      }, {});
     },
-    isAuthenticated: (state) => state.token !== null,
+    isAuthenticated: (state) => state.token,
   },
   actions: {
-    login({ commit, state }, token) {
-      state.isLoading = true;
+    login({ commit }, token) {
       commit('setToken', token);
     },
-    logout({ commit, state }) {
-      state.isLoading = true;
+    logout({ commit }) {
       commit('setToken', null);
       commit('setActiveOrders', []);
     },
@@ -73,15 +74,32 @@ export default new Vuex.Store({
       state.currentMarket = market;
     },
     setBooks(state, payload) {
-      const { buyBook, sellBook } = payload;
-      state.buyBook = buyBook;
-      state.sellBook = sellBook;
+      const { buy, sell } = payload;
+      state.buyBook = buy;
+      state.sellBook = sell;
       state.updatedAt = localeTime(new Date());
       state.isLoading = false;
     },
     emptyBooks(state) {
       state.buyBook = [];
       state.sellBook = [];
+      state.historicalBook = [];
+    },
+    setHistoricalBook(state, payload) {
+      let { book } = payload;
+
+      // Filter duplicated orders
+      const dates = {};
+      book = book.filter((order) => {
+        if (dates[order.executed_date]) {
+          return false;
+        }
+
+        dates[order.executed_date] = true;
+        return true;
+      });
+
+      state.historicalBook = book;
     },
     setBalanceModalVisibility(state, isVisible) {
       state.isBalanceModalVisible = isVisible;
@@ -97,6 +115,9 @@ export default new Vuex.Store({
     },
     setToken(state, token) {
       state.token = token;
+    },
+    setIsLoading(state, isLoading) {
+      state.isLoading = isLoading;
     },
     setIsUpdating(state, isUpdating) {
       state.isUpdating = isUpdating;
