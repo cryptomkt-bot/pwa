@@ -42,11 +42,12 @@ export default new Vuex.Store({
       return spreadPercentage.toFixed(2);
     },
     activeOrdersIds: (state) => {
-      return state.activeOrders.reduce((order, result) => {
-        result[order.id] = true;
+      const ids = {};
+      state.activeOrders.forEach((order) => {
+        ids[order.id] = true;
+      });
 
-        return result;
-      }, {});
+      return ids;
     },
     isAuthenticated: (state) => state.token,
   },
