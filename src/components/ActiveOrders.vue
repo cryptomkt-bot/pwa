@@ -49,11 +49,27 @@
 </template>
 
 <script>
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 
 @Component()
 class ActiveOrders extends Vue {
-  isLoading = false;
+  isLoading = true;
+
+  created() {
+    this.init();
+  }
+
+  @Watch('currentMarket')
+  onCurrentMarketChanged() {
+    this.init();
+  }
+
+  init() {
+    this.isLoading = true;
+    this.apiService.fetchActiveOrders(this.currentMarket.code).then(() => {
+      this.isLoading = false;
+    });
+  }
 
   get orders() {
     return this.$store.state.activeOrders;

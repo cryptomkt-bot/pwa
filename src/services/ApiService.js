@@ -138,18 +138,19 @@ class ApiService {
   pollActiveOrders(ms = 5000) {
     this.pollActiveInterval = setInterval(() => {
       const { code } = store.state.currentMarket;
-      this.getActiveOrders(code).then((orders) => {
-        store.commit('setActiveOrders', orders);
-      });
+      this.fetchActiveOrders(code);
     }, ms);
   }
 
-  getActiveOrders(market, limit = 100) {
+  fetchActiveOrders(market, limit = 100) {
     const params = { market, limit };
 
     return this.apiClient
       .get('cryptomkt/orders/active', { params })
-      .then((response) => response.data.data)
+      .then((response) => {
+        const orders = response.data.data;
+        return store.commit('setActiveOrders', orders);
+      })
       .catch(() => []);
   }
 
