@@ -52,8 +52,8 @@ const requestNotificationPermission = () => {
 };
 
 const handleNotification = (payload) => {
-  const { body } = payload.notification;
-  Toast.open({ message: body, type: 'is-info', duration: 5000 });
+  const { title } = payload.notification;
+  Toast.open({ message: title, type: 'is-info', duration: 5000 });
 };
 
 export const enableNotifications = () => {
