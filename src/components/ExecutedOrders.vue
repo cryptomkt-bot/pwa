@@ -49,14 +49,9 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 class ExecutedOrders extends Vue {
   isLoading = true;
   orders = [];
-  intervalId = null;
 
   created() {
     this.init();
-  }
-
-  destroyed() {
-    clearInterval(this.intervalId);
   }
 
   @Watch('currentMarket')
@@ -65,17 +60,11 @@ class ExecutedOrders extends Vue {
   }
 
   init() {
-    clearInterval(this.intervalId);
     this.isLoading = true;
 
     this.updateOrders().then(() => {
       this.isLoading = false;
     });
-
-    // Periodic update
-    this.intervalId = setInterval(() => {
-      this.updateOrders();
-    }, 10000); // 10 seconds
   }
 
   updateOrders() {
