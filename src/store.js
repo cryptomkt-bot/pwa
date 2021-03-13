@@ -10,8 +10,10 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     currentMarket: StorageHelper.get('currentMarket') || markets.ARS[0],
-    buyBook: [],
-    sellBook: [],
+    books: {
+      buy: [],
+      sell: [],
+    },
     activeOrders: [],
     historicalBook: [],
     updatedAt: null,
@@ -25,12 +27,12 @@ export default new Vuex.Store({
   },
   getters: {
     ask: (state) => {
-      const { sellBook } = state;
-      return sellBook.length ? Number(sellBook[0].price) : 0;
+      const { books } = state;
+      return books.sell.length ? Number(books.sell[0].price) : 0;
     },
     bid: (state) => {
-      const { buyBook } = state;
-      return buyBook.length ? Number(buyBook[0].price) : 0;
+      const { books } = state;
+      return books.buy.length ? Number(books.buy[0].price) : 0;
     },
     spread: (_, getters) => {
       const { ask, bid } = getters;
@@ -76,14 +78,18 @@ export default new Vuex.Store({
     },
     setBooks(state, payload) {
       const { buy, sell } = payload;
-      state.buyBook = buy;
-      state.sellBook = sell;
+      state.books = {
+        buy,
+        sell,
+      };
       state.updatedAt = localeTime(new Date());
       state.isLoading = false;
     },
     emptyBooks(state) {
-      state.buyBook = [];
-      state.sellBook = [];
+      state.books = {
+        buy: [],
+        sell: [],
+      };
       state.historicalBook = [];
     },
     setHistoricalBook(state, payload) {

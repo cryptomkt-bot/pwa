@@ -15,7 +15,7 @@
       <tbody>
         <!-- Sell book -->
         <tr
-          v-for="order in [...sellBook].reverse()"
+          v-for="order in [...books.sell].reverse()"
           :key="order.tradeId"
           :class="{
             selected: activeOrdersIds[order.tradeId],
@@ -50,14 +50,14 @@
           </td>
         </tr>
         <!-- Spread -->
-        <tr v-show="sellBook.length && buyBook.length" id="spread-row">
+        <tr v-show="books.sell.length && books.buy.length" id="spread-row">
           <td id="spread">{{ formattedSpread }}</td>
           <td></td>
           <td>{{ $t('spread') }}</td>
         </tr>
         <!-- Buy book -->
         <tr
-          v-for="order in buyBook"
+          v-for="order in books.buy"
           :key="order.tradeId"
           :class="{
             selected: activeOrdersIds[order.tradeId],
@@ -107,7 +107,7 @@ import { toDecimals } from '../utils';
 
 @Component({
   computed: {
-    ...mapState(['buyBook', 'sellBook', 'isLoading', 'updatedAt', 'token']),
+    ...mapState(['books', 'isLoading', 'updatedAt', 'token']),
     ...mapGetters(['activeOrdersIds', 'spread', 'spreadPercentage']),
   },
 })
