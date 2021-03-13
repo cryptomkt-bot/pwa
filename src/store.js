@@ -15,7 +15,6 @@ export default new Vuex.Store({
       sell: [],
     },
     activeOrders: [],
-    historicalBook: [],
     updatedAt: null,
     token: null,
     isLoading: true,
@@ -43,13 +42,10 @@ export default new Vuex.Store({
       const spreadPercentage = (spread / ask) * 100;
       return spreadPercentage.toFixed(2);
     },
-    activeOrdersIds: (state) => {
-      const ids = {};
-      state.activeOrders.forEach((order) => {
-        ids[order.id] = true;
-      });
-
-      return ids;
+    activeOrdersTimestamp: (state) => {
+      return state.activeOrders.map((order) =>
+        new Date(order.created_at).getTime()
+      );
     },
     isAuthenticated: (state) => state.token,
   },

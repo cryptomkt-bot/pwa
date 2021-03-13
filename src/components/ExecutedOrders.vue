@@ -73,6 +73,7 @@ class ExecutedOrders extends Vue {
 
   init() {
     this.isLoading = true;
+    this.orders = [];
 
     this.getOrders().then(() => {
       this.isLoading = false;

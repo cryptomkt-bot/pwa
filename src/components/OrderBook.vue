@@ -16,9 +16,11 @@
         <!-- Sell book -->
         <tr
           v-for="order in [...books.sell].reverse()"
-          :key="order.tradeId"
+          :key="order.timestamp"
           :class="{
-            selected: activeOrdersIds[order.tradeId],
+            selected: activeOrdersTimestamp.includes(
+              new Date(order.timestamp).getTime()
+            ),
           }"
         >
           <td class="has-text-danger">
@@ -58,9 +60,11 @@
         <!-- Buy book -->
         <tr
           v-for="order in books.buy"
-          :key="order.tradeId"
+          :key="order.timestamp"
           :class="{
-            selected: activeOrdersIds[order.tradeId],
+            selected: activeOrdersTimestamp.includes(
+              new Date(order.timestamp).getTime()
+            ),
           }"
         >
           <td class="has-text-success">
@@ -108,7 +112,7 @@ import { toDecimals } from '../utils';
 @Component({
   computed: {
     ...mapState(['books', 'isLoading', 'updatedAt', 'token']),
-    ...mapGetters(['activeOrdersIds', 'spread', 'spreadPercentage']),
+    ...mapGetters(['activeOrdersTimestamp', 'spread', 'spreadPercentage']),
   },
 })
 class OrderBook extends Vue {

@@ -10,12 +10,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="order in historicalBook" :key="order.executed_date">
-          <td>{{ Number(order.executed_date) | date }}</td>
+        <tr
+          v-for="order in orders"
+          :key="order.timestamp + order.price + order.amount"
+        >
+          <td>{{ (order.timestamp + '-00:00') | date }}</td>
           <td :class="orderColor(order)">
             {{
               formatAmount(
-                order.executed_price,
+                order.price,
                 currentMarket.quoteCurrency,
                 currentMarket.decimals
               )
@@ -24,30 +27,85 @@
           <td>
             {{
               formatAmount(
-                order.executed_amount,
+                order.amount,
                 currentMarket.baseCurrency,
                 currentMarket.baseCurrency.decimals
               )
             }}
           </td>
         </tr>
+        <tr
+          is="InfiniteLoader"
+          v-if="!isLoading"
+          :isLoading="isFetching"
+          :threshold="0"
+          @intersect="loadMore"
+          style="height: 50px"
+        />
       </tbody>
     </table>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
+
+import InfiniteLoader from './InfiniteLoader.vue';
 
 @Component({
-  computed: {
-    ...mapState(['historicalBook', 'isLoading']),
-  },
+  components: { InfiniteLoader },
 })
 class HistoricalBook extends Vue {
+  isLoading = true;
+  isFetching = false;
+  orders = [];
+  limit = 10;
+  nextPage = 0;
+
+  created() {
+    this.init();
+  }
+
+  @Watch('currentMarket')
+  onCurrentMarketChanged() {
+    this.init();
+  }
+
+  init() {
+    this.isLoading = true;
+    this.orders = [];
+
+    this.getOrders().then(() => {
+      this.isLoading = false;
+    });
+  }
+
+  getOrders() {
+    const { code } = this.currentMarket;
+    this.isFetching = true;
+
+    return this.apiService
+      .getTrades(code, this.limit, this.nextPage)
+      .then((response) => {
+        const { data, pagination } = response;
+        this.orders = [...this.orders, ...data];
+        this.nextPage = pagination.next;
+      })
+      .finally(() => {
+        this.isFetching = false;
+      });
+  }
+
+  loadMore() {
+    if (this.isFetching || this.nextPage === null) {
+      return;
+    }
+
+    this.getOrders();
+  }
+
   orderColor(order) {
-    const type = order.side === 1 ? 'success' : 'danger';
+    const type = order.side === 'sell' ? 'danger' : 'success';
     return `has-text-${type}`;
   }
 }

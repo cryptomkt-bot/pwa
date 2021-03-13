@@ -52,9 +52,9 @@ class TopPanel extends Vue {
   }
 
   set currentMarket(market) {
-    this.apiService.unsubscribeFromMarket(this.currentMarket);
+    this.apiService.stopBookFetch();
     this.changeMarket(market);
-    this.apiService.subscribeToMarket(market);
+    this.apiService.startBookFetch();
   }
 
   formatPrice(price) {
