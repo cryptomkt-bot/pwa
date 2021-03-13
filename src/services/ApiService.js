@@ -206,12 +206,12 @@ class ApiService {
       .then((response) => response.data.data);
   }
 
-  getExecutedOrders(market, limit = 100) {
-    const params = { market, limit };
+  getExecutedOrders(market, limit = 100, page = 0) {
+    const params = { market, limit, page };
 
     return this.apiClient
       .get('cryptomkt/orders/executed', { params })
-      .then((response) => response.data.data);
+      .then((response) => response.data);
   }
 
   listenToOpenBook() {

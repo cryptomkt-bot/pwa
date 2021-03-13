@@ -37,6 +37,14 @@
             }}
           </td>
         </tr>
+        <tr
+          is="InfiniteLoader"
+          v-if="!isLoading"
+          :isLoading="isFetching"
+          :threshold="0"
+          @intersect="loadMore"
+          style="height: 50px"
+        />
       </tbody>
     </table>
   </div>
@@ -44,11 +52,15 @@
 
 <script>
 import { Component, Vue, Watch } from 'vue-property-decorator';
+import InfiniteLoader from './InfiniteLoader';
 
-@Component()
+@Component({ components: { InfiniteLoader } })
 class ExecutedOrders extends Vue {
   isLoading = true;
+  isFetching = false;
   orders = [];
+  limit = 10;
+  nextPage = 0;
 
   created() {
     this.init();
@@ -62,16 +74,33 @@ class ExecutedOrders extends Vue {
   init() {
     this.isLoading = true;
 
-    this.updateOrders().then(() => {
+    this.getOrders().then(() => {
       this.isLoading = false;
     });
   }
 
-  updateOrders() {
+  getOrders() {
     const { code } = this.currentMarket;
+    this.isFetching = true;
+
     return this.apiService
-      .getExecutedOrders(code, 100)
-      .then((orders) => (this.orders = orders));
+      .getExecutedOrders(code, this.limit, this.nextPage)
+      .then((response) => {
+        const { data, pagination } = response;
+        this.orders = [...this.orders, ...data];
+        this.nextPage = pagination.next;
+      })
+      .finally(() => {
+        this.isFetching = false;
+      });
+  }
+
+  loadMore() {
+    if (this.isFetching || this.nextPage === null) {
+      return;
+    }
+
+    this.getOrders();
   }
 
   orderColor(order) {
