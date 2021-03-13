@@ -12,7 +12,7 @@
           <th>{{ $t('accumulated') }}</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody ref="tableBody">
         <!-- Sell book -->
         <tr
           v-for="order in [...books.sell].reverse()"
@@ -50,7 +50,11 @@
           </td>
         </tr>
         <!-- Spread -->
-        <tr v-show="books.sell.length && books.buy.length" id="spread-row">
+        <tr
+          v-show="books.sell.length && books.buy.length"
+          id="spread-row"
+          ref="spreadRow"
+        >
           <td id="spread">{{ formattedSpread }}</td>
           <td></td>
           <td>{{ $t('spread') }}</td>
@@ -112,8 +116,12 @@ import { toDecimals } from '../utils';
   },
 })
 class OrderBook extends Vue {
+  isScrolling = false;
+  isSpreadRowVisible = true;
+
   mounted() {
     this.centerBook();
+    this.toggleAutoCenter();
   }
 
   get formattedSpread() {
@@ -129,23 +137,49 @@ class OrderBook extends Vue {
       // Still loading, do nothing.
       return;
     }
-    setTimeout(() => {
-      // Workaround to make centering work
-      this.centerBook();
-    }, 0);
+
+    this.centerBook();
   }
 
+  @Watch('books')
   centerBook() {
+    if (this.isScrolling || !this.isSpreadRowVisible) {
+      // Don't center if scrolling or far from center
+      return;
+    }
+
     const visibleOrders = 5;
-    if (this.sellBook.length < visibleOrders) {
+    if (this.books.sell.length < visibleOrders) {
       // Not enough rows
       return;
     }
-    let target = document.getElementById('spread-row');
-    for (let i = 0; i < visibleOrders; i += 1) {
-      target = target.previousElementSibling;
-    }
-    target.scrollIntoView();
+
+    setTimeout(() => {
+      let target = this.$refs.spreadRow;
+      for (let i = 0; i < visibleOrders; i += 1) {
+        target = target.previousElementSibling;
+      }
+      target.scrollIntoView();
+    }, 0);
+  }
+
+  toggleAutoCenter() {
+    const { tableBody } = this.$refs;
+
+    // Listen to scroll
+    tableBody.addEventListener('touchstart', () => {
+      this.isScrolling = true;
+    });
+    tableBody.addEventListener('touchend', () => {
+      this.isScrolling = false;
+    });
+
+    // Observe the spread row
+    this.spreadRowObserver = new IntersectionObserver(([spreadRow]) => {
+      this.isSpreadRowVisible = spreadRow.isIntersecting;
+    });
+
+    this.spreadRowObserver.observe(this.$refs.spreadRow);
   }
 }
 
