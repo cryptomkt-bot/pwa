@@ -138,6 +138,7 @@ class OrderBook extends Vue {
       return;
     }
 
+    this.isSpreadRowVisible = true;
     this.centerBook();
   }
 
