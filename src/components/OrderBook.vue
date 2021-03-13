@@ -137,7 +137,7 @@ class OrderBook extends Vue {
 
   centerBook() {
     const visibleOrders = 5;
-    if (this.sellBook.length < visibleOrders) {
+    if (this.books.sell.length < visibleOrders) {
       // Not enough rows
       return;
     }
