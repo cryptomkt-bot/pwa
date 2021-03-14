@@ -208,7 +208,7 @@ class ApiService {
       .then((response) => response.data.data);
   }
 
-  getBooks(market, limit = 50) {
+  getBooks(market, limit = 100) {
     const sellBookRequest = this.getBook(market, 'sell', limit);
     const buyBookRequest = this.getBook(market, 'buy', limit);
 
