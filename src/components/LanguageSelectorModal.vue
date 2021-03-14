@@ -4,12 +4,12 @@
       <div class="card-content has-text-centered">
         <button
           v-for="lang in langs"
-          @click="onLanguageSelected(lang)"
-          :key="lang"
-          :class="{ 'is-primary': lang === currentLang }"
+          @click="onLanguageSelected(lang.code)"
+          :key="lang.code"
+          :class="{ 'is-primary': lang.code === currentLang }"
           class="language button is-outlined"
         >
-          {{ $t(`languages.${lang}`) }}
+          {{ lang.label }}
         </button>
       </div>
     </div>
@@ -23,7 +23,10 @@ import StorageHelper from '../helpers/StorageHelper';
 
 @Component()
 class LanguageSelectorModal extends Vue {
-  langs = ['en', 'es'];
+  langs = [
+    { code: 'en', label: 'English' },
+    { code: 'es', label: 'Español' },
+  ];
   currentLang;
 
   created() {

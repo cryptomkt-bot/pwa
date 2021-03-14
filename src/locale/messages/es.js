@@ -53,8 +53,4 @@ export default {
   username: 'Usuario',
   wrongUsernameOrPassword: 'Usuario o contraseña incorrecta',
   yes: 'Sí',
-  languages: {
-    en: 'Inglés',
-    es: 'Español',
-  },
 };
