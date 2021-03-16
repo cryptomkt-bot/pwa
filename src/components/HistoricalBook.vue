@@ -105,7 +105,7 @@ class HistoricalBook extends Vue {
   }
 
   orderColor(order) {
-    const type = order.side === 'sell' ? 'danger' : 'success';
+    const type = order.market_taker === 'sell' ? 'danger' : 'success';
     return `has-text-${type}`;
   }
 }
