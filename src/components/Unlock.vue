@@ -5,7 +5,7 @@
       :label="$t('unlock')"
       size="is-medium"
       type="is-dark"
-      icon-left="lock"
+      icon-left="lock-open"
     />
   </div>
 </template>
