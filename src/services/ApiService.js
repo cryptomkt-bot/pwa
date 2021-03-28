@@ -101,7 +101,7 @@ class ApiService {
         const token = response.data;
         this.token = token;
         this.username = username;
-        store.dispatch('login', this.token).then(() => {
+        store.dispatch('login', { token, username }).then(() => {
           this.startBookFetch();
           startPushNotifications();
         });

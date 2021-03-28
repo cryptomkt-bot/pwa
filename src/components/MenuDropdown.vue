@@ -12,6 +12,13 @@
     <div class="dropdown-menu">
       <div class="dropdown-content z-depth-3">
         <template v-if="isAuthenticated">
+          <a
+            v-if="hasCredentialsSupport"
+            @click="configureLock"
+            class="dropdown-item"
+          >
+            {{ $t('configureLock') }}
+          </a>
           <a @click="showOpenOrderModal" class="dropdown-item">
             {{ $t('openOrder') }}
           </a>
@@ -36,8 +43,9 @@
 
 <script>
 import { Component, Vue } from 'vue-property-decorator';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
 import vClickOutside from 'v-click-outside';
+import StorageHelper from '../helpers/StorageHelper';
 
 @Component({
   methods: mapMutations([
@@ -46,13 +54,20 @@ import vClickOutside from 'v-click-outside';
     'setLoginModalVisibility',
     'setOpenOrderModalVisibility',
   ]),
-  computed: mapGetters(['isAuthenticated']),
+  computed: {
+    ...mapState(['username']),
+    ...mapGetters(['isAuthenticated']),
+  },
   directives: {
     clickOutside: vClickOutside.directive,
   },
 })
 class MenuDropdown extends Vue {
   isVisible = false;
+
+  get hasCredentialsSupport() {
+    return !!navigator.credentials;
+  }
 
   handleButtonClick() {
     this.isVisible = !this.isVisible;
@@ -80,6 +95,30 @@ class MenuDropdown extends Vue {
 
   hide() {
     this.isVisible = false;
+  }
+
+  async configureLock() {
+    const credential = await navigator.credentials.create({
+      publicKey: {
+        user: {
+          id: new ArrayBuffer(),
+          name: this.username,
+          displayName: this.username,
+        },
+        challenge: new ArrayBuffer(),
+        rp: {
+          name: 'CryptoMKT Bot',
+        },
+        pubKeyCredParams: [],
+      },
+    });
+
+    StorageHelper.set('credential', {
+      id: credential.id,
+      type: credential.type,
+    });
+
+    this.hide();
   }
 
   logout() {

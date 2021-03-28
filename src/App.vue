@@ -1,6 +1,12 @@
 <template>
   <div id="app" class="is-unselectable">
-    <div id="wrapper" :class="{ 'remove-margin-bottom': !isAuthenticated }">
+    <Unlock @lock="isLocked = $event" />
+
+    <div
+      v-if="!isLocked"
+      id="wrapper"
+      :class="{ 'remove-margin-bottom': !isAuthenticated }"
+    >
       <b-loading :active="isUpdating"></b-loading>
       <!-- Modals -->
       <BalanceModal v-if="isAuthenticated" />
@@ -61,6 +67,7 @@ import OrderBook from './components/OrderBook';
 import Section from './components/Section';
 import Seller from './components/Seller';
 import TopPanel from './components/TopPanel';
+import Unlock from './components/Unlock';
 import HistoricalBook from './components/HistoricalBook';
 
 @Component({
@@ -77,12 +84,16 @@ import HistoricalBook from './components/HistoricalBook';
     Section,
     Seller,
     TopPanel,
+    Unlock,
     HistoricalBook,
   },
-  computed: mapState(['isUpdating']),
+  computed: {
+    ...mapState(['isUpdating']),
+  },
 })
 class App extends Vue {
   isOpenOrderModalVisible = false;
+  isLocked = false;
   areTradersVisible = true;
 
   mounted() {

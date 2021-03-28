@@ -17,6 +17,7 @@ export default new Vuex.Store({
     activeOrders: [],
     updatedAt: null,
     token: null,
+    username: null,
     isLoading: true,
     isBalanceModalVisible: false,
     isLanguageModalVisible: false,
@@ -47,15 +48,17 @@ export default new Vuex.Store({
         new Date(order.created_at).getTime()
       );
     },
-    isAuthenticated: (state) => state.token,
+    isAuthenticated: (state) => !!state.token,
   },
   actions: {
-    login({ commit }, token) {
+    login({ commit }, { token, username }) {
       commit('setToken', token);
+      commit('setUsername', username);
     },
     logout({ commit }) {
       commit('setToken', null);
       commit('setActiveOrders', []);
+      StorageHelper.remove('credential');
     },
     changeMarket({ commit, state }, market) {
       state.isLoading = true;
@@ -118,6 +121,9 @@ export default new Vuex.Store({
     },
     setToken(state, token) {
       state.token = token;
+    },
+    setUsername(state, username) {
+      state.username = username;
     },
     setIsLoading(state, isLoading) {
       state.isLoading = isLoading;
